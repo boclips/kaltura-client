@@ -1,0 +1,40 @@
+{
+    "provider": {
+        "name": "KalturaApi"
+    },
+    "consumer": {
+        "name": "KalturaClient"
+    },
+    "interactions": [
+        {
+            "description": "POST session start",
+            "request": {
+                "method": "POST",
+                "path": "/api_v3/service/session/action/start"
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json;charset=UTF-8"
+                },
+                "body": {
+                    "value": "\"aSession\"",
+                    "matcher": {
+                        "example": "\"aSession\"",
+                        "regex": "^\"[a-zA-Z0-9=]*\"$"
+                    },
+                    "generator": null,
+                    "regex": "^\"[a-zA-Z0-9=]*\"$"
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "pact-specification": {
+            "version": "3.0.0"
+        },
+        "pact-jvm": {
+            "version": "3.5.6"
+        }
+    }
+}
