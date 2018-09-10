@@ -8,7 +8,8 @@ import lombok.NonNull;
 @Getter
 class KalturaClientConfig {
     @NonNull
-    private final String baseUrl;
+    @Builder.Default
+    private final String baseUrl = "https://www.kaltura.com";
 
     @NonNull
     private final String partnerId;

@@ -4,7 +4,9 @@ import au.com.dius.pact.consumer.PactVerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
 import spock.lang.Specification
 
-class KalturaClientContractTest extends Specification {
+import java.time.Instant
+
+class KalturaClientIntegrationTest extends Specification {
 
     def "returns a list of media entries filtered by reference id"() {
         given:
@@ -16,7 +18,7 @@ class KalturaClientContractTest extends Specification {
                 .build()
 
         SessionGenerator sessionGenerator = Mock(SessionGenerator)
-        sessionGenerator.get() >> new KalturaSession("123")
+        sessionGenerator.get() >> new KalturaSession("123", Instant.now())
 
         KalturaClient kalturaClient = new KalturaClient(config, sessionGenerator)
 

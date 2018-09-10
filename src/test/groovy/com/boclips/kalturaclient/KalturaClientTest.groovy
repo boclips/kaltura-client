@@ -14,20 +14,7 @@ class KalturaClientTest extends Specification {
                 .build()
 
         then:
-        new KalturaClient(config, new RestSessionGenerator(config))
-    }
-
-    def "throws when baseUrl not set"() {
-        when:
-        KalturaClientConfig config = KalturaClientConfig.builder()
-                .userId("1")
-                .secret("123")
-                .partnerId("999")
-                .build()
-        new KalturaClient(config, new RestSessionGenerator(config))
-
-        then:
-        thrown Exception
+        new KalturaClient(config, Mock(SessionGenerator))
     }
 
     def "throws when userId not set"() {
@@ -37,7 +24,7 @@ class KalturaClientTest extends Specification {
                 .secret("123")
                 .partnerId("999")
                 .build()
-        new KalturaClient(config, new RestSessionGenerator(config))
+        new KalturaClient(config, Mock(SessionGenerator))
 
         then:
         thrown Exception
@@ -50,7 +37,7 @@ class KalturaClientTest extends Specification {
                 .userId("1")
                 .partnerId("999")
                 .build()
-        new KalturaClient(config, new RestSessionGenerator(config))
+        new KalturaClient(config, Mock(SessionGenerator))
 
         then:
         thrown Exception
@@ -63,7 +50,7 @@ class KalturaClientTest extends Specification {
                 .userId("1")
                 .secret("123")
                 .build()
-        new KalturaClient(config, new RestSessionGenerator(config))
+        new KalturaClient(config, Mock(SessionGenerator))
 
         then:
         thrown Exception

@@ -13,10 +13,33 @@ public class KalturaClient {
     private KalturaClientConfig config;
     private SessionGenerator sessionGenerator;
 
+    public static KalturaClient create(KalturaClientConfig config) {
+        return new KalturaClient(config, new RestSessionGenerator(new SessionRetriever(config), config.getSessionTtl()));
+    }
+
     public KalturaClient(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         this.config = config;
         this.sessionGenerator = sessionGenerator;
+        configureUniRest();
+    }
 
+    public List<MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
+        try {
+            MediaList mediaList = Unirest.get(this.config.getBaseUrl() + "/api_v3/service/media/action/list")
+                    .queryString("ks", this.sessionGenerator.get().getToken())
+                    .queryString("filter[referenceIdIn]", String.join(",", referenceIds))
+                    .queryString("format", "1")
+                    .asObject(MediaList.class)
+                    .getBody();
+
+            return mediaList.objects;
+
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void configureUniRest() {
         Unirest.setObjectMapper(new ObjectMapper() {
             private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
                     = new com.fasterxml.jackson.databind.ObjectMapper();
@@ -41,21 +64,5 @@ public class KalturaClient {
                 }
             }
         });
-    }
-
-    public List<MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
-        try {
-            MediaList mediaList = Unirest.get(this.config.getBaseUrl() + "/api_v3/service/media/action/list")
-                    .queryString("ks", this.sessionGenerator.get().getToken())
-                    .queryString("filter[referenceIdIn]", String.join(",", referenceIds))
-                    .queryString("format", "1")
-                    .asObject(MediaList.class)
-                    .getBody();
-
-            return mediaList.objects;
-
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

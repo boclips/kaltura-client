@@ -1,34 +1,32 @@
 package com.boclips.kalturaclient;
 
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import java.time.Instant;
 
 public class RestSessionGenerator implements SessionGenerator {
-    private KalturaClientConfig config;
+    private SessionRetriever sessionRetriever;
+    private Integer sessionTtl;
+    private Instant sessionExpiresAt = null;
+    private String currentSession = null;
 
-    public RestSessionGenerator(KalturaClientConfig config) {
-        this.config = config;
+    public RestSessionGenerator(SessionRetriever sessionRetriever, Integer secondsTtl) {
+        this.sessionRetriever = sessionRetriever;
+        this.sessionTtl = secondsTtl;
     }
 
     public KalturaSession get() {
-        try {
-            String token = Unirest.post(this.config.getBaseUrl() + "/api_v3/service/session/action/start")
-                    .field("expiry", this.config.getSessionTtl())
-                    .field("format", "1")
-                    .field("partnerId", this.config.getPartnerId())
-                    .field("secret", this.config.getSecret())
-                    .field("type", "0")
-                    .field("userId", this.config.getUserId())
-                    .asString()
-                    .getBody();
-
-            return new KalturaSession(tokenWithoutQuotes(token));
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
+        if (currentSession == null || hasExpired()) {
+            generateSession();
         }
+
+        return new KalturaSession(this.currentSession, this.sessionExpiresAt);
     }
 
-    private String tokenWithoutQuotes(String token) {
-        return token.substring(1, token.length() - 1);
+    private boolean hasExpired() {
+        return Instant.now().toEpochMilli() > sessionExpiresAt.toEpochMilli();
+    }
+
+    private void generateSession() {
+        this.currentSession = this.sessionRetriever.fetch();
+        this.sessionExpiresAt = Instant.ofEpochMilli(Instant.now().toEpochMilli() + sessionTtl * 1000);
     }
 }

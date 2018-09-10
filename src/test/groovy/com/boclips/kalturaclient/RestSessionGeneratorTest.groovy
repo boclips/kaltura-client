@@ -1,55 +1,49 @@
 package com.boclips.kalturaclient
 
-import au.com.dius.pact.consumer.PactVerificationResult
-import au.com.dius.pact.consumer.groovy.PactBuilder
 import spock.lang.Specification
 
+import java.time.Instant
+
 class RestSessionGeneratorTest extends Specification {
-
-    public static final int PORT = 9999
-
-    def "returns a kaltura session"() {
+    def "gets the first kaltura session"() {
         given:
-        RestSessionGenerator sessionGenerator = new RestSessionGenerator(
-                KalturaClientConfig.builder()
-                        .baseUrl(String.format("http://localhost:%d", PORT))
-                        .userId("user@kaltura.com")
-                        .secret("123")
-                        .partnerId("abc")
-                        .sessionTtl(8675309)
-                        .build()
-        )
+        SessionRetriever sessionRetriever = Mock(SessionRetriever)
+        sessionRetriever.fetch() >> "some-session"
 
         when:
-        PactVerificationResult result = mockSessionGeneration().runTest() {
-            KalturaSession session = sessionGenerator.get()
-
-            assert session.token == "aSession"
-        }
+        RestSessionGenerator generator = new RestSessionGenerator(sessionRetriever, 1000)
+        KalturaSession session = generator.get()
 
         then:
-        assert result == PactVerificationResult.Ok.INSTANCE
+        session.token == 'some-session'
+        session.expires > Instant.now()
     }
 
-    static mockSessionGeneration() {
-        def webapp_service = new PactBuilder()
-        webapp_service {
-            serviceConsumer "KalturaClient"
-            hasPactWith "KalturaApi"
-            port PORT
-            uponReceiving("POST session start")
-            withAttributes([
-                    method : 'POST',
-                    path   : '/api_v3/service/session/action/start',
-                    headers: ['Content-Type': 'application/x-www-form-urlencoded'],
-                    body   : 'expiry=8675309&format=1&partnerId=abc&secret=123&type=0&userId=user%40kaltura.com'
-            ])
-            willRespondWith([
-                    status : 200,
-                    headers: ['Content-Type': 'application/json;charset=UTF-8'],
-                    body   : '"aSession"'
-            ])
-        } as PactBuilder
+    def "uses cached session as long as within ttl"() {
+        given:
+        SessionRetriever sessionRetriever = Mock(SessionRetriever)
+        SessionGenerator generator = new RestSessionGenerator(sessionRetriever, 1000)
+
+        when:
+        generator.get()
+        generator.get()
+        generator.get()
+
+        then:
+        1 * sessionRetriever.fetch() >> "some-crap"
     }
 
+    def "renews session when it has expired"() {
+        given:
+        SessionRetriever sessionRetriever = Mock(SessionRetriever)
+        SessionGenerator generator = new RestSessionGenerator(sessionRetriever, 0)
+
+        when:
+        generator.get()
+        Thread.sleep(1000)
+        generator.get()
+
+        then:
+        2 * sessionRetriever.fetch() >> "some-crap"
+    }
 }
