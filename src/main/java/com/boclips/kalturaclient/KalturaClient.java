@@ -1,5 +1,8 @@
 package com.boclips.kalturaclient;
 
+import com.boclips.kalturaclient.session.RestSessionGenerator;
+import com.boclips.kalturaclient.session.SessionGenerator;
+import com.boclips.kalturaclient.session.SessionRetriever;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.mashape.unirest.http.ObjectMapper;

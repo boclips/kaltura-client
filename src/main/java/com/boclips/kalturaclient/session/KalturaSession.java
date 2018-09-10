@@ -1,4 +1,4 @@
-package com.boclips.kalturaclient;
+package com.boclips.kalturaclient.session;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

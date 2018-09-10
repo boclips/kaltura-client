@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient
 
+import com.boclips.kalturaclient.session.SessionGenerator
 import spock.lang.Specification
 
 class KalturaClientTest extends Specification {

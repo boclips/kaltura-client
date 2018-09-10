@@ -6,7 +6,7 @@ import lombok.NonNull;
 
 @Builder
 @Getter
-class KalturaClientConfig {
+public class KalturaClientConfig {
     @NonNull
     @Builder.Default
     private final String baseUrl = "https://www.kaltura.com";

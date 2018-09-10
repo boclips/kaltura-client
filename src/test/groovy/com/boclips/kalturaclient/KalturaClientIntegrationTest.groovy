@@ -2,6 +2,8 @@ package com.boclips.kalturaclient
 
 import au.com.dius.pact.consumer.PactVerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
+import com.boclips.kalturaclient.session.KalturaSession
+import com.boclips.kalturaclient.session.SessionGenerator
 import spock.lang.Specification
 
 import java.time.Instant

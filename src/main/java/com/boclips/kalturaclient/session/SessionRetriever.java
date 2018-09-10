@@ -1,5 +1,6 @@
-package com.boclips.kalturaclient;
+package com.boclips.kalturaclient.session;
 
+import com.boclips.kalturaclient.KalturaClientConfig;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.AllArgsConstructor;
