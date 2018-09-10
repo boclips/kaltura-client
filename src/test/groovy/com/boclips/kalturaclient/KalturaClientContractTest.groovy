@@ -1,7 +1,6 @@
 package com.boclips.kalturaclient
 
 import au.com.dius.pact.consumer.PactVerificationResult
-import au.com.dius.pact.consumer.groovy.PactBodyBuilder
 import au.com.dius.pact.consumer.groovy.PactBuilder
 import spock.lang.Specification
 
@@ -9,13 +8,19 @@ class KalturaClientContractTest extends Specification {
 
     def "returns a session"() {
         given:
-        KalturaClient kalturaClient = new KalturaClient("http://localhost:9999")
+        KalturaClientConfig config = KalturaClientConfig.builder()
+                .baseUrl("http://localhost:9999")
+                .partnerId("abc")
+                .secret("123")
+                .userId("user@kaltura.com")
+                .build()
+        KalturaClient kalturaClient = new KalturaClient(config)
 
         when:
         PactVerificationResult result = mockTransactionSteps().runTest() {
-            KalturaSession session = kalturaClient.generateSession()
+            KalturaSession session = kalturaClient.generateSession(86400)
 
-            assert session.toString() == "\"aSession\""
+            assert session.token == "aSession"
         }
 
         then:
@@ -38,7 +43,7 @@ class KalturaClientContractTest extends Specification {
             willRespondWith([
                     status : 200,
                     headers: ['Content-Type': 'application/json;charset=UTF-8'],
-                    body   : PactBodyBuilder.regexp(~/^"[a-zA-Z0-9=]*"$/, '"aSession"')
+                    body   : '"aSession"'
             ])
         } as PactBuilder
     }

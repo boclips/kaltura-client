@@ -21,15 +21,7 @@
                 "headers": {
                     "Content-Type": "application/json;charset=UTF-8"
                 },
-                "body": {
-                    "value": "\"aSession\"",
-                    "matcher": {
-                        "example": "\"aSession\"",
-                        "regex": "^\"[a-zA-Z0-9=]*\"$"
-                    },
-                    "generator": null,
-                    "regex": "^\"[a-zA-Z0-9=]*\"$"
-                }
+                "body": "\"aSession\""
             }
         },
         {

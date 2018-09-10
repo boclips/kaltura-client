@@ -1,9 +1,10 @@
 package com.boclips.kalturaclient;
 
-public class KalturaSession {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-    @Override
-    public String toString() {
-        return "\"aSession\"";
-    }
+@AllArgsConstructor
+@Getter
+public class KalturaSession {
+    private final String token;
 }
