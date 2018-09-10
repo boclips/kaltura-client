@@ -16,12 +16,13 @@ class RestSessionGeneratorTest extends Specification {
                         .userId("user@kaltura.com")
                         .secret("123")
                         .partnerId("abc")
+                        .sessionTtl(8675309)
                         .build()
         )
 
         when:
         PactVerificationResult result = mockSessionGeneration().runTest() {
-            KalturaSession session = sessionGenerator.generate(8675309)
+            KalturaSession session = sessionGenerator.get()
 
             assert session.token == "aSession"
         }

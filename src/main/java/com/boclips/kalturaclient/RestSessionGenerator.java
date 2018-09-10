@@ -10,15 +10,15 @@ public class RestSessionGenerator implements SessionGenerator {
         this.config = config;
     }
 
-    public KalturaSession generate(int ttl) {
+    public KalturaSession get() {
         try {
             String token = Unirest.post(this.config.getBaseUrl() + "/api_v3/service/session/action/start")
-                    .field("expiry", ttl)
+                    .field("expiry", this.config.getSessionTtl())
                     .field("format", "1")
-                    .field("partnerId", config.getPartnerId())
-                    .field("secret", config.getSecret())
+                    .field("partnerId", this.config.getPartnerId())
+                    .field("secret", this.config.getSecret())
                     .field("type", "0")
-                    .field("userId", config.getUserId())
+                    .field("userId", this.config.getUserId())
                     .asString()
                     .getBody();
 

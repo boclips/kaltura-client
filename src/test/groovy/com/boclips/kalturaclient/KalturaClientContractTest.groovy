@@ -16,7 +16,7 @@ class KalturaClientContractTest extends Specification {
                 .build()
 
         SessionGenerator sessionGenerator = Mock(SessionGenerator)
-        sessionGenerator.generate(_) >> new KalturaSession("123")
+        sessionGenerator.get() >> new KalturaSession("123")
 
         KalturaClient kalturaClient = new KalturaClient(config, sessionGenerator)
 

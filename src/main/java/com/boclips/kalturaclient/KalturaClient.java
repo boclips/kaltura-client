@@ -12,12 +12,10 @@ import java.util.List;
 public class KalturaClient {
     private KalturaClientConfig config;
     private SessionGenerator sessionGenerator;
-    private KalturaSession session;
 
     public KalturaClient(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         this.config = config;
         this.sessionGenerator = sessionGenerator;
-        this.session = sessionGenerator.generate(60);
 
         Unirest.setObjectMapper(new ObjectMapper() {
             private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
@@ -48,7 +46,7 @@ public class KalturaClient {
     public List<MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
         try {
             MediaList mediaList = Unirest.get(this.config.getBaseUrl() + "/api_v3/service/media/action/list")
-                    .queryString("ks", this.session.getToken())
+                    .queryString("ks", this.sessionGenerator.get().getToken())
                     .queryString("filter[referenceIdIn]", String.join(",", referenceIds))
                     .queryString("format", "1")
                     .asObject(MediaList.class)

@@ -9,11 +9,17 @@ import lombok.NonNull;
 class KalturaClientConfig {
     @NonNull
     private final String baseUrl;
+
     @NonNull
     private final String partnerId;
+
     @NonNull
     private final String userId;
+
     @NonNull
     private final String secret;
 
+    @NonNull
+    @Builder.Default
+    private final Integer sessionTtl = 60;
 }

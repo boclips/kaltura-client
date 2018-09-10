@@ -39,4 +39,3 @@ dependencies {
     testContractRuntime configurations.runtime
     testContractRuntime configurations.testRuntime
 }
-
