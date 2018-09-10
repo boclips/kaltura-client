@@ -11,10 +11,13 @@ import java.util.List;
 
 public class KalturaClient {
     private KalturaClientConfig config;
+    private SessionGenerator sessionGenerator;
     private KalturaSession session;
 
-    public KalturaClient(KalturaClientConfig config) {
+    public KalturaClient(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         this.config = config;
+        this.sessionGenerator = sessionGenerator;
+        this.session = sessionGenerator.generate(60);
 
         Unirest.setObjectMapper(new ObjectMapper() {
             private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
@@ -56,6 +59,5 @@ public class KalturaClient {
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

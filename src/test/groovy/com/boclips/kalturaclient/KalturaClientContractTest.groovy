@@ -14,7 +14,11 @@ class KalturaClientContractTest extends Specification {
                 .secret("123")
                 .userId("user@kaltura.com")
                 .build()
-        KalturaClient kalturaClient = new KalturaClient(config)
+
+        SessionGenerator sessionGenerator = Mock(SessionGenerator)
+        sessionGenerator.generate(_) >> new KalturaSession("123")
+
+        KalturaClient kalturaClient = new KalturaClient(config, sessionGenerator)
 
         when:
         PactVerificationResult result = mockMediaList().runTest() {

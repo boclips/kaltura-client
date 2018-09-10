@@ -4,13 +4,13 @@ import au.com.dius.pact.consumer.PactVerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
 import spock.lang.Specification
 
-class SessionGeneratorTest extends Specification {
+class RestSessionGeneratorTest extends Specification {
 
     public static final int PORT = 9999
 
     def "returns a kaltura session"() {
         given:
-        SessionGenerator sessionGenerator = new SessionGenerator(
+        RestSessionGenerator sessionGenerator = new RestSessionGenerator(
                 KalturaClientConfig.builder()
                         .baseUrl(String.format("http://localhost:%d", PORT))
                         .userId("user@kaltura.com")

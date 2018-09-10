@@ -5,22 +5,26 @@ import spock.lang.Specification
 class KalturaClientTest extends Specification {
 
     def "accepts a valid configuration"() {
-        expect:
-        new KalturaClient(KalturaClientConfig.builder()
+        when:
+        KalturaClientConfig config = KalturaClientConfig.builder()
                 .baseUrl("http://www.kaltura.com")
                 .userId("1")
                 .secret("123")
                 .partnerId("999")
-                .build())
+                .build()
+
+        then:
+        new KalturaClient(config, new RestSessionGenerator(config))
     }
 
     def "throws when baseUrl not set"() {
         when:
-        new KalturaClient(KalturaClientConfig.builder()
+        KalturaClientConfig config = KalturaClientConfig.builder()
                 .userId("1")
                 .secret("123")
                 .partnerId("999")
-                .build())
+                .build()
+        new KalturaClient(config, new RestSessionGenerator(config))
 
         then:
         thrown Exception
@@ -28,11 +32,12 @@ class KalturaClientTest extends Specification {
 
     def "throws when userId not set"() {
         when:
-        new KalturaClient(KalturaClientConfig.builder()
+        KalturaClientConfig config = KalturaClientConfig.builder()
                 .baseUrl("http://www.kaltura.com")
                 .secret("123")
                 .partnerId("999")
-                .build())
+                .build()
+        new KalturaClient(config, new RestSessionGenerator(config))
 
         then:
         thrown Exception
@@ -40,11 +45,12 @@ class KalturaClientTest extends Specification {
 
     def "throws when secret not set"() {
         when:
-        new KalturaClient(KalturaClientConfig.builder()
+        KalturaClientConfig config = KalturaClientConfig.builder()
                 .baseUrl("http://www.kaltura.com")
                 .userId("1")
                 .partnerId("999")
-                .build())
+                .build()
+        new KalturaClient(config, new RestSessionGenerator(config))
 
         then:
         thrown Exception
@@ -52,11 +58,12 @@ class KalturaClientTest extends Specification {
 
     def "throws when partnerId not set"() {
         when:
-        new KalturaClient(KalturaClientConfig.builder()
+        KalturaClientConfig config = KalturaClientConfig.builder()
                 .baseUrl("http://www.kaltura.com")
                 .userId("1")
                 .secret("123")
-                .build())
+                .build()
+        new KalturaClient(config, new RestSessionGenerator(config))
 
         then:
         thrown Exception

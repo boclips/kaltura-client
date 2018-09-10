@@ -3,10 +3,10 @@ package com.boclips.kalturaclient;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-public class SessionGenerator {
+public class RestSessionGenerator implements SessionGenerator {
     private KalturaClientConfig config;
 
-    public SessionGenerator(KalturaClientConfig config) {
+    public RestSessionGenerator(KalturaClientConfig config) {
         this.config = config;
     }
 
