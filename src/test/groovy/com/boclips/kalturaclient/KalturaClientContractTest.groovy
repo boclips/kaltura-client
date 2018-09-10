@@ -9,7 +9,7 @@ class KalturaClientContractTest extends Specification {
 
     def "returns a session"() {
         given:
-        KalturaClient kalturaClient = new KalturaClient()
+        KalturaClient kalturaClient = new KalturaClient("http://localhost:9999")
 
         when:
         PactVerificationResult result = mockTransactionSteps().runTest() {
@@ -30,9 +30,10 @@ class KalturaClientContractTest extends Specification {
             port 9999
             uponReceiving("POST session start")
             withAttributes([
-                    method: 'POST',
-                    path  : '/api_v3/service/session/action/start',
-//                    body  : 'secret=9c06b188bfb571ae707509180aed5d91&userId=jacek%40boclips.com&type=0&partnerId=1776261&expiry=86400&format=1'
+                    method : 'POST',
+                    path   : '/api_v3/service/session/action/start',
+                    headers: ['Content-Type': 'application/x-www-form-urlencoded'],
+                    body   : 'expiry=86400&format=1&partnerId=abc&secret=123&type=0&userId=user%40kaltura.com'
             ])
             willRespondWith([
                     status : 200,

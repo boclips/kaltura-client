@@ -7,11 +7,13 @@ import au.com.dius.pact.provider.ConsumerInfo
 import au.com.dius.pact.provider.ProviderClient
 import au.com.dius.pact.provider.ProviderInfo
 import au.com.dius.pact.provider.ResponseComparison
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class KalturaContractTest extends Specification {
+@Ignore
+class KalturaApiContractTest extends Specification {
 
     @Shared
     protected ProviderInfo serviceProvider
@@ -52,7 +54,6 @@ class KalturaContractTest extends Specification {
         serviceProvider.protocol = "https"
         serviceProvider.host = "www.kaltura.com"
         serviceProvider.port = 443
-//        serviceProvider.path = "/api_v3/service/session/action/start"
 
         ConsumerInfo consumer = new ConsumerInfo()
         consumer.name = "KalturaClient"

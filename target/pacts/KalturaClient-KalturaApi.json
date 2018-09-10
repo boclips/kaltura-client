@@ -10,7 +10,11 @@
             "description": "POST session start",
             "request": {
                 "method": "POST",
-                "path": "/api_v3/service/session/action/start"
+                "path": "/api_v3/service/session/action/start",
+                "headers": {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                "body": "expiry=86400&format=1&partnerId=abc&secret=123&type=0&userId=user%40kaltura.com"
             },
             "response": {
                 "status": 200,
@@ -27,6 +31,29 @@
                     "regex": "^\"[a-zA-Z0-9=]*\"$"
                 }
             }
+        },
+        {
+            "description": "com.boclips.kalturaclient.ExampleJavaConsumerPactTest test interaction",
+            "request": {
+                "method": "POST",
+                "path": "/api_v3/service/session/action/start",
+                "headers": {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                "body": "expiry=86400&format=1&partnerId=1776261&secret=9c06b188bfb571ae707509180aed5d91&type=0&userId=jacek%40boclips.com"
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                "body": "\"aSession\""
+            },
+            "providerStates": [
+                {
+                    "name": "test state"
+                }
+            ]
         }
     ],
     "metadata": {
