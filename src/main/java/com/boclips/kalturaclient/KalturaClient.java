@@ -1,34 +1,61 @@
 package com.boclips.kalturaclient;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import java.io.IOException;
+import java.util.List;
+
 public class KalturaClient {
     private KalturaClientConfig config;
+    private KalturaSession session;
 
     public KalturaClient(KalturaClientConfig config) {
         this.config = config;
+
+        Unirest.setObjectMapper(new ObjectMapper() {
+            private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
+                    = new com.fasterxml.jackson.databind.ObjectMapper();
+
+            {
+                jacksonObjectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            }
+
+            public <T> T readValue(String value, Class<T> valueType) {
+                try {
+                    return jacksonObjectMapper.readValue(value, valueType);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            public String writeValue(Object value) {
+                try {
+                    return jacksonObjectMapper.writeValueAsString(value);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
-    public KalturaSession generateSession(int ttlSeconds) {
+    public List<MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
         try {
-            String token = Unirest.post(this.config.getBaseUrl() + "/api_v3/service/session/action/start")
-                    .field("expiry", ttlSeconds)
-                    .field("format", "1")
-                    .field("partnerId", config.getPartnerId())
-                    .field("secret", config.getSecret())
-                    .field("type", "0")
-                    .field("userId", config.getUserId())
-                    .asString()
+            MediaList mediaList = Unirest.get(this.config.getBaseUrl() + "/api_v3/service/media/action/list")
+                    .queryString("ks", this.session.getToken())
+                    .queryString("filter[referenceIdIn]", String.join(",", referenceIds))
+                    .queryString("format", "1")
+                    .asObject(MediaList.class)
                     .getBody();
 
-            return new KalturaSession(tokenWithoutQuotes(token));
+            return mediaList.objects;
+
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
-    }
 
-    private String tokenWithoutQuotes(String token) {
-        return token.substring(1, token.length() - 1);
     }
 }

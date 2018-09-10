@@ -7,6 +7,57 @@
     },
     "interactions": [
         {
+            "description": "GET media list by reference ids",
+            "request": {
+                "method": "GET",
+                "path": "/api_v3/service/media/action/list",
+                "query": {
+                    "filter[referenceIdIn]": [
+                        "2526940"
+                    ],
+                    "ks": [
+                        "123"
+                    ],
+                    "format": [
+                        "1"
+                    ]
+                }
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": {
+                    "objects": [
+                        {
+                            "id": "_1234assd"
+                        }
+                    ]
+                },
+                "matchingRules": {
+                    "body": {
+                        "$.objects": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.objects[*].id": {
+                            "matchers": [
+                                {
+                                    "match": "integer"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    }
+                }
+            }
+        },
+        {
             "description": "POST session start",
             "request": {
                 "method": "POST",
@@ -14,7 +65,7 @@
                 "headers": {
                     "Content-Type": "application/x-www-form-urlencoded"
                 },
-                "body": "expiry=86400&format=1&partnerId=abc&secret=123&type=0&userId=user%40kaltura.com"
+                "body": "expiry=8675309&format=1&partnerId=abc&secret=123&type=0&userId=user%40kaltura.com"
             },
             "response": {
                 "status": 200,
