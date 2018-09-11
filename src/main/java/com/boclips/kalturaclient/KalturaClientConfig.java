@@ -12,6 +12,10 @@ public class KalturaClientConfig {
     private final String baseUrl = "https://www.kaltura.com";
 
     @NonNull
+    @Builder.Default
+    private final Integer sessionTtl = 60;
+
+    @NonNull
     private final String partnerId;
 
     @NonNull
@@ -19,8 +23,4 @@ public class KalturaClientConfig {
 
     @NonNull
     private final String secret;
-
-    @NonNull
-    @Builder.Default
-    private final Integer sessionTtl = 60;
 }

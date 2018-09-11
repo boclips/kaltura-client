@@ -22,7 +22,7 @@ class KalturaClientIntegrationTest extends Specification {
         SessionGenerator sessionGenerator = Mock(SessionGenerator)
         sessionGenerator.get() >> new KalturaSession("123", Instant.now())
 
-        KalturaClient kalturaClient = new KalturaClient(config, sessionGenerator)
+        HttpKalturaClient kalturaClient = new HttpKalturaClient(config, sessionGenerator)
 
         when:
         PactVerificationResult result = mockMediaList().runTest() {
@@ -30,6 +30,7 @@ class KalturaClientIntegrationTest extends Specification {
 
             MediaEntry mediaEntry = mediaEntries.get(0)
             assert mediaEntry.id == "_1234assd"
+            assert mediaEntry.referenceId == "213-123-123"
         }
 
         then:
@@ -59,6 +60,7 @@ class KalturaClientIntegrationTest extends Specification {
             withBody {
                 objects eachLike(1, {
                     id identifier('_1234assd')
+                    referenceId identifier('213-123-123')
                 })
             }
         } as PactBuilder

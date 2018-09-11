@@ -31,7 +31,8 @@
                 "body": {
                     "objects": [
                         {
-                            "id": "_1234assd"
+                            "id": "_1234assd",
+                            "referenceId": "213-123-123"
                         }
                     ]
                 },
@@ -46,6 +47,14 @@
                             "combine": "AND"
                         },
                         "$.objects[*].id": {
+                            "matchers": [
+                                {
+                                    "match": "integer"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.objects[*].referenceId": {
                             "matchers": [
                                 {
                                     "match": "integer"
