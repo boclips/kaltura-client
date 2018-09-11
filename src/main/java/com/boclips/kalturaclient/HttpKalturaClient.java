@@ -1,6 +1,7 @@
 package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.session.SessionGenerator;
+import com.boclips.kalturaclient.streams.StreamUrlProducer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.mashape.unirest.http.ObjectMapper;
@@ -31,10 +32,13 @@ public class HttpKalturaClient implements KalturaClient {
                     .asObject(MediaListResource.class)
                     .getBody();
 
+            StreamUrlProducer streamUrlProducer = new StreamUrlProducer(config);
             return mediaListResource.objects.stream().map(mediaEntryResource -> MediaEntry.builder()
                     .id(mediaEntryResource.getId())
                     .referenceId(mediaEntryResource.getReferenceId())
+                    .streams(streamUrlProducer.convert(mediaEntryResource))
                     .build()).collect(Collectors.toList());
+
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }

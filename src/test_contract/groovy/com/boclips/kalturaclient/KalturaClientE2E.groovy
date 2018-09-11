@@ -1,6 +1,7 @@
 package com.boclips.kalturaclient
 
-
+import com.boclips.kalturaclient.streams.StreamFormat
+import com.boclips.kalturaclient.streams.StreamUrls
 import spock.lang.Specification
 
 class KalturaClientE2E extends Specification {
@@ -13,6 +14,8 @@ class KalturaClientE2E extends Specification {
 
         then:
         mediaEntries[0].id == '1_2t65w8sx'
+        mediaEntries[0].streams.withFormat(StreamFormat.APPLE_HDS) != null
+
         mediaEntries[1].id == '1_8atxygq9'
 
         where:
@@ -21,8 +24,8 @@ class KalturaClientE2E extends Specification {
 
     def testClient() {
         def client = new TestKalturaClient()
-        client.addMediaEntry(MediaEntry.builder().id("1_2t65w8sx").referenceId("97eea646-c35b-4921-991d-95352666bd3a").build())
-        client.addMediaEntry(MediaEntry.builder().id("1_8atxygq9").referenceId("750af1ea-cbeb-4047-8d48-7ef067bfedfb").build())
+        client.addMediaEntry(mediaEntry("1_2t65w8sx", "97eea646-c35b-4921-991d-95352666bd3a"))
+        client.addMediaEntry(mediaEntry("1_8atxygq9", "750af1ea-cbeb-4047-8d48-7ef067bfedfb"))
         return client
     }
 
@@ -34,5 +37,9 @@ class KalturaClientE2E extends Specification {
                 .build()
 
         return KalturaClient.create(config)
+    }
+
+    private MediaEntry mediaEntry(String id, String referenceId) {
+        MediaEntry.builder().id(id).referenceId(referenceId).streams(new StreamUrls("https://stream.com/s/[FORMAT]")).build()
     }
 }
