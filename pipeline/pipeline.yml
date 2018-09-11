@@ -3,6 +3,9 @@ jobs:
 - name: build-kaltura-client
   plan:
   - get: source
+    trigger: true
+    params:
+      depth: 1
   - put: version
     params:
       bump: minor
