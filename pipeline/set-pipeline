@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -eu
+
+cwd="$(cd "$(dirname $0)" && pwd)"
+
+fly --target ci \
+    set-pipeline \
+    --pipeline kaltura-client \
+    --config $cwd/pipeline.yml \
+    --var kaltura-client-repo-key="$(lpass show concourse-kaltura-client-repo-key --notes)" \
+    --var versions-repo-key="$(lpass show concourse-versions-repo-key --notes)" \

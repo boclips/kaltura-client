@@ -1,0 +1,36 @@
+---
+jobs:
+- name: build-kaltura-client
+  plan:
+  - get: source
+  - put: version
+    params:
+      bump: minor
+  - task: build
+    file: source/pipeline/build.yml
+
+- name: cut-version
+  plan:
+  - get: version
+    passed: [build-kaltura-client]
+  - put: source
+    params:
+      tag: version/version
+
+resources:
+- name: source
+  type: git
+  source:
+    branch: master
+    private_key: {{kaltura-client-repo-key}}
+    uri: git@github.com:knowledgemotion/kaltura-client.git
+
+- name: version
+  type: semver
+  source:
+    initial_version: "0.0.0"
+    driver: git
+    uri: git@github.com:knowledgemotion/versions.git
+    branch: master
+    file: kaltura-client
+    private_key: {{versions-repo-key}}
