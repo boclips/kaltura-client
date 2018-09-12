@@ -39,6 +39,7 @@ public class HttpKalturaClient implements KalturaClient {
                     .referenceId(mediaEntryResource.getReferenceId())
                     .duration(Duration.ofSeconds(mediaEntryResource.getDuration()))
                     .streams(streamUrlProducer.convert(mediaEntryResource))
+                    .thumbnailUrl(mediaEntryResource.getThumbnailUrl())
                     .build()).collect(Collectors.toMap(MediaEntry::getReferenceId, mediaEntry -> mediaEntry));
 
         } catch (UnirestException e) {

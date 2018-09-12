@@ -13,4 +13,5 @@ public class MediaEntry {
     private final String referenceId;
     private final Duration duration;
     private final StreamUrls streams;
+    private final String thumbnailUrl;
 }
