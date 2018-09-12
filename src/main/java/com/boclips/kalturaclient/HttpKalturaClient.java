@@ -33,6 +33,10 @@ public class HttpKalturaClient implements KalturaClient {
                     .asObject(MediaListResource.class)
                     .getBody();
 
+            if(!"KalturaMediaListResponse".equals(mediaListResource.objectType)) {
+                throw new UnsupportedOperationException(String.format("Error in Kaltura request: %s", mediaListResource.code));
+            }
+
             StreamUrlProducer streamUrlProducer = new StreamUrlProducer(config);
             return mediaListResource.objects.stream().map(mediaEntryResource -> MediaEntry.builder()
                     .id(mediaEntryResource.getId())

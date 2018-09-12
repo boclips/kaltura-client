@@ -13,7 +13,7 @@
                 "path": "/api_v3/service/media/action/list",
                 "query": {
                     "filter[referenceIdIn]": [
-                        "213-123-123,does-not-exist"
+                        "does-not-exist"
                     ],
                     "ks": [
                         "123"
@@ -29,17 +29,12 @@
                     "Content-Type": "application/json"
                 },
                 "body": {
-                    "objects": [
-                        {
-                            "id": "_1234assd",
-                            "referenceId": "213-123-123",
-                            "duration": 214
-                        }
-                    ]
+                    "code": "INVALID_KS",
+                    "objectType": "KalturaAPIException"
                 },
                 "matchingRules": {
                     "body": {
-                        "$.objects": {
+                        "$.code": {
                             "matchers": [
                                 {
                                     "match": "type"
@@ -47,18 +42,10 @@
                             ],
                             "combine": "AND"
                         },
-                        "$.objects[*].id": {
+                        "$.objectType": {
                             "matchers": [
                                 {
-                                    "match": "integer"
-                                }
-                            ],
-                            "combine": "AND"
-                        },
-                        "$.objects[*].referenceId": {
-                            "matchers": [
-                                {
-                                    "match": "integer"
+                                    "match": "type"
                                 }
                             ],
                             "combine": "AND"
