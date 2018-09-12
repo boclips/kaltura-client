@@ -1,6 +1,7 @@
 ---
 jobs:
 - name: build-kaltura-client
+  public: true
   plan:
   - get: source
     trigger: true
@@ -13,6 +14,7 @@ jobs:
     file: source/pipeline/build.yml
 
 - name: cut-version
+  public: false
   plan:
   - get: source
     params:
