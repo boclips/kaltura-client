@@ -8,15 +8,17 @@ class KalturaClientE2E extends Specification {
 
     def "fetch media entries from api"(client) {
         when:
-        List<MediaEntry> mediaEntries = client.mediaEntriesByReferenceIds(
+        Map<String, MediaEntry> mediaEntries = client.mediaEntriesByReferenceIds(
                 "97eea646-c35b-4921-991d-95352666bd3a",
-                "750af1ea-cbeb-4047-8d48-7ef067bfedfb")
+                "750af1ea-cbeb-4047-8d48-7ef067bfedfb",
+                "unknown-reference-id")
 
         then:
-        mediaEntries[0].id == '1_2t65w8sx'
-        mediaEntries[0].streams.withFormat(StreamFormat.APPLE_HDS) != null
+        mediaEntries.size() == 2
+        mediaEntries['97eea646-c35b-4921-991d-95352666bd3a'].id == '1_2t65w8sx'
+        mediaEntries['750af1ea-cbeb-4047-8d48-7ef067bfedfb'].streams.withFormat(StreamFormat.APPLE_HDS) != null
 
-        mediaEntries[1].id == '1_8atxygq9'
+        mediaEntries['750af1ea-cbeb-4047-8d48-7ef067bfedfb'].id == '1_8atxygq9'
 
         where:
         client << [realClient(), testClient()]

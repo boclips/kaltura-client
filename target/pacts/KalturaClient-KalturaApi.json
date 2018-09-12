@@ -13,7 +13,7 @@
                 "path": "/api_v3/service/media/action/list",
                 "query": {
                     "filter[referenceIdIn]": [
-                        "2526940"
+                        "213-123-123,does-not-exist"
                     ],
                     "ks": [
                         "123"

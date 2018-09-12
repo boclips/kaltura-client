@@ -9,7 +9,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HttpKalturaClient implements KalturaClient {
@@ -23,7 +23,7 @@ public class HttpKalturaClient implements KalturaClient {
     }
 
     @Override
-    public List<MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
+    public Map<String, MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
         try {
             MediaListResource mediaListResource = Unirest.get(this.config.getBaseUrl() + "/api_v3/service/media/action/list")
                     .queryString("ks", this.sessionGenerator.get().getToken())
@@ -37,7 +37,7 @@ public class HttpKalturaClient implements KalturaClient {
                     .id(mediaEntryResource.getId())
                     .referenceId(mediaEntryResource.getReferenceId())
                     .streams(streamUrlProducer.convert(mediaEntryResource))
-                    .build()).collect(Collectors.toList());
+                    .build()).collect(Collectors.toMap(MediaEntry::getReferenceId, mediaEntry -> mediaEntry));
 
         } catch (UnirestException e) {
             throw new RuntimeException(e);

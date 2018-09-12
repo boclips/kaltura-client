@@ -2,19 +2,19 @@ package com.boclips.kalturaclient;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 public class TestKalturaClient implements KalturaClient {
 
     private final Map<String, MediaEntry> mediaEntryByReferenceId = new HashMap<>();
 
     @Override
-    public List<MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
+    public Map<String, MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
         return Arrays.stream(referenceIds)
-                .map(mediaEntryByReferenceId::get)
-                .collect(Collectors.toList());
+                .filter(mediaEntryByReferenceId::containsKey)
+                .collect(toMap(referenceId -> referenceId, mediaEntryByReferenceId::get));
     }
 
     public void addMediaEntry(MediaEntry mediaEntry) {

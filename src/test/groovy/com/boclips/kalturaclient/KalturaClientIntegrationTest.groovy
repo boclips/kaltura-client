@@ -26,11 +26,14 @@ class KalturaClientIntegrationTest extends Specification {
 
         when:
         PactVerificationResult result = mockMediaList().runTest() {
-            List<MediaEntry> mediaEntries = kalturaClient.mediaEntriesByReferenceIds("2526940")
+            Map<String, MediaEntry> mediaEntries = kalturaClient.mediaEntriesByReferenceIds("213-123-123", "does-not-exist")
 
-            MediaEntry mediaEntry = mediaEntries.get(0)
+
+            MediaEntry mediaEntry = mediaEntries['213-123-123']
             assert mediaEntry.id == "_1234assd"
             assert mediaEntry.referenceId == "213-123-123"
+
+            assert mediaEntries['does-not-exist'] == null
         }
 
         then:
@@ -48,7 +51,7 @@ class KalturaClientIntegrationTest extends Specification {
                     method: 'GET',
                     path  : '/api_v3/service/media/action/list',
                     query : [
-                            'filter[referenceIdIn]': '2526940',
+                            'filter[referenceIdIn]': '213-123-123,does-not-exist',
                             'ks'                   : '123',
                             'format'               : '1'
                     ]
