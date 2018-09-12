@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class MediaEntryResource {
     private String id;
     private String referenceId;
+    private Integer duration;
 }

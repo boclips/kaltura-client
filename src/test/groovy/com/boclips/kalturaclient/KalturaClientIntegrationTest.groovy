@@ -64,6 +64,7 @@ class KalturaClientIntegrationTest extends Specification {
                 objects eachLike(1, {
                     id identifier('_1234assd')
                     referenceId identifier('213-123-123')
+                    duration 214
                 })
             }
         } as PactBuilder

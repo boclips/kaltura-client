@@ -9,6 +9,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,7 @@ public class HttpKalturaClient implements KalturaClient {
             return mediaListResource.objects.stream().map(mediaEntryResource -> MediaEntry.builder()
                     .id(mediaEntryResource.getId())
                     .referenceId(mediaEntryResource.getReferenceId())
+                    .duration(Duration.ofSeconds(mediaEntryResource.getDuration()))
                     .streams(streamUrlProducer.convert(mediaEntryResource))
                     .build()).collect(Collectors.toMap(MediaEntry::getReferenceId, mediaEntry -> mediaEntry));
 

@@ -4,6 +4,8 @@ import com.boclips.kalturaclient.streams.StreamFormat
 import com.boclips.kalturaclient.streams.StreamUrls
 import spock.lang.Specification
 
+import java.time.Duration
+
 class KalturaClientE2E extends Specification {
 
     def "fetch media entries from api"(client) {
@@ -16,7 +18,9 @@ class KalturaClientE2E extends Specification {
         then:
         mediaEntries.size() == 2
         mediaEntries['97eea646-c35b-4921-991d-95352666bd3a'].id == '1_2t65w8sx'
-        mediaEntries['750af1ea-cbeb-4047-8d48-7ef067bfedfb'].streams.withFormat(StreamFormat.APPLE_HDS) != null
+        mediaEntries['97eea646-c35b-4921-991d-95352666bd3a'].referenceId == '97eea646-c35b-4921-991d-95352666bd3a'
+        mediaEntries['97eea646-c35b-4921-991d-95352666bd3a'].streams.withFormat(StreamFormat.APPLE_HDS) != null
+        mediaEntries['97eea646-c35b-4921-991d-95352666bd3a'].duration == Duration.ofMinutes(1).plusSeconds(32)
 
         mediaEntries['750af1ea-cbeb-4047-8d48-7ef067bfedfb'].id == '1_8atxygq9'
 
@@ -26,8 +30,8 @@ class KalturaClientE2E extends Specification {
 
     def testClient() {
         def client = new TestKalturaClient()
-        client.addMediaEntry(mediaEntry("1_2t65w8sx", "97eea646-c35b-4921-991d-95352666bd3a"))
-        client.addMediaEntry(mediaEntry("1_8atxygq9", "750af1ea-cbeb-4047-8d48-7ef067bfedfb"))
+        client.addMediaEntry(mediaEntry("1_2t65w8sx", "97eea646-c35b-4921-991d-95352666bd3a", Duration.ofSeconds(92)))
+        client.addMediaEntry(mediaEntry("1_8atxygq9", "750af1ea-cbeb-4047-8d48-7ef067bfedfb", Duration.ofSeconds(185)))
         return client
     }
 
@@ -41,7 +45,12 @@ class KalturaClientE2E extends Specification {
         return KalturaClient.create(config)
     }
 
-    private MediaEntry mediaEntry(String id, String referenceId) {
-        MediaEntry.builder().id(id).referenceId(referenceId).streams(new StreamUrls("https://stream.com/s/[FORMAT]")).build()
+    private MediaEntry mediaEntry(String id, String referenceId, Duration duration) {
+        MediaEntry.builder()
+                .id(id)
+                .referenceId(referenceId)
+                .duration(duration)
+                .streams(new StreamUrls("https://stream.com/s/[FORMAT]"))
+                .build()
     }
 }

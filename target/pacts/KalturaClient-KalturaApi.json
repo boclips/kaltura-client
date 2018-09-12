@@ -32,7 +32,8 @@
                     "objects": [
                         {
                             "id": "_1234assd",
-                            "referenceId": "213-123-123"
+                            "referenceId": "213-123-123",
+                            "duration": 214
                         }
                     ]
                 },

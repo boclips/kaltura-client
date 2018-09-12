@@ -10,7 +10,7 @@ import spock.lang.Specification
 class StreamUrlProducerTest extends Specification {
     def "provides stream urls for all popular formats"() {
         given:
-        MediaEntryResource mediaEntryResource = new MediaEntryResource("id", "referenceId")
+        MediaEntryResource mediaEntryResource = new MediaEntryResource("id", "referenceId", 60)
         KalturaClientConfig config = KalturaClientConfig.builder()
                 .partnerId("12313123")
                 .userId("irrelevant")
