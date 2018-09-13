@@ -87,7 +87,8 @@ class KalturaClientContractTest extends Specification {
     }
 
     private Map<String, String> readConfiguration() {
-        Map<String, String> configuration
+        Map<String, String> configuration = new HashMap<>()
+
         Yaml yaml = new Yaml()
         InputStream inputStream = this.getClass()
                 .getClassLoader()
