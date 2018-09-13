@@ -1,7 +1,7 @@
 package com.boclips.kalturaclient.streams;
 
 import com.boclips.kalturaclient.KalturaClientConfig;
-import com.boclips.kalturaclient.MediaEntryResource;
+import com.boclips.kalturaclient.client.http.MediaEntryResource;
 
 public class StreamUrlProducer {
 

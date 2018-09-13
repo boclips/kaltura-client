@@ -2,13 +2,9 @@ package com.boclips.kalturaclient;
 
 public class KalturaClientConfig {
     private final String baseUrl;
-
     private final Integer sessionTtl;
-
     private final String partnerId;
-
     private final String userId;
-
     private final String secret;
 
     private KalturaClientConfig(String partnerId, String userId, String secret, String baseUrl, Integer sessionTtl) {
@@ -22,7 +18,7 @@ public class KalturaClientConfig {
     public String getBaseUrl() {
         return baseUrl;
     }
-
+    
     public Integer getSessionTtl() {
         return sessionTtl;
     }
@@ -44,19 +40,13 @@ public class KalturaClientConfig {
     }
 
     public static class Builder {
-
         private String baseUrl = "https://www.kaltura.com";
-
         private Integer sessionTtl = 60;
-
         private String partnerId;
-
         private String userId;
-
         private String secret;
 
         private Builder() {
-
         }
 
         public KalturaClientConfig build() {

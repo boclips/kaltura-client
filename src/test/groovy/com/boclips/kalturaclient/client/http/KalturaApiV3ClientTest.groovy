@@ -1,38 +1,23 @@
-package com.boclips.kalturaclient
+package com.boclips.kalturaclient.client.http
 
 import au.com.dius.pact.consumer.PactVerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
-import com.boclips.kalturaclient.session.KalturaSession
-import com.boclips.kalturaclient.session.SessionGenerator
+import com.boclips.kalturaclient.MediaEntry
 import spock.lang.Specification
 
-import java.time.Instant
-
-class KalturaClientIntegrationTest extends Specification {
+class KalturaApiV3ClientTest extends Specification {
 
     def "returns a list of media entries filtered by reference id"() {
         given:
-        KalturaClientConfig config = KalturaClientConfig.builder()
-                .baseUrl("http://localhost:9999")
-                .partnerId("abc")
-                .secret("123")
-                .userId("user@kaltura.com")
-                .build()
-
-        SessionGenerator sessionGenerator = Mock(SessionGenerator)
-        sessionGenerator.get() >> new KalturaSession("123", Instant.now())
-
-        HttpKalturaClient kalturaClient = new HttpKalturaClient(config, sessionGenerator)
+        KalturaApiV3Client kalturaClient = new KalturaApiV3Client("http://localhost:9999")
 
         when:
         PactVerificationResult result = mockMediaList().runTest() {
-            Map<String, MediaEntry> mediaEntries = kalturaClient.mediaEntriesByReferenceIds("213-123-123", "does-not-exist")
+            List<MediaEntry> mediaEntries = kalturaClient.getMediaActionList("123", Arrays.asList("213-123-123", "does-not-exist"))
 
-            MediaEntry mediaEntry = mediaEntries['213-123-123']
-            assert mediaEntry.id == "_1234assd"
-            assert mediaEntry.referenceId == "213-123-123"
-
-            assert mediaEntries['does-not-exist'] == null
+            assert mediaEntries.size() == 1
+            assert mediaEntries[0].id == "_1234assd"
+            assert mediaEntries[0].referenceId == "213-123-123"
         }
 
         then:
@@ -41,22 +26,12 @@ class KalturaClientIntegrationTest extends Specification {
 
     def "handles a Kaltura error gracefully"() {
         given:
-        KalturaClientConfig config = KalturaClientConfig.builder()
-                .baseUrl("http://localhost:9999")
-                .partnerId("abc")
-                .secret("123")
-                .userId("user@kaltura.com")
-                .build()
-
-        SessionGenerator sessionGenerator = Mock(SessionGenerator)
-        sessionGenerator.get() >> new KalturaSession("123", Instant.now())
-
-        HttpKalturaClient kalturaClient = new HttpKalturaClient(config, sessionGenerator)
+        KalturaApiV3Client kalturaClient = new KalturaApiV3Client("http://localhost:9999")
 
         when:
         PactVerificationResult result = mockErroredMediaList().runTest() {
             try {
-                kalturaClient.mediaEntriesByReferenceIds("does-not-exist")
+                kalturaClient.getMediaActionList("123", Arrays.asList("does-not-exist"))
                 assert false
             } catch (Exception ex) {
                 assert ex.message == "Error in Kaltura request: INVALID_KS"
@@ -125,3 +100,4 @@ class KalturaClientIntegrationTest extends Specification {
         } as PactBuilder
     }
 }
+

@@ -1,4 +1,4 @@
-package com.boclips.kalturaclient;
+package com.boclips.kalturaclient.client.http;
 
 import java.util.List;
 

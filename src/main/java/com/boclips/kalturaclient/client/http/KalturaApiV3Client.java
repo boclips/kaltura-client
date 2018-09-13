@@ -1,7 +1,5 @@
-package com.boclips.kalturaclient;
+package com.boclips.kalturaclient.client.http;
 
-import com.boclips.kalturaclient.session.SessionGenerator;
-import com.boclips.kalturaclient.streams.StreamUrlProducer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.mashape.unirest.http.ObjectMapper;
@@ -9,43 +7,31 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
 
-public class HttpKalturaClient implements KalturaClient {
-    private KalturaClientConfig config;
-    private SessionGenerator sessionGenerator;
+public class KalturaApiV3Client {
+    private String baseUrl;
 
-    public HttpKalturaClient(KalturaClientConfig config, SessionGenerator sessionGenerator) {
-        this.config = config;
-        this.sessionGenerator = sessionGenerator;
+    public KalturaApiV3Client(String baseUrl) {
+        this.baseUrl = baseUrl;
+
         configureUniRest();
     }
 
-    @Override
-    public Map<String, MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
+    public List<MediaEntryResource> getMediaActionList(String sessionToken, List<String> referenceIds) {
         try {
-            MediaListResource mediaListResource = Unirest.get(this.config.getBaseUrl() + "/api_v3/service/media/action/list")
-                    .queryString("ks", this.sessionGenerator.get().getToken())
+            MediaListResource mediaListResource = Unirest.get(this.baseUrl + "/api_v3/service/media/action/list")
+                    .queryString("ks", sessionToken)
                     .queryString("filter[referenceIdIn]", String.join(",", referenceIds))
                     .queryString("format", "1")
                     .asObject(MediaListResource.class)
                     .getBody();
 
-            if(!"KalturaMediaListResponse".equals(mediaListResource.objectType)) {
+            if (!"KalturaMediaListResponse".equals(mediaListResource.objectType)) {
                 throw new UnsupportedOperationException(String.format("Error in Kaltura request: %s", mediaListResource.code));
             }
 
-            StreamUrlProducer streamUrlProducer = new StreamUrlProducer(config);
-            return mediaListResource.objects.stream().map(mediaEntryResource -> MediaEntry.builder()
-                    .id(mediaEntryResource.getId())
-                    .referenceId(mediaEntryResource.getReferenceId())
-                    .duration(Duration.ofSeconds(mediaEntryResource.getDuration()))
-                    .streams(streamUrlProducer.convert(mediaEntryResource))
-                    .thumbnailUrl(mediaEntryResource.getThumbnailUrl())
-                    .build()).collect(Collectors.toMap(MediaEntry::getReferenceId, mediaEntry -> mediaEntry));
-
+            return mediaListResource.objects;
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }

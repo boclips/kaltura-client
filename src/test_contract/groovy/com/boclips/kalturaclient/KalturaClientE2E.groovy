@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient
 
+import com.boclips.kalturaclient.client.TestKalturaClient
 import com.boclips.kalturaclient.streams.StreamFormat
 import com.boclips.kalturaclient.streams.StreamUrls
 import spock.lang.Specification
@@ -7,7 +8,6 @@ import spock.lang.Specification
 import java.time.Duration
 
 class KalturaClientE2E extends Specification {
-
     def "fetch media entries from api"(client) {
         when:
         Map<String, MediaEntry> mediaEntries = client.mediaEntriesByReferenceIds(
@@ -51,8 +51,8 @@ class KalturaClientE2E extends Specification {
                 .id(id)
                 .referenceId(referenceId)
                 .duration(duration)
-                .streams(new StreamUrls("https://stream.com/s/"+id+"[FORMAT]"))
-                .thumbnailUrl("https://cfvod.kaltura.com/p/2394162/sp/239416200/thumbnail/entry_id/"+id+"/version/100011")
+                .streams(new StreamUrls("https://stream.com/s/" + id + "[FORMAT]"))
+                .thumbnailUrl("https://cfvod.kaltura.com/p/2394162/sp/239416200/thumbnail/entry_id/" + id + "/version/100011")
                 .build()
     }
 }

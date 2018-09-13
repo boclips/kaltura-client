@@ -1,9 +1,10 @@
-package com.boclips.kalturaclient
+package com.boclips.kalturaclient.client
 
+import com.boclips.kalturaclient.KalturaClientConfig
 import com.boclips.kalturaclient.session.SessionGenerator
 import spock.lang.Specification
 
-class KalturaClientTest extends Specification {
+class HttpKalturaClientTest extends Specification {
 
     def "accepts a valid configuration"() {
         when:

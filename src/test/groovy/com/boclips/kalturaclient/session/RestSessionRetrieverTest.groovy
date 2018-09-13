@@ -3,11 +3,10 @@ package com.boclips.kalturaclient.session
 import au.com.dius.pact.consumer.PactVerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
 import com.boclips.kalturaclient.KalturaClientConfig
-import com.boclips.kalturaclient.session.SessionRetriever
 import spock.lang.Specification
 
 class RestSessionRetrieverTest extends Specification {
-    public static final int PORT = 9999
+    public static final int PORT = 9991
 
     def "returns a kaltura session"() {
         given:
