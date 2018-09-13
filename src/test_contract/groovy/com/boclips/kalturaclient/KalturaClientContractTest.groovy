@@ -7,7 +7,7 @@ import spock.lang.Specification
 
 import java.time.Duration
 
-class KalturaClientE2E extends Specification {
+class KalturaClientContractTest extends Specification {
     def "fetch media entries from api"(client) {
         when:
         Map<String, MediaEntry> mediaEntries = client.mediaEntriesByReferenceIds(

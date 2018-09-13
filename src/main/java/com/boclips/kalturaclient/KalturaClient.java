@@ -13,5 +13,6 @@ public interface KalturaClient {
     }
 
     Map<String, MediaEntry> mediaEntriesByReferenceIds(String... referenceIds);
+
     Optional<MediaEntry> mediaEntryByReferenceId(String referenceIds);
 }

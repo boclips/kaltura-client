@@ -5,7 +5,16 @@ After using the *official* Java Kaltura Client for v3, we started writing our ow
 
 ## Use
 ```
-compile 'com.github.knowledgemotion:kaltura-client:-SNAPSHOT'
+compile 'com.github.knowledgemotion:kaltura-client:<tag>>'
 ```
 
 Check different [versions](https://jitpack.io/#knowledgemotion/kaltura-client/master).
+
+## Test
+
+In order to run the contract tests, the following env variables need to be set:
+
+    PARTNER_ID
+    USER_ID
+    KALTURA_SECRET
+    
