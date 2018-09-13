@@ -1,6 +1,7 @@
-# Klient  [![ci.nono.io](https://ci.boclips.com/api/v1/teams/main/pipelines/kaltura-client/jobs/internal-tests/badge)](https://ci.boclips.com/teams/main/pipelines/kaltura-client) 
+# Klient  [![](https://ci.boclips.com/api/v1/teams/main/pipelines/kaltura-client/jobs/internal-tests/badge)](https://ci.boclips.com/teams/main/pipelines/kaltura-client) 
 
-After using the *official* Java Kaltura Client for v3, we started writing our own wrapper.
+After trying the *official* Java Kaltura Client, we felt strong urge to write our own.
+The goal of *Klient* is to make interactions with Kaltura less painful and fix various shortcomings.
 
 ## Use
 Latest version: [![](https://jitpack.io/v/knowledgemotion/kaltura-client.svg)](https://jitpack.io/#knowledgemotion/kaltura-client)
