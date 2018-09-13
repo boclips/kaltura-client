@@ -29,6 +29,32 @@ class KalturaClientE2E extends Specification {
         client << [realClient(), testClient()]
     }
 
+    def "fetch existing media entry from api"(client) {
+        when:
+        MediaEntry mediaEntry = client.mediaEntryByReferenceId("97eea646-c35b-4921-991d-95352666bd3a").get()
+
+        then:
+        mediaEntry.id == '1_2t65w8sx'
+        mediaEntry.referenceId == '97eea646-c35b-4921-991d-95352666bd3a'
+        mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS) != null
+        mediaEntry.duration == Duration.ofMinutes(1).plusSeconds(32)
+        mediaEntry.thumbnailUrl == 'https://cfvod.kaltura.com/p/2394162/sp/239416200/thumbnail/entry_id/1_2t65w8sx/version/100011'
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+    def "fetch non-existing media entry from api"(client) {
+        when:
+        Optional<MediaEntry> mediaEntry = client.mediaEntryByReferenceId("unknown-reference-id")
+
+        then:
+        mediaEntry.isPresent() == false
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
     def testClient() {
         def client = new TestKalturaClient()
         client.addMediaEntry(mediaEntry("1_2t65w8sx", "97eea646-c35b-4921-991d-95352666bd3a", Duration.ofSeconds(92)))

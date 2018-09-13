@@ -5,6 +5,7 @@ import com.boclips.kalturaclient.session.RestSessionGenerator;
 import com.boclips.kalturaclient.session.SessionRetriever;
 
 import java.util.Map;
+import java.util.Optional;
 
 public interface KalturaClient {
     static KalturaClient create(KalturaClientConfig config) {
@@ -12,4 +13,5 @@ public interface KalturaClient {
     }
 
     Map<String, MediaEntry> mediaEntriesByReferenceIds(String... referenceIds);
+    Optional<MediaEntry> mediaEntryByReferenceId(String referenceIds);
 }

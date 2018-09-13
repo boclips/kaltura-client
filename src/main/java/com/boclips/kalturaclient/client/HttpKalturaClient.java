@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class HttpKalturaClient implements KalturaClient {
@@ -39,5 +40,10 @@ public class HttpKalturaClient implements KalturaClient {
                 .streams(streamUrlProducer.convert(mediaEntryResource))
                 .thumbnailUrl(mediaEntryResource.getThumbnailUrl())
                 .build()).collect(Collectors.toMap(MediaEntry::getReferenceId, mediaEntry -> mediaEntry));
+    }
+
+    @Override
+    public Optional<MediaEntry> mediaEntryByReferenceId(String referenceId) {
+        return Optional.ofNullable(mediaEntriesByReferenceIds(referenceId).get(referenceId));
     }
 }

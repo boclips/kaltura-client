@@ -6,6 +6,7 @@ import com.boclips.kalturaclient.MediaEntry;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -18,6 +19,11 @@ public class TestKalturaClient implements KalturaClient {
         return Arrays.stream(referenceIds)
                 .filter(mediaEntryByReferenceId::containsKey)
                 .collect(toMap(referenceId -> referenceId, mediaEntryByReferenceId::get));
+    }
+
+    @Override
+    public Optional<MediaEntry> mediaEntryByReferenceId(String referenceId) {
+        return Optional.ofNullable(mediaEntryByReferenceId.get(referenceId));
     }
 
     public void addMediaEntry(MediaEntry mediaEntry) {
