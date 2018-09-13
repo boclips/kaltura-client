@@ -1,14 +1,15 @@
-# Klient
-[![](https://jitpack.io/v/knowledgemotion/kaltura-client.svg)](https://jitpack.io/#knowledgemotion/kaltura-client)
+# Klient  [![ci.nono.io](https://ci.boclips.com/api/v1/teams/main/pipelines/kaltura-client/jobs/internal-tests/badge)](https://ci.boclips.com/teams/main/pipelines/kaltura-client) 
 
 After using the *official* Java Kaltura Client for v3, we started writing our own wrapper.
 
 ## Use
+Latest version: [![](https://jitpack.io/v/knowledgemotion/kaltura-client.svg)](https://jitpack.io/#knowledgemotion/kaltura-client)
+
 ```
 compile 'com.github.knowledgemotion:kaltura-client:<tag>'
 ```
 
-Check different [versions](https://jitpack.io/#knowledgemotion/kaltura-client/master).
+Check different available [versions](https://jitpack.io/#knowledgemotion/kaltura-client).
 
 ## Test
 
