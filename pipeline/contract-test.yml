@@ -15,4 +15,4 @@ caches:
 - path: source/.gradle
 
 run:
-  path: source/pipeline/build.sh
+  path: source/pipeline/contract-test.sh

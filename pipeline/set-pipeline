@@ -10,3 +10,6 @@ fly --target ci \
     --config $cwd/pipeline.yml \
     --var kaltura-client-repo-key="$(lpass show concourse-kaltura-client-repo-key --notes)" \
     --var versions-repo-key="$(lpass show concourse-versions-repo-key --notes)" \
+    --var kaltura-partner-id="$(lpass show kaltura-client-partnerId-staging --notes)" \
+    --var kaltura-user-id="$(lpass show kaltura-client-userId-staging --notes)" \
+    --var kaltura-secret="$(lpass show kaltura-client-secret-staging --notes)" \

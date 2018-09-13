@@ -1,6 +1,6 @@
 ---
 jobs:
-- name: build-kaltura-client
+- name: internal-tests
   public: true
   plan:
   - get: source
@@ -13,15 +13,34 @@ jobs:
   - task: build
     file: source/pipeline/build.yml
 
+- name: external-tests
+  public: true
+  plan:
+  - get: 2h
+    trigger: true
+  - get: source
+    trigger: true
+    passed: [internal-tests]
+    params:
+      depth: 1
+  - get: version
+    passed: [internal-tests]
+  - task: build
+    file: source/pipeline/contract-test.yml
+    params:
+      PARTNER_ID: {{kaltura-partner-id}}
+      USER_ID: {{kaltura-user-id}}
+      SECRET: {{kaltura-secret}}
+
 - name: cut-release
   public: false
   plan:
   - get: source
     params:
       depth: 1
-    passed: [build-kaltura-client]
+    passed: [external-tests]
   - get: version
-    passed: [build-kaltura-client]
+    passed: [external-tests]
   - put: source
     params:
       repository: source
@@ -44,3 +63,7 @@ resources:
     branch: master
     file: kaltura-client
     private_key: {{versions-repo-key}}
+
+- name: 2h
+  type: time
+  source: {interval: 120m}
