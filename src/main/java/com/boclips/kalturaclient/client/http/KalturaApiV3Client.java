@@ -27,7 +27,7 @@ public class KalturaApiV3Client {
                     .asObject(MediaListResource.class)
                     .getBody();
 
-            if (!"KalturaMediaListResponse".equals(mediaListResource.objectType)) {
+            if (!ResponseObjectType.isSuccessful(mediaListResource.objectType)) {
                 throw new UnsupportedOperationException(String.format("Error in Kaltura request: %s", mediaListResource.code));
             }
 
