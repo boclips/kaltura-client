@@ -9,7 +9,11 @@ image_resource:
 
 inputs:
 - name: source
-- name: version
+
+params:
+  PARTNER_ID:
+  USER_ID:
+  SECRET:
 
 caches:
 - path: source/.gradle

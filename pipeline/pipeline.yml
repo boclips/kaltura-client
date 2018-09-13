@@ -25,7 +25,7 @@ jobs:
       depth: 1
   - get: version
     passed: [internal-tests]
-  - task: build
+  - task: contract-test
     file: source/pipeline/contract-test.yml
     params:
       PARTNER_ID: {{kaltura-partner-id}}
