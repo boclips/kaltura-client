@@ -87,20 +87,25 @@ class KalturaClientContractTest extends Specification {
     }
 
     private Map<String, String> readConfiguration() {
+        Map<String, String> configuration
         Yaml yaml = new Yaml()
         InputStream inputStream = this.getClass()
                 .getClassLoader()
                 .getResourceAsStream("contract-test-setup.yml")
-        Map<String, String> configuration = yaml.load(inputStream)
+
+        if (inputStream != null) {
+            configuration = yaml.load(inputStream)
+            inputStream.close()
+        }
 
         if (System.getenv("PARTNER_ID") != null) {
-            configuration.put("PARTNER_ID", System.getenv("PARTNER_ID"))
+            configuration["PARTNER_ID"] = System.getenv("PARTNER_ID")
         }
         if (System.getenv("USER_ID") != null) {
-            configuration.put("USER_ID", System.getenv("USER_ID"))
+            configuration["USER_ID"] = System.getenv("USER_ID")
         }
         if (System.getenv("SECRET") != null) {
-            configuration.put("SECRET", System.getenv("SECRET"))
+            configuration["SECRET"] = System.getenv("SECRET")
         }
 
         return configuration
