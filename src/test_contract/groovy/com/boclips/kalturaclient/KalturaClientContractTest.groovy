@@ -3,6 +3,7 @@ package com.boclips.kalturaclient
 import com.boclips.kalturaclient.client.TestKalturaClient
 import com.boclips.kalturaclient.streams.StreamFormat
 import com.boclips.kalturaclient.streams.StreamUrls
+import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
 
 import java.time.Duration
@@ -63,13 +64,23 @@ class KalturaClientContractTest extends Specification {
     }
 
     def realClient() {
+        Map<String, String> configuration = readConfiguration()
         KalturaClientConfig config = KalturaClientConfig.builder()
-                .partnerId(System.getenv("PARTNER_ID"))
-                .userId(System.getenv("USER_ID"))
-                .secret(System.getenv("KALTURA_SECRET"))
+                .partnerId(configuration.get("PARTNER_ID"))
+                .userId(configuration.get("USER_ID"))
+                .secret(configuration.get("SECRET"))
                 .build()
 
         return KalturaClient.create(config)
+    }
+
+    private Map<String, String> readConfiguration() {
+        Yaml yaml = new Yaml()
+        InputStream inputStream = this.getClass()
+                .getClassLoader()
+                .getResourceAsStream("contract-test-setup.yml")
+        Map<String, String> configuration = yaml.load(inputStream)
+        configuration
     }
 
     private static MediaEntry mediaEntry(String id, String referenceId, Duration duration) {
