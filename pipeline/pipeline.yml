@@ -13,7 +13,7 @@ jobs:
   - task: build
     file: source/pipeline/build.yml
 
-- name: cut-version
+- name: cut-release
   public: false
   plan:
   - get: source
