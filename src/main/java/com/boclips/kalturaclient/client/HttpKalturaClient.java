@@ -2,14 +2,13 @@ package com.boclips.kalturaclient.client;
 
 import com.boclips.kalturaclient.KalturaClient;
 import com.boclips.kalturaclient.KalturaClientConfig;
-import com.boclips.kalturaclient.MediaEntry;
-import com.boclips.kalturaclient.client.http.KalturaApiV3Client;
-import com.boclips.kalturaclient.client.http.MediaEntryResource;
+import com.boclips.kalturaclient.client.media.MediaEntryResource;
+import com.boclips.kalturaclient.client.media.MediaListClient;
+import com.boclips.kalturaclient.client.media.RequestFilters;
 import com.boclips.kalturaclient.session.SessionGenerator;
 import com.boclips.kalturaclient.streams.StreamUrlProducer;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,18 +17,18 @@ import java.util.stream.Collectors;
 public class HttpKalturaClient implements KalturaClient {
     private KalturaClientConfig config;
     private SessionGenerator sessionGenerator;
-    private KalturaApiV3Client kalturaApiV3Client;
+    private MediaListClient mediaListClient;
 
     public HttpKalturaClient(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         this.config = config;
         this.sessionGenerator = sessionGenerator;
-        this.kalturaApiV3Client = new KalturaApiV3Client(config.getBaseUrl());
+        this.mediaListClient = new MediaListClient(config.getBaseUrl());
     }
 
     @Override
     public Map<String, MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
-        List<MediaEntryResource> mediaEntryResources = kalturaApiV3Client
-                .getMediaActionList(this.sessionGenerator.get().getToken(), Arrays.asList(referenceIds));
+        List<MediaEntryResource> mediaEntryResources = mediaListClient
+                .getMediaActionList(this.sessionGenerator.get().getToken(), createFilters(referenceIds));
 
         StreamUrlProducer streamUrlProducer = new StreamUrlProducer(config);
 
@@ -45,5 +44,10 @@ public class HttpKalturaClient implements KalturaClient {
     @Override
     public Optional<MediaEntry> mediaEntryByReferenceId(String referenceId) {
         return Optional.ofNullable(mediaEntriesByReferenceIds(referenceId).get(referenceId));
+    }
+
+    private RequestFilters createFilters(String[] referenceIds) {
+        return new RequestFilters()
+                .add("filter[referenceIdIn]", String.join(",", referenceIds));
     }
 }

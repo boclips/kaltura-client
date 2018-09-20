@@ -1,6 +1,7 @@
 package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.client.HttpKalturaClient;
+import com.boclips.kalturaclient.client.MediaEntry;
 import com.boclips.kalturaclient.session.RestSessionGenerator;
 import com.boclips.kalturaclient.session.SessionRetriever;
 

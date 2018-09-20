@@ -12,7 +12,7 @@ class KalturaClientConfigTest extends Specification {
                 .partnerId("partner-id")
                 .userId("user-id")
                 .secret("secret")
-                .baseUrl("http://kaltura.com/api")
+                .baseUrl("common://kaltura.com/api")
                 .sessionTtl(120)
                 .build()
 
@@ -20,7 +20,7 @@ class KalturaClientConfigTest extends Specification {
         config.partnerId == "partner-id"
         config.userId == "user-id"
         config.secret == "secret"
-        config.baseUrl == "http://kaltura.com/api"
+        config.baseUrl == "common://kaltura.com/api"
         config.sessionTtl == 120
     }
 

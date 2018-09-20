@@ -1,13 +1,13 @@
 package com.boclips.kalturaclient.streams
 
 import com.boclips.kalturaclient.KalturaClientConfig
-import com.boclips.kalturaclient.client.http.MediaEntryResource
+import com.boclips.kalturaclient.client.media.MediaEntryResource
 import spock.lang.Specification
 
 class StreamUrlProducerTest extends Specification {
     def "provides stream urls for all popular formats"() {
         given:
-        MediaEntryResource mediaEntryResource = new MediaEntryResource("id", "referenceId", 60, "http://thumbnail.com/t.jpg")
+        MediaEntryResource mediaEntryResource = new MediaEntryResource("id", "referenceId", 60, "common://thumbnail.com/t.jpg")
         KalturaClientConfig config = KalturaClientConfig.builder()
                 .partnerId("12313123")
                 .userId("irrelevant")

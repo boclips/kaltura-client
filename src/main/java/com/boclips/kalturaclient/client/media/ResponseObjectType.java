@@ -1,4 +1,4 @@
-package com.boclips.kalturaclient.client.http;
+package com.boclips.kalturaclient.client.media;
 
 public enum ResponseObjectType {
     KALTURA_MEDIA_LIST_RESPONSE("KalturaMediaListResponse");

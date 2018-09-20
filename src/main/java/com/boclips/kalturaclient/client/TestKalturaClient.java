@@ -1,7 +1,6 @@
 package com.boclips.kalturaclient.client;
 
 import com.boclips.kalturaclient.KalturaClient;
-import com.boclips.kalturaclient.MediaEntry;
 
 import java.util.Arrays;
 import java.util.HashMap;

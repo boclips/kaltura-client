@@ -1,4 +1,4 @@
-package com.boclips.kalturaclient.client.http;
+package com.boclips.kalturaclient.client.media;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

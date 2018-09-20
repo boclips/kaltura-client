@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient
 
+import com.boclips.kalturaclient.client.MediaEntry
 import com.boclips.kalturaclient.client.TestKalturaClient
 import com.boclips.kalturaclient.streams.StreamFormat
 import com.boclips.kalturaclient.streams.StreamUrls

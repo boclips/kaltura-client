@@ -1,19 +1,19 @@
-package com.boclips.kalturaclient.client.http
+package com.boclips.kalturaclient.client.media
 
 import au.com.dius.pact.consumer.PactVerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
-import com.boclips.kalturaclient.MediaEntry
 import spock.lang.Specification
 
-class KalturaApiV3ClientTest extends Specification {
+class MediaListClientTest extends Specification {
 
     def "returns a list of media entries filtered by reference id"() {
         given:
-        KalturaApiV3Client kalturaClient = new KalturaApiV3Client("http://localhost:9999")
+        MediaListClient kalturaClient = new MediaListClient("http://localhost:9999")
+        RequestFilters filters = new RequestFilters().add("filter[referenceIdIn]", "213-123-123,does-not-exist")
 
         when:
         PactVerificationResult result = mockMediaList().runTest() {
-            List<MediaEntry> mediaEntries = kalturaClient.getMediaActionList("123", Arrays.asList("213-123-123", "does-not-exist"))
+            List<MediaEntryResource> mediaEntries = kalturaClient.getMediaActionList("123", filters)
 
             assert mediaEntries.size() == 1
             assert mediaEntries[0].id == "_1234assd"
@@ -26,12 +26,13 @@ class KalturaApiV3ClientTest extends Specification {
 
     def "handles a Kaltura error gracefully"() {
         given:
-        KalturaApiV3Client kalturaClient = new KalturaApiV3Client("http://localhost:9999")
+        MediaListClient kalturaClient = new MediaListClient("http://localhost:9999")
+        RequestFilters filters = new RequestFilters().add("filter[referenceIdIn]", "does-not-exist")
 
         when:
         PactVerificationResult result = mockErroredMediaList().runTest() {
             try {
-                kalturaClient.getMediaActionList("123", Arrays.asList("does-not-exist"))
+                kalturaClient.getMediaActionList("123", filters)
                 assert false
             } catch (Exception ex) {
                 assert ex.message == "Error in Kaltura request: INVALID_KS"

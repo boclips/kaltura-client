@@ -9,7 +9,7 @@ class HttpKalturaClientTest extends Specification {
     def "accepts a valid configuration"() {
         when:
         KalturaClientConfig config = KalturaClientConfig.builder()
-                .baseUrl("http://www.kaltura.com")
+                .baseUrl("common://www.kaltura.com")
                 .userId("1")
                 .secret("123")
                 .partnerId("999")
@@ -22,7 +22,7 @@ class HttpKalturaClientTest extends Specification {
     def "throws when userId not set"() {
         when:
         KalturaClientConfig config = KalturaClientConfig.builder()
-                .baseUrl("http://www.kaltura.com")
+                .baseUrl("common://www.kaltura.com")
                 .secret("123")
                 .partnerId("999")
                 .build()
@@ -35,7 +35,7 @@ class HttpKalturaClientTest extends Specification {
     def "throws when secret not set"() {
         when:
         KalturaClientConfig config = KalturaClientConfig.builder()
-                .baseUrl("http://www.kaltura.com")
+                .baseUrl("common://www.kaltura.com")
                 .userId("1")
                 .partnerId("999")
                 .build()
@@ -48,7 +48,7 @@ class HttpKalturaClientTest extends Specification {
     def "throws when partnerId not set"() {
         when:
         KalturaClientConfig config = KalturaClientConfig.builder()
-                .baseUrl("http://www.kaltura.com")
+                .baseUrl("common://www.kaltura.com")
                 .userId("1")
                 .secret("123")
                 .build()
