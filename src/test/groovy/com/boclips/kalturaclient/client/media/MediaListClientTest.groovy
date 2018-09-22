@@ -24,6 +24,22 @@ class MediaListClientTest extends Specification {
         assert result == PactVerificationResult.Ok.INSTANCE
     }
 
+    def "returns the count of filtered reference ids"() {
+        given:
+        MediaListClient kalturaClient = new MediaListClient("http://localhost:9999")
+        RequestFilters filters = new RequestFilters().add("filter[referenceIdIn]", "213-123-123,does-not-exist")
+
+        when:
+        PactVerificationResult result = mockMediaList().runTest() {
+            Long count = kalturaClient.countMediaActionList("123", filters)
+
+            assert count == 2L
+        }
+
+        then:
+        assert result == PactVerificationResult.Ok.INSTANCE
+    }
+
     def "handles a Kaltura error gracefully"() {
         given:
         MediaListClient kalturaClient = new MediaListClient("http://localhost:9999")
@@ -70,6 +86,7 @@ class MediaListClientTest extends Specification {
                     duration 214
                 })
                 objectType string('KalturaMediaListResponse')
+                totalCount integer(2)
             }
         } as PactBuilder
     }
