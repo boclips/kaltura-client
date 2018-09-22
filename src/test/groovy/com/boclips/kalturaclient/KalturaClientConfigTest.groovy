@@ -1,4 +1,4 @@
-package com.boclips.kalturaclient.client.config
+package com.boclips.kalturaclient
 
 import com.boclips.kalturaclient.KalturaClientConfig
 import com.boclips.kalturaclient.KalturaClientConfigException

@@ -1,7 +1,7 @@
 package com.boclips.kalturaclient.streams;
 
 import com.boclips.kalturaclient.KalturaClientConfig;
-import com.boclips.kalturaclient.client.media.MediaEntryResource;
+import com.boclips.kalturaclient.media.resources.MediaEntryResource;
 
 public class StreamUrlProducer {
     private static final String STREAMING_URL_TEMPLATE = "https://cdnapisec.kaltura.com/p/%s/sp/%s00/playManifest/entryId/%s/format/[FORMAT]/protocol/https/video.mp4";

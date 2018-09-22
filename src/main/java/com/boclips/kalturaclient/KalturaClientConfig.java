@@ -18,7 +18,7 @@ public class KalturaClientConfig {
     public String getBaseUrl() {
         return baseUrl;
     }
-    
+
     public Integer getSessionTtl() {
         return sessionTtl;
     }

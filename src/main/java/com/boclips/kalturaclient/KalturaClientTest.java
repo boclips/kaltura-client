@@ -1,6 +1,6 @@
-package com.boclips.kalturaclient.client;
+package com.boclips.kalturaclient;
 
-import com.boclips.kalturaclient.KalturaClient;
+import com.boclips.kalturaclient.media.MediaEntry;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
 
-public class TestKalturaClient implements KalturaClient {
+public class KalturaClientTest implements KalturaClient {
 
     private final Map<String, MediaEntry> mediaEntryByReferenceId = new HashMap<>();
 

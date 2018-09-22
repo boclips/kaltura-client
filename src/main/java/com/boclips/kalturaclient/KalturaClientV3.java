@@ -1,10 +1,9 @@
-package com.boclips.kalturaclient.client;
+package com.boclips.kalturaclient;
 
-import com.boclips.kalturaclient.KalturaClient;
-import com.boclips.kalturaclient.KalturaClientConfig;
-import com.boclips.kalturaclient.client.media.MediaEntryResource;
-import com.boclips.kalturaclient.client.media.MediaListClient;
-import com.boclips.kalturaclient.client.media.RequestFilters;
+import com.boclips.kalturaclient.http.RequestFilters;
+import com.boclips.kalturaclient.media.MediaEntry;
+import com.boclips.kalturaclient.media.MediaListClient;
+import com.boclips.kalturaclient.media.resources.MediaEntryResource;
 import com.boclips.kalturaclient.session.SessionGenerator;
 import com.boclips.kalturaclient.streams.StreamUrlProducer;
 
@@ -14,12 +13,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class HttpKalturaClient implements KalturaClient {
+public class KalturaClientV3 implements KalturaClient {
     private KalturaClientConfig config;
     private SessionGenerator sessionGenerator;
     private MediaListClient mediaListClient;
 
-    public HttpKalturaClient(KalturaClientConfig config, SessionGenerator sessionGenerator) {
+    public KalturaClientV3(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         this.config = config;
         this.sessionGenerator = sessionGenerator;
         this.mediaListClient = new MediaListClient(config.getBaseUrl());
@@ -28,7 +27,7 @@ public class HttpKalturaClient implements KalturaClient {
     @Override
     public Map<String, MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
         List<MediaEntryResource> mediaEntryResources = mediaListClient
-                .getMediaActionList(this.sessionGenerator.get().getToken(), createFilters(referenceIds));
+                .get(this.sessionGenerator, createFilters(referenceIds));
 
         StreamUrlProducer streamUrlProducer = new StreamUrlProducer(config);
 

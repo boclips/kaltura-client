@@ -1,7 +1,7 @@
 package com.boclips.kalturaclient.streams
 
 import com.boclips.kalturaclient.KalturaClientConfig
-import com.boclips.kalturaclient.client.media.MediaEntryResource
+import com.boclips.kalturaclient.media.resources.MediaEntryResource
 import spock.lang.Specification
 
 class StreamUrlProducerTest extends Specification {

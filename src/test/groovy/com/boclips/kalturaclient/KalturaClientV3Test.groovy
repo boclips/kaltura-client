@@ -1,10 +1,11 @@
-package com.boclips.kalturaclient.client
+package com.boclips.kalturaclient
 
 import com.boclips.kalturaclient.KalturaClientConfig
+import com.boclips.kalturaclient.KalturaClientV3
 import com.boclips.kalturaclient.session.SessionGenerator
 import spock.lang.Specification
 
-class HttpKalturaClientTest extends Specification {
+class KalturaClientV3Test extends Specification {
 
     def "accepts a valid configuration"() {
         when:
@@ -16,7 +17,7 @@ class HttpKalturaClientTest extends Specification {
                 .build()
 
         then:
-        new HttpKalturaClient(config, Mock(SessionGenerator))
+        new KalturaClientV3(config, Mock(SessionGenerator))
     }
 
     def "throws when userId not set"() {
@@ -26,7 +27,7 @@ class HttpKalturaClientTest extends Specification {
                 .secret("123")
                 .partnerId("999")
                 .build()
-        new HttpKalturaClient(config, Mock(SessionGenerator))
+        new KalturaClientV3(config, Mock(SessionGenerator))
 
         then:
         thrown Exception
@@ -39,7 +40,7 @@ class HttpKalturaClientTest extends Specification {
                 .userId("1")
                 .partnerId("999")
                 .build()
-        new HttpKalturaClient(config, Mock(SessionGenerator))
+        new KalturaClientV3(config, Mock(SessionGenerator))
 
         then:
         thrown Exception
@@ -52,7 +53,7 @@ class HttpKalturaClientTest extends Specification {
                 .userId("1")
                 .secret("123")
                 .build()
-        new HttpKalturaClient(config, Mock(SessionGenerator))
+        new KalturaClientV3(config, Mock(SessionGenerator))
 
         then:
         thrown Exception

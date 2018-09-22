@@ -1,4 +1,4 @@
-package com.boclips.kalturaclient.client;
+package com.boclips.kalturaclient.media;
 
 import com.boclips.kalturaclient.streams.StreamUrls;
 import lombok.Builder;

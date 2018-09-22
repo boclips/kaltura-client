@@ -1,7 +1,6 @@
 package com.boclips.kalturaclient
 
-import com.boclips.kalturaclient.client.MediaEntry
-import com.boclips.kalturaclient.client.TestKalturaClient
+import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.streams.StreamFormat
 import com.boclips.kalturaclient.streams.StreamUrls
 import org.yaml.snakeyaml.Yaml
@@ -60,7 +59,7 @@ class KalturaClientContractTest extends Specification {
     }
 
     private KalturaClient testClient() {
-        def client = new TestKalturaClient()
+        def client = new KalturaClientTest()
         client.addMediaEntry(mediaEntry("1_2t65w8sx", "97eea646-c35b-4921-991d-95352666bd3a", Duration.ofSeconds(92)))
         client.addMediaEntry(mediaEntry("1_8atxygq9", "750af1ea-cbeb-4047-8d48-7ef067bfedfb", Duration.ofSeconds(185)))
         return client

@@ -1,39 +1,27 @@
-package com.boclips.kalturaclient.client.media
+package com.boclips.kalturaclient.http
 
 import au.com.dius.pact.consumer.PactVerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
+import com.boclips.kalturaclient.http.HttpClient
+import com.boclips.kalturaclient.media.resources.MediaListResource
+import com.boclips.kalturaclient.http.RequestFilters
 import spock.lang.Specification
 
-class MediaListClientTest extends Specification {
+class HttpClientTest extends Specification {
 
     def "returns a list of media entries filtered by reference id"() {
         given:
-        MediaListClient kalturaClient = new MediaListClient("http://localhost:9999")
+        HttpClient httpClient = new HttpClient("http://localhost:9999")
         RequestFilters filters = new RequestFilters().add("filter[referenceIdIn]", "213-123-123,does-not-exist")
 
         when:
         PactVerificationResult result = mockMediaList().runTest() {
-            List<MediaEntryResource> mediaEntries = kalturaClient.getMediaActionList("123", filters)
+            MediaListResource mediaListResource = httpClient.getMediaListResource("123", filters)
 
-            assert mediaEntries.size() == 1
-            assert mediaEntries[0].id == "_1234assd"
-            assert mediaEntries[0].referenceId == "213-123-123"
-        }
-
-        then:
-        assert result == PactVerificationResult.Ok.INSTANCE
-    }
-
-    def "returns the count of filtered reference ids"() {
-        given:
-        MediaListClient kalturaClient = new MediaListClient("http://localhost:9999")
-        RequestFilters filters = new RequestFilters().add("filter[referenceIdIn]", "213-123-123,does-not-exist")
-
-        when:
-        PactVerificationResult result = mockMediaList().runTest() {
-            Long count = kalturaClient.countMediaActionList("123", filters)
-
-            assert count == 2L
+            assert mediaListResource.totalCount == 2
+            assert mediaListResource.objects.size() == 1
+            assert mediaListResource.objects[0].id == "_1234assd"
+            assert mediaListResource.objects[0].referenceId == "213-123-123"
         }
 
         then:
@@ -42,13 +30,13 @@ class MediaListClientTest extends Specification {
 
     def "handles a Kaltura error gracefully"() {
         given:
-        MediaListClient kalturaClient = new MediaListClient("http://localhost:9999")
+        HttpClient httpClient = new HttpClient("http://localhost:9999")
         RequestFilters filters = new RequestFilters().add("filter[referenceIdIn]", "does-not-exist")
 
         when:
         PactVerificationResult result = mockErroredMediaList().runTest() {
             try {
-                kalturaClient.getMediaActionList("123", filters)
+                httpClient.getMediaListResource("123", filters)
                 assert false
             } catch (Exception ex) {
                 assert ex.message == "Error in Kaltura request: INVALID_KS"
