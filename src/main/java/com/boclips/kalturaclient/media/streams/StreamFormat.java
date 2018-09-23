@@ -1,4 +1,4 @@
-package com.boclips.kalturaclient.streams;
+package com.boclips.kalturaclient.media.streams;
 
 public enum StreamFormat {
     PROGRESSIVE_DOWNLOAD("url"),

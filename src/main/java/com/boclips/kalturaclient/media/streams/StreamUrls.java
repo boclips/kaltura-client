@@ -1,4 +1,4 @@
-package com.boclips.kalturaclient.streams;
+package com.boclips.kalturaclient.media.streams;
 
 public class StreamUrls {
     private final String urlTemplate;

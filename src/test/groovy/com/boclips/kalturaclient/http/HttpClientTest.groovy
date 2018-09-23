@@ -3,8 +3,8 @@ package com.boclips.kalturaclient.http
 import au.com.dius.pact.consumer.PactVerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
 import com.boclips.kalturaclient.http.HttpClient
-import com.boclips.kalturaclient.media.resources.MediaListResource
 import com.boclips.kalturaclient.http.RequestFilters
+import com.boclips.kalturaclient.media.resources.MediaListResource
 import spock.lang.Specification
 
 class HttpClientTest extends Specification {

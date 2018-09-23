@@ -1,4 +1,4 @@
-package com.boclips.kalturaclient.streams;
+package com.boclips.kalturaclient.media.streams;
 
 import com.boclips.kalturaclient.KalturaClientConfig;
 import com.boclips.kalturaclient.media.resources.MediaEntryResource;
