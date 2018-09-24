@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.function.Function.identity;
+
 public class KalturaClientV3 implements KalturaClient {
     private SessionGenerator sessionGenerator;
     private MediaList mediaList;
@@ -23,10 +25,13 @@ public class KalturaClientV3 implements KalturaClient {
     @Override
     public Map<String, MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
         List<MediaEntry> mediaEntries = mediaList.get(this.sessionGenerator, createFilters(referenceIds));
+        return toMapByReferenceIdIgnoringDuplicates(mediaEntries);
+    }
 
+    static Map<String, MediaEntry> toMapByReferenceIdIgnoringDuplicates(List<MediaEntry> mediaEntries) {
         return mediaEntries
                 .stream()
-                .collect(Collectors.toMap(MediaEntry::getReferenceId, mediaEntry -> mediaEntry));
+                .collect(Collectors.toMap(MediaEntry::getReferenceId, identity(), (entry1, entry2) -> entry1));
     }
 
     @Override
