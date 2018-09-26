@@ -6,9 +6,7 @@ import com.boclips.kalturaclient.media.MediaList;
 import com.boclips.kalturaclient.media.MediaListClient;
 import com.boclips.kalturaclient.session.SessionGenerator;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.function.Function.identity;
@@ -23,7 +21,7 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public Map<String, MediaEntry> mediaEntriesByReferenceIds(String... referenceIds) {
+    public Map<String, MediaEntry> getMediaEntriesByReferenceIds(Collection<String> referenceIds) {
         List<MediaEntry> mediaEntries = mediaList.get(this.sessionGenerator, createFilters(referenceIds));
         return toMapByReferenceIdIgnoringDuplicates(mediaEntries);
     }
@@ -35,11 +33,11 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public Optional<MediaEntry> mediaEntryByReferenceId(String referenceId) {
-        return Optional.ofNullable(mediaEntriesByReferenceIds(referenceId).get(referenceId));
+    public Optional<MediaEntry> getMediaEntryByReferenceId(String referenceId) {
+        return Optional.ofNullable(getMediaEntriesByReferenceIds(Collections.singleton(referenceId)).get(referenceId));
     }
 
-    private RequestFilters createFilters(String[] referenceIds) {
+    private RequestFilters createFilters(Collection<String> referenceIds) {
         return new RequestFilters()
                 .add("filter[referenceIdIn]", String.join(",", referenceIds));
     }

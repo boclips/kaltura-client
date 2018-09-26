@@ -34,7 +34,7 @@ class KalturaClientContractTest extends Specification {
 
     def "fetch existing media entry from api"(client) {
         when:
-        MediaEntry mediaEntry = client.mediaEntryByReferenceId("97eea646-c35b-4921-991d-95352666bd3a").get()
+        MediaEntry mediaEntry = client.getMediaEntryByReferenceId("97eea646-c35b-4921-991d-95352666bd3a").get()
 
         then:
         mediaEntry.id == '1_2t65w8sx'
@@ -49,7 +49,7 @@ class KalturaClientContractTest extends Specification {
 
     def "fetch non-existing media entry from api"(client) {
         when:
-        Optional<MediaEntry> mediaEntry = client.mediaEntryByReferenceId("unknown-reference-id")
+        Optional<MediaEntry> mediaEntry = client.getMediaEntryByReferenceId("unknown-reference-id")
 
         then:
         !mediaEntry.isPresent()
