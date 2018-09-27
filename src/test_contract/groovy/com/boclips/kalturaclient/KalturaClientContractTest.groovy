@@ -11,10 +11,10 @@ import java.time.Duration
 class KalturaClientContractTest extends Specification {
     def "fetch media entries from api"(client) {
         when:
-        Map<String, MediaEntry> mediaEntries = client.mediaEntriesByReferenceIds(
+        Map<String, MediaEntry> mediaEntries = client.getMediaEntriesByReferenceIds([
                 "97eea646-c35b-4921-991d-95352666bd3a",
                 "750af1ea-cbeb-4047-8d48-7ef067bfedfb",
-                "unknown-reference-id")
+                "unknown-reference-id"])
 
         then:
         mediaEntries.size() == 2
