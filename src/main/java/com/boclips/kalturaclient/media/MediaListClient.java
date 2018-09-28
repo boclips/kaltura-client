@@ -5,7 +5,6 @@ import com.boclips.kalturaclient.http.HttpClient;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.resources.MediaListResource;
 import com.boclips.kalturaclient.media.streams.StreamUrlProducer;
-import com.boclips.kalturaclient.session.SessionGenerator;
 
 import java.util.List;
 
@@ -19,8 +18,8 @@ public class MediaListClient implements MediaList {
     }
 
     @Override
-    public List<MediaEntry> get(SessionGenerator sessionToken, RequestFilters filters) {
-        return this.processor.process(client.getMediaListResource(sessionToken.get().getToken(), filters));
+    public List<MediaEntry> get(String sessionToken, RequestFilters filters) {
+        return this.processor.process(client.getMediaListResource(sessionToken, filters));
     }
 
     @Override

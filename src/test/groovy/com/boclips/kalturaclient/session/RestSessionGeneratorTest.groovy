@@ -1,9 +1,5 @@
 package com.boclips.kalturaclient.session
 
-import com.boclips.kalturaclient.session.KalturaSession
-import com.boclips.kalturaclient.session.RestSessionGenerator
-import com.boclips.kalturaclient.session.SessionGenerator
-import com.boclips.kalturaclient.session.SessionRetriever
 import spock.lang.Specification
 
 import java.time.Instant

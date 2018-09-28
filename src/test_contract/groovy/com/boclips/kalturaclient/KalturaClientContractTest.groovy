@@ -9,9 +9,29 @@ import spock.lang.Specification
 import java.time.Duration
 
 class KalturaClientContractTest extends Specification {
-    def "fetch media entries from api"(client) {
+
+    def "create and delete media entries"(KalturaClient client) {
+        given:
+        def referenceid = "referenceid"
+        client.createMediaEntry(referenceid)
+        List<MediaEntry> createdMediaEntry = client.getMediaEntriesByReferenceId(referenceid)
+
         when:
-        Map<String, MediaEntry> mediaEntries = client.getMediaEntriesByReferenceIds([
+        client.deleteMediaEntriesByReferenceId(referenceid)
+        List<MediaEntry> deletedMediaEntry = client.getMediaEntriesByReferenceId(referenceid)
+
+        then:
+        createdMediaEntry.size() == 1
+        createdMediaEntry[0].referenceId == referenceid
+        deletedMediaEntry.isEmpty()
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+    def "fetch media entries from api"(KalturaClient client) {
+        when:
+        Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
                 "97eea646-c35b-4921-991d-95352666bd3a",
                 "750af1ea-cbeb-4047-8d48-7ef067bfedfb",
                 "unknown-reference-id"])
@@ -19,22 +39,22 @@ class KalturaClientContractTest extends Specification {
         then:
         mediaEntries.size() == 2
 
-        MediaEntry mediaEntry = mediaEntries['97eea646-c35b-4921-991d-95352666bd3a']
+        MediaEntry mediaEntry = mediaEntries['97eea646-c35b-4921-991d-95352666bd3a'][0]
         mediaEntry.id == '1_2t65w8sx'
         mediaEntry.referenceId == '97eea646-c35b-4921-991d-95352666bd3a'
         mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS) != null
         mediaEntry.duration == Duration.ofMinutes(1).plusSeconds(32)
         mediaEntry.thumbnailUrl == 'https://cfvod.kaltura.com/p/2394162/sp/239416200/thumbnail/entry_id/1_2t65w8sx/version/100011'
 
-        mediaEntries['750af1ea-cbeb-4047-8d48-7ef067bfedfb'].id == '1_8atxygq9'
+        mediaEntries['750af1ea-cbeb-4047-8d48-7ef067bfedfb'][0].id == '1_8atxygq9'
 
         where:
         client << [realClient(), testClient()]
     }
 
-    def "fetch existing media entry from api"(client) {
+    def "fetch existing media entry from api"(KalturaClient client) {
         when:
-        MediaEntry mediaEntry = client.getMediaEntryByReferenceId("97eea646-c35b-4921-991d-95352666bd3a").get()
+        MediaEntry mediaEntry = client.getMediaEntriesByReferenceId("97eea646-c35b-4921-991d-95352666bd3a")[0]
 
         then:
         mediaEntry.id == '1_2t65w8sx'
@@ -47,19 +67,19 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
-    def "fetch non-existing media entry from api"(client) {
+    def "fetch non-existing media entry from api"(KalturaClient client) {
         when:
-        Optional<MediaEntry> mediaEntry = client.getMediaEntryByReferenceId("unknown-reference-id")
+        List<MediaEntry> mediaEntry = client.getMediaEntriesByReferenceId("unknown-reference-id")
 
         then:
-        !mediaEntry.isPresent()
+        mediaEntry.isEmpty()
 
         where:
         client << [realClient(), testClient()]
     }
 
     private KalturaClient testClient() {
-        def client = new KalturaClientTest()
+        def client = new TestKalturaClient()
         client.addMediaEntry(mediaEntry("1_2t65w8sx", "97eea646-c35b-4921-991d-95352666bd3a", Duration.ofSeconds(92)))
         client.addMediaEntry(mediaEntry("1_8atxygq9", "750af1ea-cbeb-4047-8d48-7ef067bfedfb", Duration.ofSeconds(185)))
         return client

@@ -2,8 +2,6 @@ package com.boclips.kalturaclient.http
 
 import au.com.dius.pact.consumer.PactVerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
-import com.boclips.kalturaclient.http.HttpClient
-import com.boclips.kalturaclient.http.RequestFilters
 import com.boclips.kalturaclient.media.resources.MediaListResource
 import spock.lang.Specification
 
@@ -59,6 +57,7 @@ class HttpClientTest extends Specification {
                     path  : '/api_v3/service/media/action/list',
                     query : [
                             'filter[referenceIdIn]': '213-123-123,does-not-exist',
+                            'filter[statusIn]'     : '-2,-1,0,1,2,4,5,6,7',
                             'ks'                   : '123',
                             'format'               : '1'
                     ]
@@ -91,6 +90,7 @@ class HttpClientTest extends Specification {
                     path  : '/api_v3/service/media/action/list',
                     query : [
                             'filter[referenceIdIn]': 'does-not-exist',
+                            'filter[statusIn]'     : '-2,-1,0,1,2,4,5,6,7',
                             'ks'                   : '123',
                             'format'               : '1'
                     ]

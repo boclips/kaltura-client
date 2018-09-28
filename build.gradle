@@ -27,6 +27,7 @@ dependencies {
     compile 'com.mashape.unirest:unirest-java:1.4.9'
     compile 'org.projectlombok:lombok:1.18.2'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+    compile 'org.slf4j:slf4j-api:1.7.25'
 
     testCompile 'au.com.dius:pact-jvm-provider_2.11:3.5.6'
     testCompile 'au.com.dius:pact-jvm-consumer-groovy_2.11:3.5.6'
@@ -41,6 +42,7 @@ dependencies {
 
     testContractCompile configurations.compile
     testContractCompile configurations.testCompile
+    testContractCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
 
     testContractRuntime configurations.runtime
     testContractRuntime configurations.testRuntime
