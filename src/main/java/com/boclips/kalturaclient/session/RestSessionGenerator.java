@@ -1,7 +1,10 @@
 package com.boclips.kalturaclient.session;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.Instant;
 
+@Slf4j
 public class RestSessionGenerator implements SessionGenerator {
     private SessionRetriever sessionRetriever;
     private Integer sessionTtl;
@@ -26,6 +29,7 @@ public class RestSessionGenerator implements SessionGenerator {
     }
 
     private void generateSession() {
+        log.debug("Generating a session with {} TTL", sessionTtl);
         this.currentSession = this.sessionRetriever.fetch();
         this.sessionExpiresAt = Instant.ofEpochMilli(Instant.now().toEpochMilli() + sessionTtl * 1000);
     }
