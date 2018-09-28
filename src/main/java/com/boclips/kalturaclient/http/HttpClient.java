@@ -23,21 +23,21 @@ public class HttpClient {
 
     public MediaListResource getMediaListResource(String sessionToken, RequestFilters filters) {
         try {
-            MediaListResource response = Unirest.get(this.baseUrl + "/api_v3/service/media/action/list")
+            HttpResponse<MediaListResource> response = Unirest.get(this.baseUrl + "/api_v3/service/media/action/list")
                     .queryString(filters.toMap())
                     .queryString("ks", sessionToken)
                     .queryString("format", "1")
                     .queryString("filter[statusIn]", "-2,-1,0,1,2,4,5,6,7")
-                    .asObject(MediaListResource.class)
-                    .getBody();
+                    .asObject(MediaListResource.class);
 
-            log.debug("Get media list of size {} response: {}", response.totalCount, response);
+            log.debug("/action/list returned: {} with body {}", response.getStatus(), response);
 
-            if (!ResponseObjectType.isSuccessful(response.objectType)) {
-                throw new UnsupportedOperationException(String.format("Error in Kaltura request: %s", response.code));
+            MediaListResource mediaListResource = response.getBody();
+            if (!ResponseObjectType.isSuccessful(mediaListResource.objectType)) {
+                throw new UnsupportedOperationException(String.format("Error in Kaltura request: %s", mediaListResource.code));
             }
 
-            return response;
+            return mediaListResource;
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
@@ -52,7 +52,8 @@ public class HttpClient {
                     .queryString("entry[objectType]", "KalturaMediaEntry")
                     .queryString("entry[referenceId]", referenceId)
                     .asString();
-            log.debug("media.add response: {}", response);
+
+            log.debug("/action/add returned: {} with body {}", response.getStatus(), response);
         } catch (UnirestException e) {
             e.printStackTrace();
         }
@@ -65,7 +66,8 @@ public class HttpClient {
                     .queryString("ks", sessionToken)
                     .queryString("entryId", referenceId)
                     .asString();
-            log.debug("media.delete response: {} {}", response.getStatus(), response.getBody());
+
+            log.debug("/action/delete returned: {} with body {}", response.getStatus(), response);
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
