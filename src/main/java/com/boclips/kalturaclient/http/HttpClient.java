@@ -21,7 +21,7 @@ public class HttpClient {
         configureUniRest();
     }
 
-    public MediaListResource getMediaListResource(String sessionToken, RequestFilters filters) {
+    public MediaListResource listMediaEntries(String sessionToken, RequestFilters filters) {
         try {
             HttpResponse<MediaListResource> response = Unirest.get(this.baseUrl + "/api_v3/service/media/action/list")
                     .queryString(filters.toMap())
@@ -62,8 +62,8 @@ public class HttpClient {
     public void deleteMediaEntryByReferenceId(String sessionToken, String referenceId) {
         try {
             final HttpResponse<String> response = Unirest.post(this.baseUrl + "/api_v3/service/media/action/delete")
-                    .queryString("format", "1")
                     .queryString("ks", sessionToken)
+                    .queryString("format", "1")
                     .queryString("entryId", referenceId)
                     .asString();
 

@@ -14,7 +14,7 @@ class HttpClientTest extends Specification {
 
         when:
         PactVerificationResult result = mockMediaList().runTest() {
-            MediaListResource mediaListResource = httpClient.getMediaListResource("123", filters)
+            MediaListResource mediaListResource = httpClient.listMediaEntries("123", filters)
 
             assert mediaListResource.totalCount == 2
             assert mediaListResource.objects.size() == 1
@@ -34,7 +34,7 @@ class HttpClientTest extends Specification {
         when:
         PactVerificationResult result = mockErroredMediaList().runTest() {
             try {
-                httpClient.getMediaListResource("123", filters)
+                httpClient.listMediaEntries("123", filters)
                 assert false
             } catch (Exception ex) {
                 assert ex.message == "Error in Kaltura request: INVALID_KS"

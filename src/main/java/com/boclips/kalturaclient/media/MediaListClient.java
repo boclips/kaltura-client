@@ -19,12 +19,12 @@ public class MediaListClient implements MediaList {
 
     @Override
     public List<MediaEntry> get(String sessionToken, RequestFilters filters) {
-        return this.processor.process(client.getMediaListResource(sessionToken, filters));
+        return this.processor.process(client.listMediaEntries(sessionToken, filters));
     }
 
     @Override
     public Long count(String sessionToken, RequestFilters filters) {
-        MediaListResource mediaListResource = client.getMediaListResource(sessionToken, filters);
+        MediaListResource mediaListResource = client.listMediaEntries(sessionToken, filters);
         return mediaListResource.totalCount;
     }
 }
