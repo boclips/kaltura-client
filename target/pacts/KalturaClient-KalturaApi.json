@@ -9,20 +9,17 @@
         {
             "description": "GET media list by reference ids",
             "request": {
-                "method": "GET",
-                "path": "/api_v3/service/media/action/list",
+                "method": "POST",
+                "path": "/api_v3/service/media/action/delete",
                 "query": {
-                    "filter[referenceIdIn]": [
-                        "does-not-exist"
-                    ],
-                    "filter[statusIn]": [
-                        "-2,-1,0,1,2,4,5,6,7"
-                    ],
                     "ks": [
                         "123"
                     ],
                     "format": [
                         "1"
+                    ],
+                    "entryId": [
+                        "999"
                     ]
                 }
             },

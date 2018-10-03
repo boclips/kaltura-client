@@ -45,6 +45,37 @@ class HttpClientTest extends Specification {
         assert result == PactVerificationResult.Ok.INSTANCE
     }
 
+    def "returns empty response when Media Entry successfully deleted"() {
+        given:
+        HttpClient httpClient = new HttpClient("http://localhost:9999")
+
+        when:
+        PactVerificationResult result = mockMediaEntryDelete().runTest() {
+            httpClient.deleteMediaEntryByReferenceId("123", "999")
+        }
+
+        then:
+        assert result == PactVerificationResult.Ok.INSTANCE
+    }
+
+    def "handles a Kaltura error on MediaEntry delete gracefully"() {
+        given:
+        HttpClient httpClient = new HttpClient("http://localhost:9999")
+
+        when:
+        PactVerificationResult result = mockErroredMediaEntryDelete().runTest() {
+            try {
+                httpClient.deleteMediaEntryByReferenceId("123", "999")
+                assert false
+            } catch (Exception ex) {
+                assert ex.message.contains("Media Entry 999 was not deleted")
+            }
+        }
+
+        then:
+        assert result == PactVerificationResult.Ok.INSTANCE
+    }
+
     static mockMediaList() {
         def webapp_service = new PactBuilder()
         webapp_service {
@@ -93,6 +124,59 @@ class HttpClientTest extends Specification {
                             'filter[statusIn]'     : '-2,-1,0,1,2,4,5,6,7',
                             'ks'                   : '123',
                             'format'               : '1'
+                    ]
+            ])
+            willRespondWith([
+                    status : 200,
+                    headers: ['Content-Type': 'application/json'],
+            ])
+            withBody {
+                code string('INVALID_KS')
+                objectType string('KalturaAPIException')
+            }
+        } as PactBuilder
+    }
+
+    static mockMediaEntryDelete() {
+        def webapp_service = new PactBuilder()
+        webapp_service {
+            serviceConsumer "KalturaClient"
+            hasPactWith "KalturaApi"
+            port 9999
+            uponReceiving("GET media list by reference ids")
+            withAttributes([
+                    method: 'POST',
+                    path  : '/api_v3/service/media/action/delete',
+                    query : [
+                            'ks'     : '123',
+                            'format' : '1',
+                            'entryId': '999'
+                    ]
+            ])
+            willRespondWith([
+                    status : 200,
+                    headers: ['Content-Type': 'application/json'],
+            ])
+            withBody {
+                code string('')
+            }
+        } as PactBuilder
+    }
+
+    static mockErroredMediaEntryDelete() {
+        def webapp_service = new PactBuilder()
+        webapp_service {
+            serviceConsumer "KalturaClient"
+            hasPactWith "KalturaApi"
+            port 9999
+            uponReceiving("GET media list by reference ids")
+            withAttributes([
+                    method: 'POST',
+                    path  : '/api_v3/service/media/action/delete',
+                    query : [
+                            'ks'     : '123',
+                            'format' : '1',
+                            'entryId': '999'
                     ]
             ])
             willRespondWith([

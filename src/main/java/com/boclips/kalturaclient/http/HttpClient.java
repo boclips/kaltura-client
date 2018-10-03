@@ -68,6 +68,14 @@ public class HttpClient {
                     .asString();
 
             log.debug("/action/delete returned: {} with body {}", response.getStatus(), response);
+
+            if (response.getBody().contains("KalturaAPIException")) {
+                throw new KalturaApiException(
+                        String.format("Media Entry %s was not deleted, API returned %s",
+                                referenceId,
+                                response.getBody())
+                );
+            }
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
