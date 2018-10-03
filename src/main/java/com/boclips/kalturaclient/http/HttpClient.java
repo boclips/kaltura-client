@@ -30,7 +30,7 @@ public class HttpClient {
                     .queryString("filter[statusIn]", "-2,-1,0,1,2,4,5,6,7")
                     .asObject(MediaListResource.class);
 
-            log.debug("/action/list returned: {} with body {}", response.getStatus(), response);
+            log.debug("/action/list returned: {} with body {}", response.getStatus(), response.getBody());
 
             MediaListResource mediaListResource = response.getBody();
             if (!ResponseObjectType.isSuccessful(mediaListResource.objectType)) {
@@ -53,7 +53,7 @@ public class HttpClient {
                     .queryString("entry[referenceId]", referenceId)
                     .asString();
 
-            log.debug("/action/add returned: {} with body {}", response.getStatus(), response);
+            log.debug("/action/add returned: {} with body {}", response.getStatus(), response.getBody());
         } catch (UnirestException e) {
             e.printStackTrace();
         }
@@ -67,7 +67,7 @@ public class HttpClient {
                     .queryString("entryId", entityId)
                     .asString();
 
-            log.debug("/action/delete returned: {} with body {}", response.getStatus(), response);
+            log.debug("/action/delete returned: {} with body {}", response.getStatus(), response.getBody());
 
             if (response.getBody().contains("KalturaAPIException")) {
                 throw new KalturaClientApiException(
