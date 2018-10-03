@@ -10,19 +10,27 @@ import java.time.Duration
 
 class KalturaClientContractTest extends Specification {
 
+    void setup() {
+        realClient().createMediaEntry("test-reference-id")
+    }
+
+    void cleanup() {
+        realClient().deleteMediaEntriesByReferenceId("test-reference-id")
+    }
+
     def "create and delete media entries"(KalturaClient client) {
         given:
-        def referenceid = "referenceid"
-        client.createMediaEntry(referenceid)
-        List<MediaEntry> createdMediaEntry = client.getMediaEntriesByReferenceId(referenceid)
+        def referenceId = UUID.randomUUID().toString()
+        client.createMediaEntry(referenceId)
+        List<MediaEntry> createdMediaEntry = client.getMediaEntriesByReferenceId(referenceId)
 
         when:
-        client.deleteMediaEntriesByReferenceId(referenceid)
-        List<MediaEntry> deletedMediaEntry = client.getMediaEntriesByReferenceId(referenceid)
+        client.deleteMediaEntriesByReferenceId(referenceId)
+        List<MediaEntry> deletedMediaEntry = client.getMediaEntriesByReferenceId(referenceId)
 
         then:
         createdMediaEntry.size() == 1
-        createdMediaEntry[0].referenceId == referenceid
+        createdMediaEntry[0].referenceId == referenceId
         deletedMediaEntry.isEmpty()
 
         where:
@@ -32,47 +40,19 @@ class KalturaClientContractTest extends Specification {
     def "fetch media entries from api"(KalturaClient client) {
         when:
         Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
-                "97eea646-c35b-4921-991d-95352666bd3a",
-                "750af1ea-cbeb-4047-8d48-7ef067bfedfb",
-                "unknown-reference-id"])
+                "test-reference-id",
+                "unknown-reference-id"
+        ])
 
         then:
-        mediaEntries.size() == 2
+        mediaEntries.size() == 1
 
-        MediaEntry mediaEntry = mediaEntries['97eea646-c35b-4921-991d-95352666bd3a'][0]
-        mediaEntry.id == '1_2t65w8sx'
-        mediaEntry.referenceId == '97eea646-c35b-4921-991d-95352666bd3a'
+        MediaEntry mediaEntry = mediaEntries['test-reference-id'][0]
+        !mediaEntry.id.isEmpty()
+        mediaEntry.referenceId == 'test-reference-id'
         mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS) != null
-        mediaEntry.duration == Duration.ofMinutes(1).plusSeconds(32)
-        mediaEntry.thumbnailUrl == 'https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/1_2t65w8sx/height/250/vid_slices/3/vid_slice/2'
-
-        mediaEntries['750af1ea-cbeb-4047-8d48-7ef067bfedfb'][0].id == '1_8atxygq9'
-
-        where:
-        client << [realClient(), testClient()]
-    }
-
-    def "fetch existing media entry from api"(KalturaClient client) {
-        when:
-        MediaEntry mediaEntry = client.getMediaEntriesByReferenceId("97eea646-c35b-4921-991d-95352666bd3a")[0]
-
-        then:
-        mediaEntry.id == '1_2t65w8sx'
-        mediaEntry.referenceId == '97eea646-c35b-4921-991d-95352666bd3a'
-        mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS) != null
-        mediaEntry.duration == Duration.ofMinutes(1).plusSeconds(32)
-        mediaEntry.thumbnailUrl == 'https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/1_2t65w8sx/height/250/vid_slices/3/vid_slice/2'
-
-        where:
-        client << [realClient(), testClient()]
-    }
-
-    def "fetch non-existing media entry from api"(KalturaClient client) {
-        when:
-        List<MediaEntry> mediaEntry = client.getMediaEntriesByReferenceId("unknown-reference-id")
-
-        then:
-        mediaEntry.isEmpty()
+        mediaEntry.duration != null
+        mediaEntry.thumbnailUrl.startsWith('https://cdnapisec.kaltura.com/p')
 
         where:
         client << [realClient(), testClient()]
@@ -80,8 +60,8 @@ class KalturaClientContractTest extends Specification {
 
     private KalturaClient testClient() {
         def client = new TestKalturaClient()
-        client.addMediaEntry(mediaEntry("1_2t65w8sx", "97eea646-c35b-4921-991d-95352666bd3a", Duration.ofSeconds(92)))
-        client.addMediaEntry(mediaEntry("1_8atxygq9", "750af1ea-cbeb-4047-8d48-7ef067bfedfb", Duration.ofSeconds(185)))
+        client.addMediaEntry(mediaEntry("1_2t65w8sx", "test-reference-id", Duration.ofSeconds(92)))
+        client.addMediaEntry(mediaEntry("1_8atxygq9", "reference-id-2", Duration.ofSeconds(185)))
         return client
     }
 
