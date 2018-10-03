@@ -44,7 +44,7 @@ class KalturaClientContractTest extends Specification {
         mediaEntry.referenceId == '97eea646-c35b-4921-991d-95352666bd3a'
         mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS) != null
         mediaEntry.duration == Duration.ofMinutes(1).plusSeconds(32)
-        mediaEntry.thumbnailUrl == 'https://cfvod.kaltura.com/p/2394162/sp/239416200/thumbnail/entry_id/1_2t65w8sx/version/100011'
+        mediaEntry.thumbnailUrl == 'https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/1_2t65w8sx/height/250/vid_slices/3/vid_slice/2'
 
         mediaEntries['750af1ea-cbeb-4047-8d48-7ef067bfedfb'][0].id == '1_8atxygq9'
 
@@ -61,7 +61,7 @@ class KalturaClientContractTest extends Specification {
         mediaEntry.referenceId == '97eea646-c35b-4921-991d-95352666bd3a'
         mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS) != null
         mediaEntry.duration == Duration.ofMinutes(1).plusSeconds(32)
-        mediaEntry.thumbnailUrl == 'https://cfvod.kaltura.com/p/2394162/sp/239416200/thumbnail/entry_id/1_2t65w8sx/version/100011'
+        mediaEntry.thumbnailUrl == 'https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/1_2t65w8sx/height/250/vid_slices/3/vid_slice/2'
 
         where:
         client << [realClient(), testClient()]
@@ -102,7 +102,7 @@ class KalturaClientContractTest extends Specification {
                 .referenceId(referenceId)
                 .duration(duration)
                 .streams(new StreamUrls("https://stream.com/s/" + id + "[FORMAT]"))
-                .thumbnailUrl("https://cfvod.kaltura.com/p/2394162/sp/239416200/thumbnail/entry_id/" + id + "/version/100011")
+                .thumbnailUrl("https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/" + id + "/height/250/vid_slices/3/vid_slice/2")
                 .build()
     }
 

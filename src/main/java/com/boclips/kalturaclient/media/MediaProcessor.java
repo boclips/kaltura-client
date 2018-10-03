@@ -3,16 +3,21 @@ package com.boclips.kalturaclient.media;
 import com.boclips.kalturaclient.media.resources.MediaEntryResource;
 import com.boclips.kalturaclient.media.resources.MediaListResource;
 import com.boclips.kalturaclient.media.streams.StreamUrlProducer;
+import com.boclips.kalturaclient.media.thumbnails.ThumbnailUrlProducer;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class MediaProcessor {
-    private StreamUrlProducer streamUrlProducer;
+    private final ThumbnailUrlProducer thumbnailUrlProducer;
+    private final StreamUrlProducer streamUrlProducer;
 
-    public MediaProcessor(StreamUrlProducer streamUrlProducer) {
+    public MediaProcessor(
+            StreamUrlProducer streamUrlProducer,
+            ThumbnailUrlProducer thumbnailUrlProducer) {
         this.streamUrlProducer = streamUrlProducer;
+        this.thumbnailUrlProducer = thumbnailUrlProducer;
     }
 
     public List<MediaEntry> process(MediaListResource mediaListResource) {
@@ -28,7 +33,7 @@ public class MediaProcessor {
                 .referenceId(mediaEntryResource.getReferenceId())
                 .duration(Duration.ofSeconds(mediaEntryResource.getDuration()))
                 .streams(streamUrlProducer.convert(mediaEntryResource))
-                .thumbnailUrl(mediaEntryResource.getThumbnailUrl())
+                .thumbnailUrl(thumbnailUrlProducer.convert(mediaEntryResource))
                 .build();
     }
 }

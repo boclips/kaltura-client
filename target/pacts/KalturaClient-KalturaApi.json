@@ -12,14 +12,14 @@
                 "method": "POST",
                 "path": "/api_v3/service/media/action/delete",
                 "query": {
-                    "entryId": [
-                        "999"
+                    "ks": [
+                        "123"
                     ],
                     "format": [
                         "1"
                     ],
-                    "ks": [
-                        "123"
+                    "entryId": [
+                        "999"
                     ]
                 }
             },
