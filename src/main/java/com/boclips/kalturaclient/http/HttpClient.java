@@ -59,12 +59,12 @@ public class HttpClient {
         }
     }
 
-    public void deleteMediaEntryByReferenceId(String sessionToken, String referenceId) {
+    public void deleteMediaEntryByEntityId(String sessionToken, String entityId) {
         try {
             final HttpResponse<String> response = Unirest.post(this.baseUrl + "/api_v3/service/media/action/delete")
                     .queryString("ks", sessionToken)
                     .queryString("format", "1")
-                    .queryString("entryId", referenceId)
+                    .queryString("entryId", entityId)
                     .asString();
 
             log.debug("/action/delete returned: {} with body {}", response.getStatus(), response);
@@ -72,7 +72,7 @@ public class HttpClient {
             if (response.getBody().contains("KalturaAPIException")) {
                 throw new KalturaApiException(
                         String.format("Media Entry %s was not deleted, API returned %s",
-                                referenceId,
+                                entityId,
                                 response.getBody())
                 );
             }

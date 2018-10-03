@@ -30,9 +30,9 @@ public class KalturaClientV3 implements KalturaClient {
     public void deleteMediaEntriesByReferenceId(String referenceId) {
         final List<MediaEntry> mediaEntryToBeDeleted = getMediaEntriesByReferenceId(referenceId);
 
-        mediaEntryToBeDeleted.forEach(mediaEntry -> {
-            mediaDelete.deleteByReferenceId(sessionGenerator.get().getToken(), mediaEntry.getId());
-        });
+        mediaEntryToBeDeleted.forEach(mediaEntry ->
+                mediaDelete.deleteByEntityId(sessionGenerator.get().getToken(), mediaEntry.getId())
+        );
     }
 
     @Override

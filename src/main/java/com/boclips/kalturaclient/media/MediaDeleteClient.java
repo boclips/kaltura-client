@@ -11,7 +11,7 @@ public class MediaDeleteClient implements MediaDelete {
     }
 
     @Override
-    public void deleteByReferenceId(String session, String referenceId) {
-        client.deleteMediaEntryByReferenceId(session, referenceId);
+    public void deleteByEntityId(String session, String entityId) {
+        client.deleteMediaEntryByEntityId(session, entityId);
     }
 }

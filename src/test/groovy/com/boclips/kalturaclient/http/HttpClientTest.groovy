@@ -51,7 +51,7 @@ class HttpClientTest extends Specification {
 
         when:
         PactVerificationResult result = mockMediaEntryDelete().runTest() {
-            httpClient.deleteMediaEntryByReferenceId("123", "999")
+            httpClient.deleteMediaEntryByEntityId("123", "999")
         }
 
         then:
@@ -65,7 +65,7 @@ class HttpClientTest extends Specification {
         when:
         PactVerificationResult result = mockErroredMediaEntryDelete().runTest() {
             try {
-                httpClient.deleteMediaEntryByReferenceId("123", "999")
+                httpClient.deleteMediaEntryByEntityId("123", "999")
                 assert false
             } catch (Exception ex) {
                 assert ex.message.contains("Media Entry 999 was not deleted")
