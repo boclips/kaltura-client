@@ -8,7 +8,7 @@ import spock.lang.Specification
 class RestSessionRetrieverTest extends Specification {
     public static final int PORT = 9991
 
-    def "returns a kaltura session"() {
+    def "returns a kaltura session with admin permissions"() {
         given:
         SessionRetriever sessionRetriever = new SessionRetriever(
                 KalturaClientConfig.builder()
@@ -42,7 +42,7 @@ class RestSessionRetrieverTest extends Specification {
                     method : 'POST',
                     path   : '/api_v3/service/session/action/start',
                     headers: ['Content-Type': 'application/x-www-form-urlencoded'],
-                    body   : 'expiry=8675309&format=1&partnerId=abc&secret=123&type=0&userId=user%40kaltura.com'
+                    body   : 'expiry=8675309&format=1&partnerId=abc&secret=123&type=2&userId=user%40kaltura.com'
             ])
             willRespondWith([
                     status : 200,

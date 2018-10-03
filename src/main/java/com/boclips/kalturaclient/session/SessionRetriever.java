@@ -16,7 +16,7 @@ public class SessionRetriever {
                     .field("format", "1")
                     .field("partnerId", this.config.getPartnerId())
                     .field("secret", this.config.getSecret())
-                    .field("type", "0")
+                    .field("type", "2")
                     .field("userId", this.config.getUserId())
                     .asString()
                     .getBody();
