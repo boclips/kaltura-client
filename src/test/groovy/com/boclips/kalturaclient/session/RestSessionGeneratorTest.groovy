@@ -33,14 +33,14 @@ class RestSessionGeneratorTest extends Specification {
         1 * sessionRetriever.fetch() >> "some-crap"
     }
 
-    def "renews session when it has expired"() {
+    def "renews session when expiry is within 5 second"() {
         given:
         SessionRetriever sessionRetriever = Mock(SessionRetriever)
-        SessionGenerator generator = new RestSessionGenerator(sessionRetriever, 0)
+        SessionGenerator generator = new RestSessionGenerator(sessionRetriever, 5)
 
         when:
         generator.get()
-        Thread.sleep(1000)
+        Thread.sleep(100)
         generator.get()
 
         then:

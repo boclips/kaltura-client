@@ -25,7 +25,7 @@ public class RestSessionGenerator implements SessionGenerator {
     }
 
     private boolean hasExpired() {
-        return Instant.now().toEpochMilli() > sessionExpiresAt.toEpochMilli();
+        return Instant.now().toEpochMilli() + 5000 > sessionExpiresAt.toEpochMilli();
     }
 
     private void generateSession() {
