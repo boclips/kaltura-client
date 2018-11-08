@@ -59,4 +59,21 @@ class KalturaClientV3Test extends Specification {
         thrown Exception
     }
 
+    def "getMediaEntriesByReferenceIds does not call Kaltura when list of ids empty"() {
+        given:
+        KalturaClientConfig config = KalturaClientConfig.builder()
+                .baseUrl("common://www.kaltura.com")
+                .partnerId("not a real partner id")
+                .userId("not a real user id")
+                .secret("not a real secret")
+                .build()
+        KalturaClientV3 client = new KalturaClientV3(config, Mock(SessionGenerator))
+
+        when:
+        Map<String, List<MediaEntry>> entries = client.getMediaEntriesByReferenceIds([])
+
+        then:
+        entries.isEmpty()
+    }
+
 }

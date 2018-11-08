@@ -22,6 +22,9 @@ public class KalturaClientV3 implements KalturaClient {
 
     @Override
     public Map<String, List<MediaEntry>> getMediaEntriesByReferenceIds(Collection<String> referenceIds) {
+        if(referenceIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
         List<MediaEntry> mediaEntries = mediaList.get(this.sessionGenerator.get().getToken(), createFilters(referenceIds));
         return mediaEntries.stream().collect(Collectors.groupingBy(MediaEntry::getReferenceId, Collectors.toList()));
     }
