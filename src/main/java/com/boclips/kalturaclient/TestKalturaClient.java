@@ -40,4 +40,8 @@ public class TestKalturaClient implements KalturaClient {
                 .computeIfAbsent(mediaEntry.getReferenceId(), (String key) -> new ArrayList<>())
                 .add(mediaEntry);
     }
+
+    public void clear() {
+        mediaEntryByReferenceId.clear();
+    }
 }
