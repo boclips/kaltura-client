@@ -58,4 +58,8 @@ apply plugin: 'org.owasp.dependencycheck'
 
 dependencyCheck {
     failBuildOnCVSS = 4
+
+    data {
+        directory='./dependency-check-cache'
+    }
 }

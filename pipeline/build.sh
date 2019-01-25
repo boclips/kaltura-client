@@ -7,5 +7,5 @@ export GRADLE_USER_HOME="${cwd}/.gradle"
 
 (
 cd source
-./gradlew test
+./gradlew test dependencyCheckAnalyze
 )

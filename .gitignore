@@ -4,3 +4,4 @@
 build/
 out/
 contract-test-setup.yml
+dependency-check-cache/

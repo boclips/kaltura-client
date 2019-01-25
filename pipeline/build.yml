@@ -13,6 +13,7 @@ inputs:
 
 caches:
 - path: source/.gradle
+- path: source/dependency-check-cache
 
 run:
   path: source/pipeline/build.sh
