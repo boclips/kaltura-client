@@ -1,6 +1,7 @@
 plugins {
     id 'groovy'
     id 'java'
+    id 'org.owasp.dependencycheck' version '4.0.2'
 }
 
 group 'com.boclips'
@@ -51,4 +52,10 @@ dependencies {
 task testContract(type: Test) {
     testClassesDirs = sourceSets.testContract.output.classesDirs
     classpath = sourceSets.testContract.runtimeClasspath
+}
+
+apply plugin: 'org.owasp.dependencycheck'
+
+dependencyCheck {
+    failBuildOnCVSS = 4
 }
