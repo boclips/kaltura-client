@@ -26,7 +26,7 @@ sourceSets {
 dependencies {
     compile 'com.mashape.unirest:unirest-java:1.4.9'
     compile 'org.projectlombok:lombok:1.18.2'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     compile 'org.slf4j:slf4j-api:1.7.25'
 
     testCompile 'au.com.dius:pact-jvm-provider_2.11:3.5.6'
