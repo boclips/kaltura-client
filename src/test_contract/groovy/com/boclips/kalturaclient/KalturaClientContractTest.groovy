@@ -1,6 +1,8 @@
 package com.boclips.kalturaclient
 
 import com.boclips.kalturaclient.media.MediaEntry
+import com.boclips.kalturaclient.media.MediaEntryStatus
+import com.boclips.kalturaclient.media.resources.MediaEntryStatusResource
 import com.boclips.kalturaclient.media.streams.StreamFormat
 import com.boclips.kalturaclient.media.streams.StreamUrls
 import org.yaml.snakeyaml.Yaml
@@ -53,6 +55,7 @@ class KalturaClientContractTest extends Specification {
         mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS) != null
         mediaEntry.duration != null
         mediaEntry.thumbnailUrl.startsWith('https://cdnapisec.kaltura.com/p')
+        mediaEntry.getStatus() == MediaEntryStatus.NOT_READY
 
         where:
         client << [realClient(), testClient()]
@@ -60,8 +63,8 @@ class KalturaClientContractTest extends Specification {
 
     private KalturaClient testClient() {
         def client = new TestKalturaClient()
-        client.addMediaEntry(mediaEntry("1_2t65w8sx", "test-reference-id", Duration.ofSeconds(92)))
-        client.addMediaEntry(mediaEntry("1_8atxygq9", "reference-id-2", Duration.ofSeconds(185)))
+        client.addMediaEntry(mediaEntry("1_2t65w8sx", "test-reference-id", Duration.ofSeconds(92), MediaEntryStatus.NOT_READY))
+        client.addMediaEntry(mediaEntry("1_8atxygq9", "reference-id-2", Duration.ofSeconds(185), MediaEntryStatus.NOT_READY))
         return client
     }
 
@@ -76,13 +79,14 @@ class KalturaClientContractTest extends Specification {
         return KalturaClient.create(config)
     }
 
-    private static MediaEntry mediaEntry(String id, String referenceId, Duration duration) {
+    private static MediaEntry mediaEntry(String id, String referenceId, Duration duration, MediaEntryStatus status) {
         MediaEntry.builder()
                 .id(id)
                 .referenceId(referenceId)
                 .duration(duration)
                 .streams(new StreamUrls("https://stream.com/s/" + id + "[FORMAT]"))
                 .thumbnailUrl("https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/" + id + "/height/250/vid_slices/3/vid_slice/2")
+                .status(status)
                 .build()
     }
 

@@ -14,4 +14,5 @@ public class MediaEntry {
     private final Duration duration;
     private final StreamUrls streams;
     private final String thumbnailUrl;
+    private final MediaEntryStatus status;
 }

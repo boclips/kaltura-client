@@ -1,6 +1,7 @@
 package com.boclips.kalturaclient.media
 
 import com.boclips.kalturaclient.media.resources.MediaEntryResource
+import com.boclips.kalturaclient.media.resources.MediaEntryStatusResource
 import com.boclips.kalturaclient.media.resources.MediaListResource
 import com.boclips.kalturaclient.media.streams.StreamFormat
 import com.boclips.kalturaclient.media.streams.StreamUrlProducer
@@ -20,7 +21,7 @@ class MediaProcessorTest extends Specification {
                 new ThumbnailUrlProducer(Factories.exampleConfig())
         )
 
-        MediaEntryResource mediaEntryResource = new MediaEntryResource("123", "ref-123", 120)
+        MediaEntryResource mediaEntryResource = new MediaEntryResource("123", "ref-123", 120, 2)
         resource = new MediaListResource(Arrays.asList(mediaEntryResource), "Something", "code", 1L)
     }
 
@@ -32,6 +33,7 @@ class MediaProcessorTest extends Specification {
         mediaEntry[0].id == "123"
         mediaEntry[0].referenceId == "ref-123"
         mediaEntry[0].duration == Duration.ofMinutes(2)
+        mediaEntry[0].status == MediaEntryStatus.READY
     }
 
     def "produces valid streams"() {

@@ -11,4 +11,5 @@ public class MediaEntryResource {
     private String id;
     private String referenceId;
     private Integer duration;
+    public int status;
 }

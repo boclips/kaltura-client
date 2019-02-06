@@ -1,6 +1,7 @@
 package com.boclips.kalturaclient.media;
 
 import com.boclips.kalturaclient.media.resources.MediaEntryResource;
+import com.boclips.kalturaclient.media.resources.MediaEntryStatusResource;
 import com.boclips.kalturaclient.media.resources.MediaListResource;
 import com.boclips.kalturaclient.media.streams.StreamUrlProducer;
 import com.boclips.kalturaclient.media.thumbnails.ThumbnailUrlProducer;
@@ -34,6 +35,7 @@ public class MediaProcessor {
                 .duration(Duration.ofSeconds(mediaEntryResource.getDuration()))
                 .streams(streamUrlProducer.convert(mediaEntryResource))
                 .thumbnailUrl(thumbnailUrlProducer.convert(mediaEntryResource))
+                .status(MediaEntryStatus.from(MediaEntryStatusResource.fromInteger(mediaEntryResource.status)))
                 .build();
     }
 }
