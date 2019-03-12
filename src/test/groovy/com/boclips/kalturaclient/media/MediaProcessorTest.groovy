@@ -21,7 +21,13 @@ class MediaProcessorTest extends Specification {
                 new ThumbnailUrlProducer(Factories.exampleConfig())
         )
 
-        MediaEntryResource mediaEntryResource = new MediaEntryResource("123", "ref-123", 120, 2)
+        MediaEntryResource mediaEntryResource = MediaEntryResource.builder()
+            .id("123")
+            .referenceId("ref-123")
+            .downloadUrl("http://kaltura.com/download/123.mp4")
+            .duration(120)
+            .status(2)
+            .build()
         resource = new MediaListResource(Arrays.asList(mediaEntryResource), "Something", "code", 1L)
     }
 
@@ -32,6 +38,7 @@ class MediaProcessorTest extends Specification {
         then:
         mediaEntry[0].id == "123"
         mediaEntry[0].referenceId == "ref-123"
+        mediaEntry[0].downloadUrl == "http://kaltura.com/download/123.mp4"
         mediaEntry[0].duration == Duration.ofMinutes(2)
         mediaEntry[0].status == MediaEntryStatus.READY
     }

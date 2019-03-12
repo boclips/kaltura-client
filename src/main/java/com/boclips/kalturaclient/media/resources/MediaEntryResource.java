@@ -1,12 +1,11 @@
 package com.boclips.kalturaclient.media.resources;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class MediaEntryResource {
     private String id;
     private String referenceId;
