@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-lpass show --notes "kaltura-client contract test application.properties" > contract-test-setup.yml
+cwd="$(cd "$(dirname "$0")" && pwd)"
+lpass show --notes "kaltura-client contract test application.properties" > "$cwd/contract-test-setup.yml"

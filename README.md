@@ -28,4 +28,4 @@ In order for them to run successfully, the following environment variables need 
     USER_ID
     SECRET
 
-Execute `./setup-contract-test` to download some secret configuration from lastpass.
+Execute `src/test_contract/resources/setup-contract-test` to download some secret configuration from lastpass.
