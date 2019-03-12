@@ -11,6 +11,7 @@ import java.time.Duration;
 public class MediaEntry {
     private final String id;
     private final String referenceId;
+    private final String downloadUrl;
     private final Duration duration;
     private final StreamUrls streams;
     private final String thumbnailUrl;

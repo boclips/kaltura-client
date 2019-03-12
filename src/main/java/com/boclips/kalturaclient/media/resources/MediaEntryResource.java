@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class MediaEntryResource {
     private String id;
     private String referenceId;
+    private String downloadUrl;
     private Integer duration;
     public int status;
 }

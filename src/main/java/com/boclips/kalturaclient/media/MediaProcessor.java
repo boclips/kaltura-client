@@ -32,6 +32,7 @@ public class MediaProcessor {
         return MediaEntry.builder()
                 .id(mediaEntryResource.getId())
                 .referenceId(mediaEntryResource.getReferenceId())
+                .downloadUrl(mediaEntryResource.getDownloadUrl())
                 .duration(Duration.ofSeconds(mediaEntryResource.getDuration()))
                 .streams(streamUrlProducer.convert(mediaEntryResource))
                 .thumbnailUrl(thumbnailUrlProducer.convert(mediaEntryResource))

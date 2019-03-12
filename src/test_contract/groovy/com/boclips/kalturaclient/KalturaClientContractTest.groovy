@@ -2,7 +2,6 @@ package com.boclips.kalturaclient
 
 import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaEntryStatus
-import com.boclips.kalturaclient.media.resources.MediaEntryStatusResource
 import com.boclips.kalturaclient.media.streams.StreamFormat
 import com.boclips.kalturaclient.media.streams.StreamUrls
 import org.yaml.snakeyaml.Yaml
@@ -55,6 +54,7 @@ class KalturaClientContractTest extends Specification {
         mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS) != null
         mediaEntry.duration != null
         mediaEntry.thumbnailUrl.startsWith('https://cdnapisec.kaltura.com/p')
+        mediaEntry.downloadUrl.startsWith('https://cdnapisec.kaltura.com/p')
         mediaEntry.getStatus() == MediaEntryStatus.NOT_READY
 
         where:
@@ -63,8 +63,26 @@ class KalturaClientContractTest extends Specification {
 
     private KalturaClient testClient() {
         def client = new TestKalturaClient()
-        client.addMediaEntry(mediaEntry("1_2t65w8sx", "test-reference-id", Duration.ofSeconds(92), MediaEntryStatus.NOT_READY))
-        client.addMediaEntry(mediaEntry("1_8atxygq9", "reference-id-2", Duration.ofSeconds(185), MediaEntryStatus.NOT_READY))
+        def id1 = "1_2t65w8sx"
+        def id2 = "1_8atxygq9"
+        client.addMediaEntry(MediaEntry.builder()
+                .id(id1)
+                .referenceId("test-reference-id")
+                .downloadUrl(downloadUrl(id1))
+                .duration(Duration.ofSeconds(92))
+                .streams(streamUrl(id1))
+                .thumbnailUrl(thumbnailUrl(id1))
+                .status(MediaEntryStatus.NOT_READY)
+                .build())
+        client.addMediaEntry(MediaEntry.builder()
+                .id(id2)
+                .referenceId("reference-id-2")
+                .downloadUrl(downloadUrl(id2))
+                .duration(Duration.ofSeconds(185))
+                .streams(streamUrl(id2))
+                .thumbnailUrl(thumbnailUrl(id2))
+                .status(MediaEntryStatus.NOT_READY)
+                .build())
         return client
     }
 
@@ -79,15 +97,16 @@ class KalturaClientContractTest extends Specification {
         return KalturaClient.create(config)
     }
 
-    private static MediaEntry mediaEntry(String id, String referenceId, Duration duration, MediaEntryStatus status) {
-        MediaEntry.builder()
-                .id(id)
-                .referenceId(referenceId)
-                .duration(duration)
-                .streams(new StreamUrls("https://stream.com/s/" + id + "[FORMAT]"))
-                .thumbnailUrl("https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/" + id + "/height/250/vid_slices/3/vid_slice/2")
-                .status(status)
-                .build()
+    private static String downloadUrl(String id) {
+        return "https://cdnapisec.kaltura.com/p/" + id + ".mp4"
+    }
+
+    private static StreamUrls streamUrl(String id) {
+        new StreamUrls("https://stream.com/s/" + id + "[FORMAT]")
+    }
+
+    private static String thumbnailUrl(String id) {
+        "https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/" + id + "/height/250/vid_slices/3/vid_slice/2"
     }
 
     private Map<String, String> readConfiguration() {
