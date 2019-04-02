@@ -1,7 +1,7 @@
 package com.boclips.kalturaclient.captionasset;
 
 import com.boclips.kalturaclient.KalturaClientConfig;
-import com.boclips.kalturaclient.captionasset.resources.CaptionAssetListItemResource;
+import com.boclips.kalturaclient.captionasset.resources.CaptionAssetResource;
 import com.boclips.kalturaclient.captionasset.resources.CaptionAssetListResource;
 import com.boclips.kalturaclient.http.HttpClient;
 import com.boclips.kalturaclient.http.RequestFilters;
@@ -24,16 +24,7 @@ public class CaptionAssetListClient implements CaptionAssetList {
 
         return resources.objects
                 .stream()
-                .map(this::resourceToAsset)
+                .map(CaptionAssetResource::toAsset)
                 .collect(toList());
-    }
-
-    private CaptionAsset resourceToAsset(CaptionAssetListItemResource item) {
-        return CaptionAsset.builder()
-                .id(item.id)
-                .label(item.label)
-                .language(item.language)
-                .fileType(CaptionFormat.fromValue(item.format))
-                .build();
     }
 }

@@ -2,6 +2,7 @@ package com.boclips.kalturaclient
 
 import com.boclips.kalturaclient.captionasset.CaptionAsset
 import com.boclips.kalturaclient.captionasset.CaptionFormat
+import com.boclips.kalturaclient.http.KalturaClientApiException
 import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaEntryStatus
 import com.boclips.kalturaclient.media.streams.StreamFormat
@@ -10,6 +11,7 @@ import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
 
 import java.time.Duration
+import java.util.stream.Collectors
 
 class KalturaClientContractTest extends Specification {
 
@@ -19,7 +21,11 @@ class KalturaClientContractTest extends Specification {
     }
 
     void cleanup() {
-        realClient().deleteMediaEntriesByReferenceId("test-reference-id")
+        try {
+            realClient().deleteMediaEntriesByReferenceId("test-reference-id")
+        } catch (Exception e) {
+            e.printStackTrace()
+        }
     }
 
     def "create and delete media entries"(KalturaClient client) {
@@ -71,8 +77,12 @@ class KalturaClientContractTest extends Specification {
                 .language("English")
                 .fileType(CaptionFormat.WEBVTT)
                 .build()
-        client.createCaptionsFile("test-reference-id", captionAsset)
+        client.createCaptionsFile("test-reference-id", captionAsset, "this week in the news")
         List<CaptionAsset> captions = client.getCaptionFilesByReferenceId("test-reference-id")
+        List<String> contents = captions.stream()
+                .map { caption -> caption.id }
+                .map { id -> client.getCaptionContentByAssetId(id) }
+                .collect(Collectors.toList())
 
         then:
         captions.size() == 1
@@ -80,6 +90,10 @@ class KalturaClientContractTest extends Specification {
         captions.first().label == "English (auto-generated)"
         captions.first().language == "English"
         captions.first().fileType == CaptionFormat.WEBVTT
+
+        then:
+        contents.size() == 1
+        contents.first() == "this week in the news"
 
         where:
         client << [realClient(), testClient()]

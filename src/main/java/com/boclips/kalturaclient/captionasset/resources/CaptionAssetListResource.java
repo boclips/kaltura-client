@@ -11,7 +11,7 @@ import java.util.List;
 @ToString
 public class CaptionAssetListResource {
     public Long totalCount;
-    public List<CaptionAssetListItemResource> objects;
+    public List<CaptionAssetResource> objects;
 }
 
 

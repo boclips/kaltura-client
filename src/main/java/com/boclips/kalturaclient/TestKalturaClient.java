@@ -12,6 +12,7 @@ public class TestKalturaClient implements KalturaClient {
     private final Map<String, List<MediaEntry>> mediaEntryByReferenceId = new HashMap<>();
 
     private final Map<String, List<CaptionAsset>> captionAssetsByReferenceId = new HashMap<>();
+    private final Map<String, String> captionContentsByAssetId = new HashMap<>();
 
     @Override
     public Map<String, List<MediaEntry>> getMediaEntriesByReferenceIds(Collection<String> referenceIds) {
@@ -39,18 +40,25 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public void createCaptionsFile(String referenceId, CaptionAsset captionAsset) {
+    public void createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
+        String assetId = UUID.randomUUID().toString();
         CaptionAsset copyWithId = captionAsset
                 .toBuilder()
-                .id(UUID.randomUUID().toString())
+                .id(assetId)
                 .build();
         captionAssetsByReferenceId.computeIfAbsent(referenceId, (refId) -> new ArrayList<>())
                 .add(copyWithId);
+        captionContentsByAssetId.put(assetId, content);
     }
 
     @Override
     public List<CaptionAsset> getCaptionFilesByReferenceId(String referenceId) {
         return captionAssetsByReferenceId.get(referenceId);
+    }
+
+    @Override
+    public String getCaptionContentByAssetId(String assetId) {
+        return captionContentsByAssetId.get(assetId);
     }
 
     public void addMediaEntry(MediaEntry mediaEntry) {

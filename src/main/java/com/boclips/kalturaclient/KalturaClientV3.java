@@ -17,6 +17,8 @@ public class KalturaClientV3 implements KalturaClient {
     private final MediaAdd mediaAdd;
     private final CaptionAssetList captionAssetList;
     private final CaptionAssetAdd captionAssetAdd;
+    private final CaptionAssetSetContentClient captionAssetSetContent;
+    private final CaptionAssetServeClient captionAssetServe;
 
     public KalturaClientV3(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         this.sessionGenerator = sessionGenerator;
@@ -25,6 +27,8 @@ public class KalturaClientV3 implements KalturaClient {
         this.mediaAdd = new MediaAddClient(config);
         this.captionAssetList = new CaptionAssetListClient(config);
         this.captionAssetAdd = new CaptionAssetAddClient(config);
+        this.captionAssetSetContent = new CaptionAssetSetContentClient(config);
+        this.captionAssetServe = new CaptionAssetServeClient(config);
     }
 
     @Override
@@ -51,9 +55,11 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public void createCaptionsFile(String referenceId, CaptionAsset captionAsset) {
+    public void createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
         String entryId = entryIdFromReferenceId(referenceId);
-        captionAssetAdd.post(sessionGenerator.get().getToken(), entryId, captionAsset);
+        String token = sessionGenerator.get().getToken();
+        CaptionAsset asset = captionAssetAdd.post(token, entryId, captionAsset);
+        captionAssetSetContent.post(token, asset.getId(), content);
     }
 
     @Override
@@ -61,6 +67,11 @@ public class KalturaClientV3 implements KalturaClient {
         String entryId = entryIdFromReferenceId(referenceId);
 
         return captionAssetList.get(sessionGenerator.get().getToken(), entryIdEqual(entryId));
+    }
+
+    @Override
+    public String getCaptionContentByAssetId(String assetId) {
+        return captionAssetServe.get(sessionGenerator.get().getToken(), assetId);
     }
 
     private String entryIdFromReferenceId(String referenceId) {

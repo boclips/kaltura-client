@@ -22,7 +22,9 @@ public interface KalturaClient {
 
     void createMediaEntry(String referenceId);
 
-    void createCaptionsFile(String referenceId, CaptionAsset captionAsset);
+    void createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content);
 
     List<CaptionAsset> getCaptionFilesByReferenceId(String referenceId);
+
+    String getCaptionContentByAssetId(String assetId);
 }

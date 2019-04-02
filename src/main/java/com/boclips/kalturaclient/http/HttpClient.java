@@ -3,6 +3,7 @@ package com.boclips.kalturaclient.http;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
 import com.boclips.kalturaclient.captionasset.CaptionAssetList;
 import com.boclips.kalturaclient.captionasset.resources.CaptionAssetListResource;
+import com.boclips.kalturaclient.captionasset.resources.CaptionAssetResource;
 import com.boclips.kalturaclient.media.resources.MediaListResource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -84,15 +85,16 @@ public class HttpClient {
         }
     }
 
-    public void addCaptionAsset(String sessionToken, String entryId, CaptionAsset captionAsset) {
+    public CaptionAssetResource addCaptionAsset(String sessionToken, String entryId, CaptionAsset captionAsset) {
         try {
-            Unirest.post(this.baseUrl + "/api_v3/service/caption_captionasset/action/add")
+            return Unirest.post(this.baseUrl + "/api_v3/service/caption_captionasset/action/add")
                     .queryString("ks", sessionToken)
+                    .queryString("format", "1")
                     .queryString("entryId", entryId)
                     .queryString("captionAsset[format]", captionAsset.getFileType().getValue())
                     .queryString("captionAsset[language]", captionAsset.getLanguage())
                     .queryString("captionAsset[label]", captionAsset.getLabel())
-                    .asObject(String.class)
+                    .asObject(CaptionAssetResource.class)
                     .getBody();
         } catch (UnirestException e) {
             throw new RuntimeException(e);
@@ -137,5 +139,31 @@ public class HttpClient {
                 }
             }
         });
+    }
+
+    public void setCaptionAssetContent(String sessionToken, String captionAssetId, String content) {
+        try {
+            Unirest.post(this.baseUrl + "/api_v3/service/caption_captionasset/action/setContent")
+                    .queryString("ks", sessionToken)
+                    .queryString("id", captionAssetId)
+                    .queryString("contentResource[objectType]", "KalturaStringResource")
+                    .queryString("contentResource[content]", content)
+                    .asObject(String.class)
+                    .getBody();
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String serveCaptionAsset(String sessionToken, String assetId) {
+        try {
+            return Unirest.get(this.baseUrl + "/api_v3/service/caption_captionasset/action/serve")
+                    .queryString("ks", sessionToken)
+                    .queryString("captionAssetId", assetId)
+                    .asObject(String.class)
+                    .getBody();
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
