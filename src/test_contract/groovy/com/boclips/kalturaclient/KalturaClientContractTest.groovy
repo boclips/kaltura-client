@@ -1,5 +1,7 @@
 package com.boclips.kalturaclient
 
+import com.boclips.kalturaclient.captionasset.CaptionAsset
+import com.boclips.kalturaclient.captionasset.CaptionFormat
 import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaEntryStatus
 import com.boclips.kalturaclient.media.streams.StreamFormat
@@ -12,6 +14,7 @@ import java.time.Duration
 class KalturaClientContractTest extends Specification {
 
     void setup() {
+        cleanup()
         realClient().createMediaEntry("test-reference-id")
     }
 
@@ -56,6 +59,27 @@ class KalturaClientContractTest extends Specification {
         mediaEntry.thumbnailUrl.startsWith('https://cdnapisec.kaltura.com/p')
         mediaEntry.downloadUrl.startsWith('https://cdnapisec.kaltura.com/p')
         mediaEntry.getStatus() == MediaEntryStatus.NOT_READY
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+    def "list caption files"(KalturaClient client) {
+        when:
+        CaptionAsset captionAsset = CaptionAsset.builder()
+                .label("English (auto-generated)")
+                .language("English")
+                .fileType(CaptionFormat.WEBVTT)
+                .build()
+        client.createCaptionsFile("test-reference-id", captionAsset)
+        List<CaptionAsset> captions = client.getCaptionFilesByReferenceId("test-reference-id")
+
+        then:
+        captions.size() == 1
+        captions.first().id.length() > 0
+        captions.first().label == "English (auto-generated)"
+        captions.first().language == "English"
+        captions.first().fileType == CaptionFormat.WEBVTT
 
         where:
         client << [realClient(), testClient()]

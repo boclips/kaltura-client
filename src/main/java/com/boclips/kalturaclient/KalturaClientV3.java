@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient;
 
+import com.boclips.kalturaclient.captionasset.*;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.*;
 import com.boclips.kalturaclient.session.SessionGenerator;
@@ -7,17 +8,23 @@ import com.boclips.kalturaclient.session.SessionGenerator;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singleton;
+
 public class KalturaClientV3 implements KalturaClient {
     private SessionGenerator sessionGenerator;
     private final MediaList mediaList;
     private final MediaDelete mediaDelete;
     private final MediaAdd mediaAdd;
+    private final CaptionAssetList captionAssetList;
+    private final CaptionAssetAdd captionAssetAdd;
 
     public KalturaClientV3(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         this.sessionGenerator = sessionGenerator;
         this.mediaList = new MediaListClient(config);
         this.mediaDelete = new MediaDeleteClient(config);
         this.mediaAdd = new MediaAddClient(config);
+        this.captionAssetList = new CaptionAssetListClient(config);
+        this.captionAssetAdd = new CaptionAssetAddClient(config);
     }
 
     @Override
@@ -25,7 +32,7 @@ public class KalturaClientV3 implements KalturaClient {
         if(referenceIds.isEmpty()) {
             return Collections.emptyMap();
         }
-        List<MediaEntry> mediaEntries = mediaList.get(this.sessionGenerator.get().getToken(), createFilters(referenceIds));
+        List<MediaEntry> mediaEntries = mediaList.get(this.sessionGenerator.get().getToken(), referenceIdIn(referenceIds));
         return mediaEntries.stream().collect(Collectors.groupingBy(MediaEntry::getReferenceId, Collectors.toList()));
     }
 
@@ -44,12 +51,42 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
+    public void createCaptionsFile(String referenceId, CaptionAsset captionAsset) {
+        String entryId = entryIdFromReferenceId(referenceId);
+        captionAssetAdd.post(sessionGenerator.get().getToken(), entryId, captionAsset);
+    }
+
+    @Override
+    public List<CaptionAsset> getCaptionFilesByReferenceId(String referenceId) {
+        String entryId = entryIdFromReferenceId(referenceId);
+
+        return captionAssetList.get(sessionGenerator.get().getToken(), entryIdEqual(entryId));
+    }
+
+    private String entryIdFromReferenceId(String referenceId) {
+        List<MediaEntry> mediaEntries = getMediaEntriesByReferenceId(referenceId);
+
+        if(mediaEntries.size() != 1) {
+            throw new RuntimeException(mediaEntries.size() + " media entries for reference id " + referenceId);
+        }
+
+        MediaEntry mediaEntry = mediaEntries.get(0);
+
+        return mediaEntry.getId();
+    }
+
+    @Override
     public List<MediaEntry> getMediaEntriesByReferenceId(String referenceId) {
-        return Optional.ofNullable(getMediaEntriesByReferenceIds(Collections.singleton(referenceId)).get(referenceId))
+        return Optional.ofNullable(getMediaEntriesByReferenceIds(singleton(referenceId)).get(referenceId))
                 .orElse(Collections.emptyList());
     }
 
-    private RequestFilters createFilters(Collection<String> referenceIds) {
+    private RequestFilters entryIdEqual(String entryId) {
+        return new RequestFilters()
+                .add("filter[entryIdEqual]", entryId);
+    }
+
+    private RequestFilters referenceIdIn(Collection<String> referenceIds) {
         return new RequestFilters()
                 .add("filter[referenceIdIn]", String.join(",", referenceIds));
     }
