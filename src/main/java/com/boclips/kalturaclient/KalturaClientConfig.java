@@ -40,7 +40,7 @@ public class KalturaClientConfig {
     }
 
     public static class Builder {
-        private String baseUrl = "https://www.kaltura.com";
+        private String baseUrl = "https://www.kaltura.com/api_v3/service";
         private Integer sessionTtl = 60;
         private String partnerId;
         private String userId;
