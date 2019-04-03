@@ -46,8 +46,10 @@ class KalturaClientContractTest extends Specification {
     }
 
     def "fetch media entries from api"(KalturaClient client) {
-        when:
+        given:
         client.createMediaEntry("test-reference-id")
+
+        when:
         Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
                 "test-reference-id",
                 "unknown-reference-id"
@@ -70,8 +72,10 @@ class KalturaClientContractTest extends Specification {
     }
 
     def "create and list caption files"(KalturaClient client) {
-        when:
+        given:
         client.createMediaEntry("test-reference-id")
+
+        when:
         CaptionAsset captionAsset = CaptionAsset.builder()
                 .label("English (auto-generated)")
                 .language("English")
