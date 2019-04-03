@@ -76,20 +76,6 @@ public class HttpClient {
         });
     }
 
-    public void setCaptionAssetContent(String sessionToken, String captionAssetId, String content) {
-        try {
-            Unirest.post(this.baseUrl + "/api_v3/service/caption_captionasset/action/setContent")
-                    .queryString("ks", sessionToken)
-                    .queryString("id", captionAssetId)
-                    .queryString("contentResource[objectType]", "KalturaStringResource")
-                    .queryString("contentResource[content]", content)
-                    .asObject(String.class)
-                    .getBody();
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public String serveCaptionAsset(String sessionToken, String assetId) {
         try {
             return Unirest.get(this.baseUrl + "/api_v3/service/caption_captionasset/action/serve")
