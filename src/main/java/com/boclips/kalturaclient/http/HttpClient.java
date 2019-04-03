@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -24,21 +25,16 @@ public class HttpClient {
     }
 
     public <T> T get(String path, Map<String, Object> queryParams, Class<T> responseType) {
-        try {
-            return Unirest.get(this.baseUrl + path)
-                    .queryString("ks", sessionGenerator.get().getToken())
-                    .queryString("format", "1")
-                    .queryString(queryParams)
-                    .asObject(responseType)
-                    .getBody();
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
-        }
+        return makeRequest(Unirest.get(this.baseUrl + path), queryParams, responseType);
     }
 
     public <T> T post(String path, Map<String, Object> queryParams, Class<T> responseType) {
+        return makeRequest(Unirest.post(this.baseUrl + path), queryParams, responseType);
+    }
+
+    private <T> T makeRequest(HttpRequest req, Map<String, Object> queryParams, Class<T> responseType) {
         try {
-            return Unirest.post(this.baseUrl + path)
+            return req
                     .queryString("ks", sessionGenerator.get().getToken())
                     .queryString("format", "1")
                     .queryString(queryParams)
