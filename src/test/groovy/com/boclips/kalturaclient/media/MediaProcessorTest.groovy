@@ -1,7 +1,8 @@
 package com.boclips.kalturaclient.media
 
+import com.boclips.kalturaclient.http.KalturaClientApiException
+import com.boclips.kalturaclient.http.ResponseObjectType
 import com.boclips.kalturaclient.media.resources.MediaEntryResource
-import com.boclips.kalturaclient.media.resources.MediaEntryStatusResource
 import com.boclips.kalturaclient.media.resources.MediaListResource
 import com.boclips.kalturaclient.media.streams.StreamFormat
 import com.boclips.kalturaclient.media.streams.StreamUrlProducer
@@ -22,13 +23,18 @@ class MediaProcessorTest extends Specification {
         )
 
         MediaEntryResource mediaEntryResource = MediaEntryResource.builder()
-            .id("123")
-            .referenceId("ref-123")
-            .downloadUrl("http://kaltura.com/download/123.mp4")
-            .duration(120)
-            .status(2)
-            .build()
-        resource = new MediaListResource(Arrays.asList(mediaEntryResource), "Something", "code", 1L)
+                .id("123")
+                .referenceId("ref-123")
+                .downloadUrl("http://kaltura.com/download/123.mp4")
+                .duration(120)
+                .status(2)
+                .build()
+        resource = MediaListResource.builder()
+                .objectType(ResponseObjectType.KALTURA_MEDIA_LIST_RESPONSE.type)
+                .code("code")
+                .totalCount(1L)
+                .objects(Arrays.asList(mediaEntryResource))
+                .build()
     }
 
     def "process MediaEntryResource to MediaEntry"() {
@@ -59,5 +65,14 @@ class MediaProcessorTest extends Specification {
 
         then:
         mediaEntries[0].thumbnailUrl == "https://cdnapisec.kaltura.com/p/partner-123/thumbnail/entry_id/123/height/250/vid_slices/3/vid_slice/2"
+    }
+
+    def "throws when the resource is unsuccessful"() {
+        when:
+        resource = resource.toBuilder().objectType("Bad thing").build()
+        processor.process(resource)
+
+        then:
+        thrown KalturaClientApiException
     }
 }

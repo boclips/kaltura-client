@@ -1,6 +1,5 @@
 package com.boclips.kalturaclient.captionasset;
 
-import com.boclips.kalturaclient.KalturaClientConfig;
 import com.boclips.kalturaclient.captionasset.resources.CaptionAssetResource;
 import com.boclips.kalturaclient.captionasset.resources.CaptionAssetListResource;
 import com.boclips.kalturaclient.http.HttpClient;
@@ -14,13 +13,13 @@ public class CaptionAssetListClient implements CaptionAssetList {
 
     private final HttpClient client;
 
-    public CaptionAssetListClient(KalturaClientConfig config) {
-        this.client = new HttpClient(config.getBaseUrl());
+    public CaptionAssetListClient(HttpClient client) {
+        this.client = client;
     }
 
     @Override
-    public List<CaptionAsset> get(String sessionToken, RequestFilters filters) {
-        CaptionAssetListResource resources = client.listCaptionAssets(sessionToken, filters);
+    public List<CaptionAsset> get(RequestFilters filters) {
+        CaptionAssetListResource resources = client.get("/service/caption_captionasset/action/list", filters.toMap(), CaptionAssetListResource.class);
 
         return resources.objects
                 .stream()

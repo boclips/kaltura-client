@@ -2,7 +2,6 @@ package com.boclips.kalturaclient
 
 import com.boclips.kalturaclient.captionasset.CaptionAsset
 import com.boclips.kalturaclient.captionasset.CaptionFormat
-import com.boclips.kalturaclient.http.KalturaClientApiException
 import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaEntryStatus
 import com.boclips.kalturaclient.media.streams.StreamFormat
@@ -70,7 +69,7 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
-    def "list caption files"(KalturaClient client) {
+    def "create and list caption files"(KalturaClient client) {
         when:
         CaptionAsset captionAsset = CaptionAsset.builder()
                 .label("English (auto-generated)")

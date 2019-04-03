@@ -1,5 +1,7 @@
 package com.boclips.kalturaclient.media;
 
+import com.boclips.kalturaclient.http.KalturaClientApiException;
+import com.boclips.kalturaclient.http.ResponseObjectType;
 import com.boclips.kalturaclient.media.resources.MediaEntryResource;
 import com.boclips.kalturaclient.media.resources.MediaEntryStatusResource;
 import com.boclips.kalturaclient.media.resources.MediaListResource;
@@ -22,6 +24,11 @@ public class MediaProcessor {
     }
 
     public List<MediaEntry> process(MediaListResource mediaListResource) {
+
+        if (!ResponseObjectType.isSuccessful(mediaListResource.objectType)) {
+            throw new KalturaClientApiException(String.format("Error in Kaltura request: %s", mediaListResource.code));
+        }
+
         return mediaListResource.objects
                 .stream()
                 .map(this::process)

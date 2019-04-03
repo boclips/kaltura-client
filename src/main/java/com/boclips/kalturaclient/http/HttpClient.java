@@ -1,113 +1,48 @@
 package com.boclips.kalturaclient.http;
 
-import com.boclips.kalturaclient.captionasset.CaptionAsset;
-import com.boclips.kalturaclient.captionasset.CaptionAssetList;
-import com.boclips.kalturaclient.captionasset.resources.CaptionAssetListResource;
-import com.boclips.kalturaclient.captionasset.resources.CaptionAssetResource;
-import com.boclips.kalturaclient.media.resources.MediaListResource;
+import com.boclips.kalturaclient.session.SessionGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 public class HttpClient {
-    private String baseUrl;
+    private final String baseUrl;
+    private final SessionGenerator sessionGenerator;
 
-    public HttpClient(String baseUrl) {
+    public HttpClient(String baseUrl, SessionGenerator sessionGenerator) {
         this.baseUrl = baseUrl;
+        this.sessionGenerator = sessionGenerator;
 
         configureUniRest();
     }
 
-    public MediaListResource listMediaEntries(String sessionToken, RequestFilters filters) {
+    public <T> T get(String path, Map<String, Object> queryParams, Class<T> responseType) {
         try {
-            HttpResponse<MediaListResource> response = Unirest.get(this.baseUrl + "/api_v3/service/media/action/list")
-                    .queryString(filters.toMap())
-                    .queryString("ks", sessionToken)
+            return Unirest.get(this.baseUrl + "/api_v3" + path)
+                    .queryString("ks", sessionGenerator.get().getToken())
                     .queryString("format", "1")
-                    .queryString("filter[statusIn]", "-2,-1,0,1,2,4,5,6,7")
-                    .asObject(MediaListResource.class);
-
-            log.debug("/action/list returned: {} with body {}", response.getStatus(), response.getBody());
-
-            MediaListResource mediaListResource = response.getBody();
-            if (!ResponseObjectType.isSuccessful(mediaListResource.objectType)) {
-                throw new UnsupportedOperationException(String.format("Error in Kaltura request: %s", mediaListResource.code));
-            }
-
-            return mediaListResource;
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void addMediaEntry(String sessionToken, String referenceId) {
-        try {
-            final HttpResponse<String> response = Unirest.post(this.baseUrl + "/api_v3/service/media/action/add")
-                    .queryString("ks", sessionToken)
-                    .queryString("format", "1")
-                    .queryString("entry[mediaType]", 1)
-                    .queryString("entry[objectType]", "KalturaMediaEntry")
-                    .queryString("entry[referenceId]", referenceId)
-                    .asString();
-
-            log.debug("/action/add returned: {} with body {}", response.getStatus(), response.getBody());
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void deleteMediaEntryByEntityId(String sessionToken, String entityId) {
-        try {
-            final HttpResponse<String> response = Unirest.post(this.baseUrl + "/api_v3/service/media/action/delete")
-                    .queryString("ks", sessionToken)
-                    .queryString("format", "1")
-                    .queryString("entryId", entityId)
-                    .asString();
-
-            log.debug("/action/delete returned: {} with body {}", response.getStatus(), response.getBody());
-
-            if (response.getBody().contains("KalturaAPIException")) {
-                throw new KalturaClientApiException(
-                        String.format("Media Entry %s was not deleted, API returned %s",
-                                entityId,
-                                response.getBody())
-                );
-            }
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public CaptionAssetResource addCaptionAsset(String sessionToken, String entryId, CaptionAsset captionAsset) {
-        try {
-            return Unirest.post(this.baseUrl + "/api_v3/service/caption_captionasset/action/add")
-                    .queryString("ks", sessionToken)
-                    .queryString("format", "1")
-                    .queryString("entryId", entryId)
-                    .queryString("captionAsset[format]", captionAsset.getFileType().getValue())
-                    .queryString("captionAsset[language]", captionAsset.getLanguage())
-                    .queryString("captionAsset[label]", captionAsset.getLabel())
-                    .asObject(CaptionAssetResource.class)
+                    .queryString(queryParams)
+                    .asObject(responseType)
                     .getBody();
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public CaptionAssetListResource listCaptionAssets(String sessionToken, RequestFilters filters) {
+    public <T> T post(String path, Map<String, Object> queryParams, Class<T> responseType) {
         try {
-            return Unirest.get(this.baseUrl + "/api_v3/service/caption_captionasset/action/list")
-                    .queryString(filters.toMap())
-                    .queryString("ks", sessionToken)
+            return Unirest.post(this.baseUrl + "/api_v3" + path)
+                    .queryString("ks", sessionGenerator.get().getToken())
                     .queryString("format", "1")
-                    .asObject(CaptionAssetListResource.class)
+                    .queryString(queryParams)
+                    .asObject(responseType)
                     .getBody();
         } catch (UnirestException e) {
             throw new RuntimeException(e);

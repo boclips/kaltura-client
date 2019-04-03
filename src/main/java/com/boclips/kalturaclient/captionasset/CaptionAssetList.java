@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface CaptionAssetList {
 
-    List<CaptionAsset> get(String sessionToken, RequestFilters filters);
+    List<CaptionAsset> get(RequestFilters filters);
 }

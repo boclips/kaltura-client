@@ -1,6 +1,7 @@
 package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.captionasset.*;
+import com.boclips.kalturaclient.http.HttpClient;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.*;
 import com.boclips.kalturaclient.session.SessionGenerator;
@@ -22,13 +23,15 @@ public class KalturaClientV3 implements KalturaClient {
 
     public KalturaClientV3(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         this.sessionGenerator = sessionGenerator;
-        this.mediaList = new MediaListClient(config);
-        this.mediaDelete = new MediaDeleteClient(config);
-        this.mediaAdd = new MediaAddClient(config);
-        this.captionAssetList = new CaptionAssetListClient(config);
-        this.captionAssetAdd = new CaptionAssetAddClient(config);
-        this.captionAssetSetContent = new CaptionAssetSetContentClient(config);
-        this.captionAssetServe = new CaptionAssetServeClient(config);
+
+        HttpClient client = new HttpClient(config.getBaseUrl(), sessionGenerator);
+        this.mediaList = new MediaListClient(client, config);
+        this.mediaDelete = new MediaDeleteClient(client);
+        this.mediaAdd = new MediaAddClient(client);
+        this.captionAssetList = new CaptionAssetListClient(client);
+        this.captionAssetAdd = new CaptionAssetAddClient(client);
+        this.captionAssetSetContent = new CaptionAssetSetContentClient(client);
+        this.captionAssetServe = new CaptionAssetServeClient(client);
     }
 
     @Override
@@ -36,7 +39,7 @@ public class KalturaClientV3 implements KalturaClient {
         if(referenceIds.isEmpty()) {
             return Collections.emptyMap();
         }
-        List<MediaEntry> mediaEntries = mediaList.get(this.sessionGenerator.get().getToken(), referenceIdIn(referenceIds));
+        List<MediaEntry> mediaEntries = mediaList.get(referenceIdIn(referenceIds));
         return mediaEntries.stream().collect(Collectors.groupingBy(MediaEntry::getReferenceId, Collectors.toList()));
     }
 
@@ -66,7 +69,7 @@ public class KalturaClientV3 implements KalturaClient {
     public List<CaptionAsset> getCaptionFilesByReferenceId(String referenceId) {
         String entryId = entryIdFromReferenceId(referenceId);
 
-        return captionAssetList.get(sessionGenerator.get().getToken(), entryIdEqual(entryId));
+        return captionAssetList.get(entryIdEqual(entryId));
     }
 
     @Override
