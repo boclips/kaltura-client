@@ -39,6 +39,6 @@ public class MediaListClient implements MediaList {
     private MediaListResource listMediaEntries(RequestFilters filters) {
         Map<String, Object> params = new HashMap<>(filters.toMap());
         params.put("filter[statusIn]", "-2,-1,0,1,2,4,5,6,7");
-        return client.get("/service/media/action/list", params, MediaListResource.class);
+        return client.get("/media/action/list", params, MediaListResource.class);
     }
 }

@@ -18,6 +18,6 @@ public class CaptionAssetSetContentClient implements CaptionAssetSetContent {
         params.put("id", captionAssetId);
         params.put("contentResource[objectType]", "KalturaStringResource");
         params.put("contentResource[content]", content);
-        client.post("/service/caption_captionasset/action/setContent", params, String.class);
+        client.post("/caption_captionasset/action/setContent", params, String.class);
     }
 }

@@ -18,6 +18,6 @@ public class MediaAddClient implements MediaAdd {
         params.put("entry[mediaType]", 1);
         params.put("entry[objectType]", "KalturaMediaEntry");
         params.put("entry[referenceId]", referenceId);
-        client.post("/service/media/action/add", params, String.class);
+        client.post("/media/action/add", params, String.class);
     }
 }

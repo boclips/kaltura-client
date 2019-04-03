@@ -14,7 +14,7 @@ public class CaptionAssetServeClient implements CaptionAssetServe {
     @Override
     public String get(String sessionToken, String assetId) {
         return client.get(
-                "/service/caption_captionasset/action/serve",
+                "/caption_captionasset/action/serve",
                 singletonMap("captionAssetId", assetId),
                 String.class
         );

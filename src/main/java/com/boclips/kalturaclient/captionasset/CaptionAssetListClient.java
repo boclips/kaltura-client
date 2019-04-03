@@ -19,7 +19,7 @@ public class CaptionAssetListClient implements CaptionAssetList {
 
     @Override
     public List<CaptionAsset> get(RequestFilters filters) {
-        CaptionAssetListResource resources = client.get("/service/caption_captionasset/action/list", filters.toMap(), CaptionAssetListResource.class);
+        CaptionAssetListResource resources = client.get("/caption_captionasset/action/list", filters.toMap(), CaptionAssetListResource.class);
 
         return resources.objects
                 .stream()

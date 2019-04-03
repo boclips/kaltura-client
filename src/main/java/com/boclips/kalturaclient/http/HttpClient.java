@@ -25,7 +25,7 @@ public class HttpClient {
 
     public <T> T get(String path, Map<String, Object> queryParams, Class<T> responseType) {
         try {
-            return Unirest.get(this.baseUrl + "/api_v3" + path)
+            return Unirest.get(this.baseUrl + path)
                     .queryString("ks", sessionGenerator.get().getToken())
                     .queryString("format", "1")
                     .queryString(queryParams)
@@ -38,7 +38,7 @@ public class HttpClient {
 
     public <T> T post(String path, Map<String, Object> queryParams, Class<T> responseType) {
         try {
-            return Unirest.post(this.baseUrl + "/api_v3" + path)
+            return Unirest.post(this.baseUrl + path)
                     .queryString("ks", sessionGenerator.get().getToken())
                     .queryString("format", "1")
                     .queryString(queryParams)

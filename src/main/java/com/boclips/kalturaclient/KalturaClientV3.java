@@ -24,7 +24,7 @@ public class KalturaClientV3 implements KalturaClient {
     public KalturaClientV3(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         this.sessionGenerator = sessionGenerator;
 
-        HttpClient client = new HttpClient(config.getBaseUrl(), sessionGenerator);
+        HttpClient client = new HttpClient(config.getBaseUrl() + "/api_v3/service", sessionGenerator);
         this.mediaList = new MediaListClient(client, config);
         this.mediaDelete = new MediaDeleteClient(client);
         this.mediaAdd = new MediaAddClient(client);
