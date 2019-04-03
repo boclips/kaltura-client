@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient;
 
+import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
 import com.boclips.kalturaclient.media.MediaEntry;
 import com.boclips.kalturaclient.session.RestSessionGenerator;
@@ -27,4 +28,8 @@ public interface KalturaClient {
     List<CaptionAsset> getCaptionFilesByReferenceId(String referenceId);
 
     String getCaptionContentByAssetId(String assetId);
+
+    void tag(String entryId, List<String> tags);
+
+    BaseEntry getBaseEntry(String entryId);
 }

@@ -1,15 +1,14 @@
 package com.boclips.kalturaclient
 
+
 import com.boclips.kalturaclient.captionasset.CaptionAsset
 import com.boclips.kalturaclient.captionasset.CaptionFormat
 import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaEntryStatus
 import com.boclips.kalturaclient.media.streams.StreamFormat
-import com.boclips.kalturaclient.media.streams.StreamUrls
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
 
-import java.time.Duration
 import java.util.stream.Collectors
 
 class KalturaClientContractTest extends Specification {
@@ -101,6 +100,24 @@ class KalturaClientContractTest extends Specification {
 
         where:
         client << [realClient(), testClient()]
+    }
+
+    def "can tag base entries"() {
+        given:
+        client.createMediaEntry("test-reference-id")
+        Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
+                "test-reference-id",
+        ])
+        String entryId = mediaEntries.get("test-reference-id")[0].id
+
+        when:
+        client.tag(entryId, ["just", "testing"])
+
+        then:
+        client.getBaseEntry(entryId).tags == ["just", "testing"]
+
+        where:
+        client << [testClient(), realClient()]
     }
 
     private static KalturaClient testClient() {

@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient;
 
+import com.boclips.kalturaclient.baseentry.*;
 import com.boclips.kalturaclient.captionasset.*;
 import com.boclips.kalturaclient.http.HttpClient;
 import com.boclips.kalturaclient.http.RequestFilters;
@@ -19,6 +20,8 @@ public class KalturaClientV3 implements KalturaClient {
     private final CaptionAssetAdd captionAssetAdd;
     private final CaptionAssetSetContentClient captionAssetSetContent;
     private final CaptionAssetServeClient captionAssetServe;
+    private final BaseEntryGet baseEntryGet;
+    private final BaseEntryUpdate baseEntryUpdate;
 
     public KalturaClientV3(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         HttpClient client = new HttpClient(config.getBaseUrl(), sessionGenerator);
@@ -29,6 +32,8 @@ public class KalturaClientV3 implements KalturaClient {
         this.captionAssetAdd = new CaptionAssetAddClient(client);
         this.captionAssetSetContent = new CaptionAssetSetContentClient(client);
         this.captionAssetServe = new CaptionAssetServeClient(client);
+        this.baseEntryGet = new BaseEntryGetClient(client);
+        this.baseEntryUpdate = new BaseEntryUpdateClient(client);
     }
 
     @Override
@@ -71,6 +76,16 @@ public class KalturaClientV3 implements KalturaClient {
     @Override
     public String getCaptionContentByAssetId(String assetId) {
         return captionAssetServe.get(assetId);
+    }
+
+    @Override
+    public void tag(String entryId, List<String> tags) {
+        baseEntryUpdate.post(entryId, BaseEntry.builder().id(entryId).tags(tags).build());
+    }
+
+    @Override
+    public BaseEntry getBaseEntry(String entryId) {
+        return baseEntryGet.get(entryId);
     }
 
     private String entryIdFromReferenceId(String referenceId) {
