@@ -13,7 +13,7 @@ public class MediaAddClient implements MediaAdd {
     }
 
     @Override
-    public void add(String sessionToken, String referenceId) {
+    public void add(String referenceId) {
         Map<String, Object> params = new HashMap<>();
         params.put("entry[mediaType]", 1);
         params.put("entry[objectType]", "KalturaMediaEntry");

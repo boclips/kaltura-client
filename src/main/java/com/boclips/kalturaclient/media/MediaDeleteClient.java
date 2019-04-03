@@ -13,7 +13,7 @@ public class MediaDeleteClient implements MediaDelete {
     }
 
     @Override
-    public void deleteByEntityId(String session, String entityId) {
+    public void deleteByEntityId(String entityId) {
         String response = client.post("/media/action/delete", singletonMap("entryId", entityId), String.class);
 
         if (response.contains("KalturaAPIException")) {

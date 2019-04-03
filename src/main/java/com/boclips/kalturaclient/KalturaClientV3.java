@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import static java.util.Collections.singleton;
 
 public class KalturaClientV3 implements KalturaClient {
-    private SessionGenerator sessionGenerator;
     private final MediaList mediaList;
     private final MediaDelete mediaDelete;
     private final MediaAdd mediaAdd;
@@ -22,8 +21,6 @@ public class KalturaClientV3 implements KalturaClient {
     private final CaptionAssetServeClient captionAssetServe;
 
     public KalturaClientV3(KalturaClientConfig config, SessionGenerator sessionGenerator) {
-        this.sessionGenerator = sessionGenerator;
-
         HttpClient client = new HttpClient(config.getBaseUrl() + "/api_v3/service", sessionGenerator);
         this.mediaList = new MediaListClient(client, config);
         this.mediaDelete = new MediaDeleteClient(client);
@@ -48,21 +45,20 @@ public class KalturaClientV3 implements KalturaClient {
         final List<MediaEntry> mediaEntryToBeDeleted = getMediaEntriesByReferenceId(referenceId);
 
         mediaEntryToBeDeleted.forEach(mediaEntry ->
-                mediaDelete.deleteByEntityId(sessionGenerator.get().getToken(), mediaEntry.getId())
+                mediaDelete.deleteByEntityId(mediaEntry.getId())
         );
     }
 
     @Override
     public void createMediaEntry(String referenceId) {
-        mediaAdd.add(sessionGenerator.get().getToken(), referenceId);
+        mediaAdd.add(referenceId);
     }
 
     @Override
     public void createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
         String entryId = entryIdFromReferenceId(referenceId);
-        String token = sessionGenerator.get().getToken();
         CaptionAsset asset = captionAssetAdd.post(entryId, captionAsset);
-        captionAssetSetContent.post(token, asset.getId(), content);
+        captionAssetSetContent.post(asset.getId(), content);
     }
 
     @Override
@@ -74,7 +70,7 @@ public class KalturaClientV3 implements KalturaClient {
 
     @Override
     public String getCaptionContentByAssetId(String assetId) {
-        return captionAssetServe.get(sessionGenerator.get().getToken(), assetId);
+        return captionAssetServe.get(assetId);
     }
 
     private String entryIdFromReferenceId(String referenceId) {

@@ -13,7 +13,7 @@ public class CaptionAssetSetContentClient implements CaptionAssetSetContent {
     }
 
     @Override
-    public void post(String sessionToken, String captionAssetId, String content) {
+    public void post(String captionAssetId, String content) {
         Map<String, Object> params = new HashMap<>();
         params.put("id", captionAssetId);
         params.put("contentResource[objectType]", "KalturaStringResource");
