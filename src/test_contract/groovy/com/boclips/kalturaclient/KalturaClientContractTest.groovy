@@ -16,7 +16,6 @@ class KalturaClientContractTest extends Specification {
 
     void setup() {
         cleanup()
-        realClient().createMediaEntry("test-reference-id")
     }
 
     void cleanup() {
@@ -48,6 +47,7 @@ class KalturaClientContractTest extends Specification {
 
     def "fetch media entries from api"(KalturaClient client) {
         when:
+        client.createMediaEntry("test-reference-id")
         Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
                 "test-reference-id",
                 "unknown-reference-id"
@@ -71,6 +71,7 @@ class KalturaClientContractTest extends Specification {
 
     def "create and list caption files"(KalturaClient client) {
         when:
+        client.createMediaEntry("test-reference-id")
         CaptionAsset captionAsset = CaptionAsset.builder()
                 .label("English (auto-generated)")
                 .language("English")
@@ -98,19 +99,8 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
-    private KalturaClient testClient() {
-        def client = new TestKalturaClient()
-        def id = "1_2t65w8sx"
-        client.addMediaEntry(MediaEntry.builder()
-                .id(id)
-                .referenceId("test-reference-id")
-                .downloadUrl(downloadUrl(id))
-                .duration(Duration.ofSeconds(92))
-                .streams(streamUrl(id))
-                .thumbnailUrl(thumbnailUrl(id))
-                .status(MediaEntryStatus.NOT_READY)
-                .build())
-        return client
+    private static KalturaClient testClient() {
+        new TestKalturaClient()
     }
 
     private KalturaClient realClient() {
@@ -122,18 +112,6 @@ class KalturaClientContractTest extends Specification {
                 .build()
 
         return KalturaClient.create(config)
-    }
-
-    private static String downloadUrl(String id) {
-        return "https://cdnapisec.kaltura.com/p/" + id + ".mp4"
-    }
-
-    private static StreamUrls streamUrl(String id) {
-        new StreamUrls("https://stream.com/s/" + id + "[FORMAT]")
-    }
-
-    private static String thumbnailUrl(String id) {
-        "https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/" + id + "/height/250/vid_slices/3/vid_slice/2"
     }
 
     private Map<String, String> readConfiguration() {

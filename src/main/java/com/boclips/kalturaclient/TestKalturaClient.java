@@ -2,7 +2,10 @@ package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
 import com.boclips.kalturaclient.media.MediaEntry;
+import com.boclips.kalturaclient.media.MediaEntryStatus;
+import com.boclips.kalturaclient.media.streams.StreamUrls;
 
+import java.time.Duration;
 import java.util.*;
 
 import static java.util.stream.Collectors.toMap;
@@ -33,8 +36,15 @@ public class TestKalturaClient implements KalturaClient {
 
     @Override
     public void createMediaEntry(String referenceId) {
+        String id = UUID.randomUUID().toString();
         addMediaEntry(MediaEntry.builder()
                 .referenceId(referenceId)
+                .id(id)
+                .downloadUrl(downloadUrl(id))
+                .duration(Duration.ofSeconds(92))
+                .streams(streamUrl(id))
+                .thumbnailUrl(thumbnailUrl(id))
+                .status(MediaEntryStatus.NOT_READY)
                 .build()
         );
     }
@@ -69,5 +79,17 @@ public class TestKalturaClient implements KalturaClient {
 
     public void clear() {
         mediaEntryByReferenceId.clear();
+    }
+
+    private static String downloadUrl(String id) {
+        return "https://cdnapisec.kaltura.com/p/" + id + ".mp4";
+    }
+
+    private static StreamUrls streamUrl(String id) {
+        return new StreamUrls("https://stream.com/s/" + id + "[FORMAT]");
+    }
+
+    private static String thumbnailUrl(String id) {
+        return "https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/" + id + "/height/250/vid_slices/3/vid_slice/2";
     }
 }
