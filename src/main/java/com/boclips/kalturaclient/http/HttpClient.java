@@ -76,15 +76,4 @@ public class HttpClient {
         });
     }
 
-    public String serveCaptionAsset(String sessionToken, String assetId) {
-        try {
-            return Unirest.get(this.baseUrl + "/api_v3/service/caption_captionasset/action/serve")
-                    .queryString("ks", sessionToken)
-                    .queryString("captionAssetId", assetId)
-                    .asObject(String.class)
-                    .getBody();
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

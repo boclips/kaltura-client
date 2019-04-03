@@ -2,6 +2,8 @@ package com.boclips.kalturaclient.captionasset;
 
 import com.boclips.kalturaclient.http.HttpClient;
 
+import static java.util.Collections.singletonMap;
+
 public class CaptionAssetServeClient implements CaptionAssetServe {
     private final HttpClient client;
 
@@ -11,6 +13,10 @@ public class CaptionAssetServeClient implements CaptionAssetServe {
 
     @Override
     public String get(String sessionToken, String assetId) {
-        return client.serveCaptionAsset(sessionToken, assetId);
+        return client.get(
+                "/service/caption_captionasset/action/serve",
+                singletonMap("captionAssetId", assetId),
+                String.class
+        );
     }
 }
