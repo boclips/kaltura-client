@@ -100,24 +100,14 @@ class KalturaClientContractTest extends Specification {
 
     private KalturaClient testClient() {
         def client = new TestKalturaClient()
-        def id1 = "1_2t65w8sx"
-        def id2 = "1_8atxygq9"
+        def id = "1_2t65w8sx"
         client.addMediaEntry(MediaEntry.builder()
-                .id(id1)
+                .id(id)
                 .referenceId("test-reference-id")
-                .downloadUrl(downloadUrl(id1))
+                .downloadUrl(downloadUrl(id))
                 .duration(Duration.ofSeconds(92))
-                .streams(streamUrl(id1))
-                .thumbnailUrl(thumbnailUrl(id1))
-                .status(MediaEntryStatus.NOT_READY)
-                .build())
-        client.addMediaEntry(MediaEntry.builder()
-                .id(id2)
-                .referenceId("reference-id-2")
-                .downloadUrl(downloadUrl(id2))
-                .duration(Duration.ofSeconds(185))
-                .streams(streamUrl(id2))
-                .thumbnailUrl(thumbnailUrl(id2))
+                .streams(streamUrl(id))
+                .thumbnailUrl(thumbnailUrl(id))
                 .status(MediaEntryStatus.NOT_READY)
                 .build())
         return client
