@@ -61,7 +61,7 @@ public class KalturaClientV3 implements KalturaClient {
     public void createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
         String entryId = entryIdFromReferenceId(referenceId);
         String token = sessionGenerator.get().getToken();
-        CaptionAsset asset = captionAssetAdd.post(token, entryId, captionAsset);
+        CaptionAsset asset = captionAssetAdd.post(entryId, captionAsset);
         captionAssetSetContent.post(token, asset.getId(), content);
     }
 

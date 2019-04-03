@@ -15,7 +15,7 @@ public class CaptionAssetAddClient implements CaptionAssetAdd {
     }
 
     @Override
-    public CaptionAsset post(String sessionToken, String entryId, CaptionAsset captionAsset) {
+    public CaptionAsset post(String entryId, CaptionAsset captionAsset) {
         Map<String, Object> params = new HashMap<>();
         params.put("entryId", entryId);
         params.put("captionAsset[format]", captionAsset.getFileType().getValue());
