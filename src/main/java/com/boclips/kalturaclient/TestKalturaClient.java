@@ -63,7 +63,11 @@ public class TestKalturaClient implements KalturaClient {
 
     @Override
     public List<CaptionAsset> getCaptionFilesByReferenceId(String referenceId) {
-        return captionAssetsByReferenceId.get(referenceId);
+        List<CaptionAsset> captionFiles = captionAssetsByReferenceId.get(referenceId);
+        if(captionFiles == null) {
+            return Collections.emptyList();
+        }
+        return captionFiles;
     }
 
     @Override

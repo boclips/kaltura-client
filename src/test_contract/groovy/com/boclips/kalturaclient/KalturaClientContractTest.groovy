@@ -18,8 +18,13 @@ class KalturaClientContractTest extends Specification {
     }
 
     void cleanup() {
+        tryDeleteMediaEntry("test-reference-id")
+        tryDeleteMediaEntry("another-test-reference-id")
+    }
+
+    void tryDeleteMediaEntry(String referenceId) {
         try {
-            realClient().deleteMediaEntriesByReferenceId("test-reference-id")
+            realClient().deleteMediaEntriesByReferenceId(referenceId)
         } catch (Exception e) {
             e.printStackTrace()
         }
@@ -73,6 +78,7 @@ class KalturaClientContractTest extends Specification {
     def "create and list caption files"(KalturaClient client) {
         given:
         client.createMediaEntry("test-reference-id")
+        client.createMediaEntry("another-test-reference-id")
 
         when:
         CaptionAsset captionAsset = CaptionAsset.builder()
@@ -81,6 +87,7 @@ class KalturaClientContractTest extends Specification {
                 .fileType(CaptionFormat.WEBVTT)
                 .build()
         client.createCaptionsFile("test-reference-id", captionAsset, "this week in the news")
+        List<CaptionAsset> emptyCaptions = client.getCaptionFilesByReferenceId("another-test-reference-id")
         List<CaptionAsset> captions = client.getCaptionFilesByReferenceId("test-reference-id")
         List<String> contents = captions.stream()
                 .map { caption -> caption.id }
@@ -88,6 +95,7 @@ class KalturaClientContractTest extends Specification {
                 .collect(Collectors.toList())
 
         then:
+        emptyCaptions.size() == 0
         captions.size() == 1
         captions.first().id.length() > 0
         captions.first().label == "English (auto-generated)"
