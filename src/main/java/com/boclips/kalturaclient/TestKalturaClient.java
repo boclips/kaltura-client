@@ -95,6 +95,9 @@ public class TestKalturaClient implements KalturaClient {
 
     public void clear() {
         mediaEntryListsByReferenceId.clear();
+        captionAssetsByReferenceId.clear();
+        captionContentsByAssetId.clear();
+        baseEntriesByEntryId.clear();
     }
 
     private static String downloadUrl(String id) {
