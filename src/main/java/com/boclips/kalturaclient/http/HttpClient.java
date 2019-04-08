@@ -7,9 +7,11 @@ import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
+import com.mashape.unirest.request.HttpRequestWithBody;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 
 @Slf4j
@@ -29,7 +31,13 @@ public class HttpClient {
     }
 
     public <T> T post(String path, Map<String, Object> queryParams, Class<T> responseType) {
-        return makeRequest(Unirest.post(this.baseUrl + path), queryParams, responseType);
+        return post(path, queryParams, Collections.emptyMap(), responseType);
+    }
+
+    public <T> T post(String path, Map<String, Object> queryParams, Map<String, Object> multipartParams, Class<T> responseType) {
+        HttpRequestWithBody post = Unirest.post(this.baseUrl + path);
+        multipartParams.forEach(post::field);
+        return makeRequest(post, queryParams, responseType);
     }
 
     private <T> T makeRequest(HttpRequest req, Map<String, Object> queryParams, Class<T> responseType) {

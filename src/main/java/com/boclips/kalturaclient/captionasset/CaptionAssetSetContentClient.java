@@ -15,10 +15,13 @@ public class CaptionAssetSetContentClient implements CaptionAssetSetContent {
 
     @Override
     public CaptionAsset post(String captionAssetId, String content) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", captionAssetId);
-        params.put("contentResource[objectType]", "KalturaStringResource");
-        params.put("contentResource[content]", content);
-        return client.post("/caption_captionasset/action/setContent", params, CaptionAssetResource.class).toAsset();
+        Map<String, Object> query = new HashMap<>();
+        query.put("id", captionAssetId);
+        query.put("contentResource[objectType]", "KalturaStringResource");
+
+        Map<String, Object> bodyParams = new HashMap<>();
+        bodyParams.put("contentResource[content]", content);
+
+        return client.post("/caption_captionasset/action/setContent", query, bodyParams, CaptionAssetResource.class).toAsset();
     }
 }

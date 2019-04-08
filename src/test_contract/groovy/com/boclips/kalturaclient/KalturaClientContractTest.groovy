@@ -7,9 +7,11 @@ import com.boclips.kalturaclient.captionasset.KalturaLanguage
 import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaEntryStatus
 import com.boclips.kalturaclient.media.streams.StreamFormat
+import org.apache.commons.io.IOUtils
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
 
+import java.nio.charset.StandardCharsets
 import java.util.stream.Collectors
 
 class KalturaClientContractTest extends Specification {
@@ -87,7 +89,7 @@ class KalturaClientContractTest extends Specification {
                 .language(KalturaLanguage.ENGLISH)
                 .fileType(CaptionFormat.WEBVTT)
                 .build()
-        client.createCaptionsFile("test-reference-id", captionAsset, "this week in the news")
+        client.createCaptionsFile("test-reference-id", captionAsset, readResourceFile("/captions.vtt"))
         List<CaptionAsset> emptyCaptions = client.getCaptionFilesByReferenceId("another-test-reference-id")
         List<CaptionAsset> captions = client.getCaptionFilesByReferenceId("test-reference-id")
         List<String> contents = captions.stream()
@@ -105,7 +107,7 @@ class KalturaClientContractTest extends Specification {
 
         then:
         contents.size() == 1
-        contents.first() == "this week in the news"
+        contents.first().contains("Tintern Abbey")
 
         where:
         client << [realClient(), testClient()]
@@ -168,5 +170,22 @@ class KalturaClientContractTest extends Specification {
         }
 
         return configuration
+    }
+
+    private String readResourceFile(String path) {
+        InputStream is = null
+        try {
+            is = KalturaClientContractTest.class.getResourceAsStream(path)
+            return IOUtils.readLines(is, StandardCharsets.UTF_8)
+                    .stream()
+                    .collect(Collectors.joining("\n"))
+        } catch (IOException e) {
+            throw new RuntimeException(e)
+        }
+        finally {
+            if (is != null) {
+                is.close()
+            }
+        }
     }
 }
