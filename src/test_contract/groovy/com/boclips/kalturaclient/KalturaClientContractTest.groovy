@@ -3,6 +3,7 @@ package com.boclips.kalturaclient
 
 import com.boclips.kalturaclient.captionasset.CaptionAsset
 import com.boclips.kalturaclient.captionasset.CaptionFormat
+import com.boclips.kalturaclient.captionasset.KalturaLanguage
 import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaEntryStatus
 import com.boclips.kalturaclient.media.streams.StreamFormat
@@ -83,7 +84,7 @@ class KalturaClientContractTest extends Specification {
         when:
         CaptionAsset captionAsset = CaptionAsset.builder()
                 .label("English (auto-generated)")
-                .language("English")
+                .language(KalturaLanguage.ENGLISH)
                 .fileType(CaptionFormat.WEBVTT)
                 .build()
         client.createCaptionsFile("test-reference-id", captionAsset, "this week in the news")
@@ -99,7 +100,7 @@ class KalturaClientContractTest extends Specification {
         captions.size() == 1
         captions.first().id.length() > 0
         captions.first().label == "English (auto-generated)"
-        captions.first().language == "English"
+        captions.first().language == KalturaLanguage.ENGLISH
         captions.first().fileType == CaptionFormat.WEBVTT
 
         then:

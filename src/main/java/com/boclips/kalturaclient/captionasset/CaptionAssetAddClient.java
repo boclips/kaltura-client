@@ -19,7 +19,7 @@ public class CaptionAssetAddClient implements CaptionAssetAdd {
         Map<String, Object> params = new HashMap<>();
         params.put("entryId", entryId);
         params.put("captionAsset[format]", captionAsset.getFileType().getValue());
-        params.put("captionAsset[language]", captionAsset.getLanguage());
+        params.put("captionAsset[language]", captionAsset.getLanguage().getName());
         params.put("captionAsset[label]", captionAsset.getLabel());
         return client.post("/caption_captionasset/action/add", params, CaptionAssetResource.class)
                 .toAsset();

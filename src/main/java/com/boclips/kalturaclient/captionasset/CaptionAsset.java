@@ -11,7 +11,7 @@ public class CaptionAsset {
 
     private final String label;
 
-    private final String language;
+    private final KalturaLanguage language;
 
     private final CaptionFormat fileType;
 

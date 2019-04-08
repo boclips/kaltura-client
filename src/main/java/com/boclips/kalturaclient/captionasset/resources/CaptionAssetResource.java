@@ -2,6 +2,7 @@ package com.boclips.kalturaclient.captionasset.resources;
 
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
 import com.boclips.kalturaclient.captionasset.CaptionFormat;
+import com.boclips.kalturaclient.captionasset.KalturaLanguage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ public class CaptionAssetResource {
         return CaptionAsset.builder()
                 .id(id)
                 .label(label)
-                .language(language)
+                .language(KalturaLanguage.fromName(language))
                 .fileType(CaptionFormat.fromValue(format))
                 .build();
     }

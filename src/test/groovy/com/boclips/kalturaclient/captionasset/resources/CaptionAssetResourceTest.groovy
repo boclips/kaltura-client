@@ -1,6 +1,7 @@
 package com.boclips.kalturaclient.captionasset.resources
 
 import com.boclips.kalturaclient.captionasset.CaptionFormat
+import com.boclips.kalturaclient.captionasset.KalturaLanguage
 import spock.lang.Specification
 
 class CaptionAssetResourceTest extends Specification {
@@ -9,7 +10,7 @@ class CaptionAssetResourceTest extends Specification {
             .id("the id")
             .format(CaptionFormat.WEBVTT.value)
             .label("the label")
-            .language("the language")
+            .language("French")
             .build()
 
     def "ToAsset"() {
@@ -20,7 +21,7 @@ class CaptionAssetResourceTest extends Specification {
         asset.id == "the id"
         asset.fileType == CaptionFormat.WEBVTT
         asset.label == "the label"
-        asset.language == "the language"
+        asset.language == KalturaLanguage.FRENCH
     }
 
     def "Throws when id is null"() {
