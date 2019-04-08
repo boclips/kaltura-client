@@ -60,10 +60,10 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public void createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
+    public CaptionAsset createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
         String entryId = entryIdFromReferenceId(referenceId);
         CaptionAsset asset = captionAssetAdd.post(entryId, captionAsset);
-        captionAssetSetContent.post(asset.getId(), content);
+        return captionAssetSetContent.post(asset.getId(), content);
     }
 
     @Override

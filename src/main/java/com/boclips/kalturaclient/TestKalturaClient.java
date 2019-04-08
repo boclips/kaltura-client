@@ -50,7 +50,7 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public void createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
+    public CaptionAsset createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
         String assetId = UUID.randomUUID().toString();
         CaptionAsset copyWithId = captionAsset
                 .toBuilder()
@@ -59,6 +59,7 @@ public class TestKalturaClient implements KalturaClient {
         captionAssetsByReferenceId.computeIfAbsent(referenceId, (refId) -> new ArrayList<>())
                 .add(copyWithId);
         captionContentsByAssetId.put(assetId, content);
+        return copyWithId;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient.captionasset;
 
+import com.boclips.kalturaclient.captionasset.resources.CaptionAssetResource;
 import com.boclips.kalturaclient.http.HttpClient;
 
 import java.util.HashMap;
@@ -13,11 +14,11 @@ public class CaptionAssetSetContentClient implements CaptionAssetSetContent {
     }
 
     @Override
-    public void post(String captionAssetId, String content) {
+    public CaptionAsset post(String captionAssetId, String content) {
         Map<String, Object> params = new HashMap<>();
         params.put("id", captionAssetId);
         params.put("contentResource[objectType]", "KalturaStringResource");
         params.put("contentResource[content]", content);
-        client.post("/caption_captionasset/action/setContent", params, String.class);
+        return client.post("/caption_captionasset/action/setContent", params, CaptionAssetResource.class).toAsset();
     }
 }
