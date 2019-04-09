@@ -113,6 +113,27 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
+    def "delete caption files"(KalturaClient client) {
+        given:
+        client.createMediaEntry("test-reference-id")
+        CaptionAsset captionAsset = CaptionAsset.builder()
+                .label("English (auto-generated)")
+                .language(KalturaLanguage.ENGLISH)
+                .fileType(CaptionFormat.WEBVTT)
+                .build()
+        String assetId = client.createCaptionsFile("test-reference-id", captionAsset, readResourceFile("/captions.vtt")).id
+
+        when:
+        client.deleteCaptionContentByAssetId(assetId)
+        List<CaptionAsset> assets = client.getCaptionFilesByReferenceId("test-reference-id")
+
+        then:
+        assets.isEmpty()
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
     def "can tag base entries"() {
         given:
         client.createMediaEntry("test-reference-id")

@@ -77,6 +77,17 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
+    public void deleteCaptionContentByAssetId(String assetId) {
+        captionContentsByAssetId.remove(assetId);
+        captionAssetsByReferenceId.values().forEach(assets -> {
+            assets.stream()
+                    .filter(asset -> asset.getId().equals(assetId))
+                    .findAny()
+                    .ifPresent(assets::remove);
+        });
+    }
+
+    @Override
     public void tag(String entryId, List<String> tags) {
         baseEntriesByEntryId.put(
                 entryId,

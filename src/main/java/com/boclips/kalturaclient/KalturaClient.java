@@ -32,4 +32,6 @@ public interface KalturaClient {
     void tag(String entryId, List<String> tags);
 
     BaseEntry getBaseEntry(String entryId);
+
+    void deleteCaptionContentByAssetId(String assetId);
 }

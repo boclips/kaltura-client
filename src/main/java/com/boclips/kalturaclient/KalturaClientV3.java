@@ -18,6 +18,7 @@ public class KalturaClientV3 implements KalturaClient {
     private final MediaAdd mediaAdd;
     private final CaptionAssetList captionAssetList;
     private final CaptionAssetAdd captionAssetAdd;
+    private final CaptionAssetDelete captionAssetDelete;
     private final CaptionAssetSetContentClient captionAssetSetContent;
     private final CaptionAssetServeClient captionAssetServe;
     private final BaseEntryGet baseEntryGet;
@@ -30,6 +31,7 @@ public class KalturaClientV3 implements KalturaClient {
         this.mediaAdd = new MediaAddClient(client);
         this.captionAssetList = new CaptionAssetListClient(client);
         this.captionAssetAdd = new CaptionAssetAddClient(client);
+        this.captionAssetDelete = new CaptionAssetDelete(client);
         this.captionAssetSetContent = new CaptionAssetSetContentClient(client);
         this.captionAssetServe = new CaptionAssetServeClient(client);
         this.baseEntryGet = new BaseEntryGetClient(client);
@@ -76,6 +78,11 @@ public class KalturaClientV3 implements KalturaClient {
     @Override
     public String getCaptionContentByAssetId(String assetId) {
         return captionAssetServe.get(assetId);
+    }
+
+    @Override
+    public void deleteCaptionContentByAssetId(String assetId) {
+        captionAssetDelete.post(assetId);
     }
 
     @Override
