@@ -3,6 +3,7 @@ package com.boclips.kalturaclient.http;
 import com.boclips.kalturaclient.session.SessionGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -42,12 +43,17 @@ public class HttpClient {
 
     private <T> T makeRequest(HttpRequest req, Map<String, Object> queryParams, Class<T> responseType) {
         try {
-            return req
+            HttpResponse<T> response = req
                     .queryString("ks", sessionGenerator.get().getToken())
                     .queryString("format", "1")
                     .queryString(queryParams)
-                    .asObject(responseType)
-                    .getBody();
+                    .asObject(responseType);
+
+            if(response.getStatus() >= 400) {
+                throw new RuntimeException(req.getHttpMethod().name() + " request to " + req.getUrl() + " failed with status " + response.getStatus());
+            }
+
+            return response.getBody();
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
