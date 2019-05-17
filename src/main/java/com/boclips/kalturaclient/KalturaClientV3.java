@@ -3,6 +3,7 @@ package com.boclips.kalturaclient;
 import com.boclips.kalturaclient.baseentry.*;
 import com.boclips.kalturaclient.captionasset.*;
 import com.boclips.kalturaclient.http.HttpClient;
+import com.boclips.kalturaclient.http.KalturaClientApiException;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.*;
 import com.boclips.kalturaclient.session.SessionGenerator;
@@ -40,7 +41,7 @@ public class KalturaClientV3 implements KalturaClient {
 
     @Override
     public Map<String, List<MediaEntry>> getMediaEntriesByReferenceIds(Collection<String> referenceIds) {
-        if(referenceIds.isEmpty()) {
+        if (referenceIds.isEmpty()) {
             return Collections.emptyMap();
         }
         List<MediaEntry> mediaEntries = mediaList.get(referenceIdIn(referenceIds));
@@ -51,9 +52,20 @@ public class KalturaClientV3 implements KalturaClient {
     public void deleteMediaEntriesByReferenceId(String referenceId) {
         final List<MediaEntry> mediaEntryToBeDeleted = getMediaEntriesByReferenceId(referenceId);
 
-        mediaEntryToBeDeleted.forEach(mediaEntry ->
-                mediaDelete.deleteByEntityId(mediaEntry.getId())
+        List<KalturaClientApiException> errors = new ArrayList<>();
+
+        mediaEntryToBeDeleted.forEach(mediaEntry -> {
+                    try {
+                        mediaDelete.deleteByEntityId(mediaEntry.getId());
+                    } catch (KalturaClientApiException e) {
+                        errors.add(e);
+                    }
+                }
         );
+
+        if (errors.size() > 0) {
+            throw errors.get(0);
+        }
     }
 
     @Override
@@ -98,7 +110,7 @@ public class KalturaClientV3 implements KalturaClient {
     private String entryIdFromReferenceId(String referenceId) {
         List<MediaEntry> mediaEntries = getMediaEntriesByReferenceId(referenceId);
 
-        if(mediaEntries.size() != 1) {
+        if (mediaEntries.size() < 1) {
             throw new RuntimeException(mediaEntries.size() + " media entries for reference id " + referenceId);
         }
 
