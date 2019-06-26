@@ -28,9 +28,9 @@ jobs:
   - task: contract-test
     file: source/pipeline/contract-test.yml
     params:
-      PARTNER_ID: {{kaltura-partner-id}}
-      USER_ID: {{kaltura-user-id}}
-      SECRET: {{kaltura-secret}}
+      PARTNER_ID: ((kaltura-partner-id))
+      USER_ID: ((kaltura-user-id))
+      SECRET: ((kaltura-secret))
 
 - name: cut-release
   public: false
@@ -51,7 +51,7 @@ resources:
   type: git
   source:
     branch: master
-    private_key: {{kaltura-client-repo-key}}
+    private_key: ((kaltura-client-repo-key))
     uri: git@github.com:knowledgemotion/kaltura-client.git
 
 - name: version
@@ -62,7 +62,7 @@ resources:
     uri: git@github.com:knowledgemotion/versions.git
     branch: master
     file: kaltura-client
-    private_key: {{versions-repo-key}}
+    private_key: ((versions.repo-key))
 
 - name: 2h
   type: time
