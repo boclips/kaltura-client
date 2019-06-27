@@ -62,4 +62,6 @@ dependencyCheck {
     data {
         directory='./dependency-check-cache'
     }
+
+    suppressionFile = './dependency-check-suppressions.xml'
 }
