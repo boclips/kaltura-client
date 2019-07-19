@@ -28,9 +28,9 @@ jobs:
   - task: contract-test
     file: source/pipeline/contract-test.yml
     params:
-      PARTNER_ID: ((kaltura-partner-id))
-      USER_ID: ((kaltura-user-id))
-      SECRET: ((kaltura-secret))
+      PARTNER_ID: ((kaltura-client.partner-id))
+      USER_ID: ((kaltura-client.user-id))
+      SECRET: ((kaltura-client.secret))
 
 - name: cut-release
   public: false

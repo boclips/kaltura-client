@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
 
+set -e
+
 cwd="$(cd "$(dirname "$0")" && pwd)"
-lpass show --notes "kaltura-client contract test application.properties" > "$cwd/contract-test-setup.yml"
+output="$cwd/contract-test-setup.yml"
+partner_id="$(get-k8s-concourse-secret kaltura-client kaltura-client partner-id)"
+user_id="$(get-k8s-concourse-secret kaltura-client kaltura-client user-id)"
+secret="$(get-k8s-concourse-secret kaltura-client kaltura-client secret)"
+
+echo "PARTNER_ID: \"$partner_id\""  > "$output"
+echo "USER_ID: \"$user_id\""        >> "$output"
+echo "SECRET: \"$secret\""          >> "$output"

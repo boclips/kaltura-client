@@ -7,7 +7,4 @@ cwd="$(cd "$(dirname "$0")" && pwd)"
 fly --target ci \
     set-pipeline \
     --pipeline kaltura-client \
-    --config "$cwd/pipeline.yml" \
-    --var kaltura-partner-id="$(lpass show kaltura-client-partnerId-staging --notes)" \
-    --var kaltura-user-id="$(lpass show kaltura-client-userId-staging --notes)" \
-    --var kaltura-secret="$(lpass show kaltura-client-secret-staging --notes)" \
+    --config "$cwd/pipeline.yml"
