@@ -110,7 +110,7 @@ public class KalturaClientV3 implements KalturaClient {
     private String entryIdFromReferenceId(String referenceId) {
         List<MediaEntry> mediaEntries = getMediaEntriesByReferenceId(referenceId);
 
-        if (mediaEntries.size() < 1) {
+        if (mediaEntries.size() != 1) {
             throw new RuntimeException(mediaEntries.size() + " media entries for reference id " + referenceId);
         }
 
