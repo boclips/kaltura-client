@@ -40,15 +40,21 @@ public class TestKalturaClient implements KalturaClient {
     @Override
     public void createMediaEntry(String referenceId) {
         String id = UUID.randomUUID().toString();
+
+        createMediaEntry(id, referenceId, Duration.ofSeconds(92), MediaEntryStatus.NOT_READY);
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public void createMediaEntry(String id, String referenceId, Duration duration, MediaEntryStatus status) {
         addMediaEntry(MediaEntry.builder()
                 .referenceId(referenceId)
                 .id(id)
                 .downloadUrl(downloadUrl(id))
-                .duration(Duration.ofSeconds(92))
+                .duration(duration)
                 .streams(streamUrl(id))
                 .thumbnailUrl(thumbnailUrl(id))
                 .videoPreviewUrl(videoPreviewUrl(id))
-                .status(MediaEntryStatus.NOT_READY)
+                .status(status)
                 .build()
         );
     }
