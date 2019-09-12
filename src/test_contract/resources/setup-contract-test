@@ -2,11 +2,16 @@
 
 set -e
 
+# CD to the directory containing this script
 cwd="$(cd "$(dirname "$0")" && pwd)"
-output="$cwd/contract-test-setup.yml"
+
+# With these secrets from concourse
 partner_id="$(get-k8s-concourse-secret kaltura-client kaltura-client partner-id)"
 user_id="$(get-k8s-concourse-secret kaltura-client kaltura-client user-id)"
 secret="$(get-k8s-concourse-secret kaltura-client kaltura-client secret)"
+
+# We're going to update the yml file here
+output="$cwd/contract-test-setup.yml"
 
 echo "PARTNER_ID: \"$partner_id\""  > "$output"
 echo "USER_ID: \"$user_id\""        >> "$output"

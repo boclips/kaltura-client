@@ -11,6 +11,9 @@ import java.util.*;
 
 import static java.util.stream.Collectors.toMap;
 
+/**
+ *
+ */
 public class TestKalturaClient implements KalturaClient {
     private final Map<String, List<MediaEntry>> mediaEntryListsByReferenceId = new HashMap<>();
     private final Map<String, List<CaptionAsset>> captionAssetsByReferenceId = new HashMap<>();
@@ -44,6 +47,7 @@ public class TestKalturaClient implements KalturaClient {
                 .duration(Duration.ofSeconds(92))
                 .streams(streamUrl(id))
                 .thumbnailUrl(thumbnailUrl(id))
+                .videoPreviewUrl(videoPreviewUrl(id))
                 .status(MediaEntryStatus.NOT_READY)
                 .build()
         );
@@ -117,7 +121,7 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     private static String downloadUrl(String id) {
-        return "https://cdnapisec.kaltura.com/p/" + id + ".mp4";
+        return "https://cdnapisec.kaltura.com/p/2394162/sp/239416200/playManifest/entryId/" + id + "/format/download/protocol/https/flavorParamIds/0";
     }
 
     private static StreamUrls streamUrl(String id) {
@@ -125,6 +129,11 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     private static String thumbnailUrl(String id) {
-        return "https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/" + id + "/height/250/vid_slices/3/vid_slice/2";
+        return "https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/" + id + "/width/{thumbnailWidth}/vid_slices/3/vid_slice/1";
     }
+
+    private static String videoPreviewUrl(String id) {
+        return "https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/" + id + "/width/{thumbnailWidth}/vid_slices/{thumbnailCount}";
+    }
+
 }

@@ -70,8 +70,9 @@ class KalturaClientContractTest extends Specification {
         mediaEntry.referenceId == 'test-reference-id'
         mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS) != null
         mediaEntry.duration != null
-        mediaEntry.thumbnailUrl.startsWith('https://cdnapisec.kaltura.com/p')
-        mediaEntry.downloadUrl.startsWith('https://cdnapisec.kaltura.com/p')
+        mediaEntry.thumbnailUrl.equals('https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/' + mediaEntry.id + '/width/{thumbnailWidth}/vid_slices/3/vid_slice/1')
+        mediaEntry.videoPreviewUrl.equals('https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/' + mediaEntry.id + '/width/{thumbnailWidth}/vid_slices/{thumbnailCount}')
+        mediaEntry.downloadUrl.equals('https://cdnapisec.kaltura.com/p/2394162/sp/239416200/playManifest/entryId/' + mediaEntry.id + '/format/download/protocol/https/flavorParamIds/0')
         mediaEntry.getStatus() == MediaEntryStatus.NOT_READY
 
         where:
