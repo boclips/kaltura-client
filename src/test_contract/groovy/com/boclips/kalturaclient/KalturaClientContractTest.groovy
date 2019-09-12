@@ -68,7 +68,10 @@ class KalturaClientContractTest extends Specification {
         MediaEntry mediaEntry = mediaEntries['test-reference-id'][0]
         !mediaEntry.id.isEmpty()
         mediaEntry.referenceId == 'test-reference-id'
-        mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS) != null
+        def hlsStreamUrl = mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS)
+        hlsStreamUrl != null
+        hlsStreamUrl.contains('/entryId/' + mediaEntry.id)
+        hlsStreamUrl.contains('/format/applehttp')
         mediaEntry.duration != null
         mediaEntry.thumbnailUrl.contains('/entry_id/' + mediaEntry.id)
         mediaEntry.thumbnailUrl.contains('/width/{thumbnailWidth}')

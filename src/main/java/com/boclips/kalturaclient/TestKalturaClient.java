@@ -131,7 +131,7 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     private static StreamUrls streamUrl(String id) {
-        return new StreamUrls("https://stream.com/entry_id/" + id + "/format/[FORMAT]");
+        return new StreamUrls("https://stream.com/entryId/" + id + "/format/[FORMAT]");
     }
 
     private static String thumbnailUrl(String id) {
