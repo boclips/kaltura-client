@@ -7,6 +7,7 @@ import com.boclips.kalturaclient.media.resources.MediaEntryStatusResource;
 import com.boclips.kalturaclient.media.resources.MediaListResource;
 import com.boclips.kalturaclient.media.streams.StreamUrlProducer;
 import com.boclips.kalturaclient.media.thumbnails.ThumbnailUrlProducer;
+import com.boclips.kalturaclient.media.thumbnails.VideoPreviewUrlProducer;
 
 import java.time.Duration;
 import java.util.List;
@@ -14,13 +15,16 @@ import java.util.stream.Collectors;
 
 public class MediaProcessor {
     private final ThumbnailUrlProducer thumbnailUrlProducer;
+    private VideoPreviewUrlProducer videoPreviewUrlProducer;
     private final StreamUrlProducer streamUrlProducer;
 
     public MediaProcessor(
             StreamUrlProducer streamUrlProducer,
-            ThumbnailUrlProducer thumbnailUrlProducer) {
+            ThumbnailUrlProducer thumbnailUrlProducer,
+            VideoPreviewUrlProducer videoPreviewUrlProducer) {
         this.streamUrlProducer = streamUrlProducer;
         this.thumbnailUrlProducer = thumbnailUrlProducer;
+        this.videoPreviewUrlProducer = videoPreviewUrlProducer;
     }
 
     public List<MediaEntry> process(MediaListResource mediaListResource) {
@@ -43,6 +47,7 @@ public class MediaProcessor {
                 .duration(Duration.ofSeconds(mediaEntryResource.getDuration()))
                 .streams(streamUrlProducer.convert(mediaEntryResource))
                 .thumbnailUrl(thumbnailUrlProducer.convert(mediaEntryResource))
+                .videoPreviewUrl(videoPreviewUrlProducer.convert(mediaEntryResource))
                 .status(MediaEntryStatus.from(MediaEntryStatusResource.fromInteger(mediaEntryResource.status)))
                 .build();
     }

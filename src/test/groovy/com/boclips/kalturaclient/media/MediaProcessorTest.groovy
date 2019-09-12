@@ -7,6 +7,7 @@ import com.boclips.kalturaclient.media.resources.MediaListResource
 import com.boclips.kalturaclient.media.streams.StreamFormat
 import com.boclips.kalturaclient.media.streams.StreamUrlProducer
 import com.boclips.kalturaclient.media.thumbnails.ThumbnailUrlProducer
+import com.boclips.kalturaclient.media.thumbnails.VideoPreviewUrlProducer
 import spock.lang.Specification
 import test_support.Factories
 
@@ -19,7 +20,8 @@ class MediaProcessorTest extends Specification {
     def setup() {
         processor = new MediaProcessor(
                 new StreamUrlProducer(Factories.exampleConfig()),
-                new ThumbnailUrlProducer(Factories.exampleConfig())
+                new ThumbnailUrlProducer(Factories.exampleConfig()),
+                new VideoPreviewUrlProducer(Factories.exampleConfig())
         )
 
         MediaEntryResource mediaEntryResource = MediaEntryResource.builder()
@@ -59,12 +61,20 @@ class MediaProcessorTest extends Specification {
         mediaEntries[0].streams.withFormat(StreamFormat.PROGRESSIVE_DOWNLOAD) == "https://cdnapisec.kaltura.com/p/partner-123/sp/partner-12300/playManifest/entryId/123/format/url/protocol/https/video.mp4"
     }
 
-    def "produces a valid thumbnail"() {
+    def "produces a valid templated thumbnail url"() {
         when:
         List<MediaEntry> mediaEntries = processor.process(resource)
 
         then:
-        mediaEntries[0].thumbnailUrl == "https://cdnapisec.kaltura.com/p/partner-123/thumbnail/entry_id/123/height/250/vid_slices/3/vid_slice/2"
+        mediaEntries[0].thumbnailUrl == "https://cdnapisec.kaltura.com/p/partner-123/thumbnail/entry_id/123/width/{thumbnailWidth}/vid_slices/3/vid_slice/1"
+    }
+
+    def "produces a valid templated video preview url"() {
+        when:
+        List<MediaEntry> mediaEntries = processor.process(resource)
+
+        then:
+        mediaEntries[0].videoPreviewUrl == "https://cdnapisec.kaltura.com/p/partner-123/thumbnail/entry_id/123/width/{thumbnailWidth}/vid_slices/{thumbnailCount}"
     }
 
     def "throws when the resource is unsuccessful"() {
