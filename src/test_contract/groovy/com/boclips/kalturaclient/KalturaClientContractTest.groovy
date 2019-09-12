@@ -70,9 +70,13 @@ class KalturaClientContractTest extends Specification {
         mediaEntry.referenceId == 'test-reference-id'
         mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS) != null
         mediaEntry.duration != null
-        mediaEntry.thumbnailUrl.equals('https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/' + mediaEntry.id + '/width/{thumbnailWidth}/vid_slices/3/vid_slice/1')
-        mediaEntry.videoPreviewUrl.equals('https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/' + mediaEntry.id + '/width/{thumbnailWidth}/vid_slices/{thumbnailCount}')
-        mediaEntry.downloadUrl.equals('https://cdnapisec.kaltura.com/p/2394162/sp/239416200/playManifest/entryId/' + mediaEntry.id + '/format/download/protocol/https/flavorParamIds/0')
+        mediaEntry.thumbnailUrl.contains('/entry_id/' + mediaEntry.id)
+        mediaEntry.thumbnailUrl.contains('/width/{thumbnailWidth}')
+        mediaEntry.videoPreviewUrl.contains('/entry_id/' + mediaEntry.id)
+        mediaEntry.videoPreviewUrl.contains('/width/{thumbnailWidth}')
+        mediaEntry.videoPreviewUrl.contains('/vid_slices/{thumbnailCount}')
+        mediaEntry.downloadUrl.contains('/entryId/' + mediaEntry.id)
+        mediaEntry.downloadUrl.contains('/format/download')
         mediaEntry.getStatus() == MediaEntryStatus.NOT_READY
 
         where:

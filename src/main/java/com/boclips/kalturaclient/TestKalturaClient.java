@@ -127,19 +127,19 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     private static String downloadUrl(String id) {
-        return "https://cdnapisec.kaltura.com/p/2394162/sp/239416200/playManifest/entryId/" + id + "/format/download/protocol/https/flavorParamIds/0";
+        return "https://download.com/entryId/" + id + "/format/download";
     }
 
     private static StreamUrls streamUrl(String id) {
-        return new StreamUrls("https://stream.com/s/" + id + "[FORMAT]");
+        return new StreamUrls("https://stream.com/entry_id/" + id + "/format/[FORMAT]");
     }
 
     private static String thumbnailUrl(String id) {
-        return "https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/" + id + "/width/{thumbnailWidth}/vid_slices/3/vid_slice/1";
+        return "https://thumbnail.com/entry_id/" + id + "/width/{thumbnailWidth}";
     }
 
     private static String videoPreviewUrl(String id) {
-        return "https://cdnapisec.kaltura.com/p/2394162/thumbnail/entry_id/" + id + "/width/{thumbnailWidth}/vid_slices/{thumbnailCount}";
+        return "https://videopreview.com/entry_id/" + id + "/width/{thumbnailWidth}/vid_slices/{thumbnailCount}";
     }
 
 }
