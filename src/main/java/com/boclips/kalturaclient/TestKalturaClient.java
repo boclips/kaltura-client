@@ -16,9 +16,17 @@ import static java.util.stream.Collectors.toMap;
  */
 public class TestKalturaClient implements KalturaClient {
     private final Map<String, List<MediaEntry>> mediaEntryListsByReferenceId = new HashMap<>();
+    private final Map<String, MediaEntry> mediaEntriesById = new HashMap<>();
     private final Map<String, List<CaptionAsset>> captionAssetsByReferenceId = new HashMap<>();
     private final Map<String, String> captionContentsByAssetId = new HashMap<>();
     private final Map<String, BaseEntry> baseEntriesByEntryId = new HashMap<>();
+
+    @Override
+    public Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds) {
+        return entryIds.stream()
+                .filter(mediaEntriesById::containsKey)
+                .collect(toMap(entryId -> entryId, mediaEntriesById::get));
+    }
 
     @Override
     public Map<String, List<MediaEntry>> getMediaEntriesByReferenceIds(Collection<String> referenceIds) {
@@ -34,6 +42,8 @@ public class TestKalturaClient implements KalturaClient {
 
     @Override
     public void deleteMediaEntriesByReferenceId(String referenceId) {
+        List<MediaEntry> mediaEntries = mediaEntryListsByReferenceId.get(referenceId);
+        mediaEntries.forEach(mediaEntry -> mediaEntriesById.remove(mediaEntry.getId()));
         mediaEntryListsByReferenceId.remove(referenceId);
     }
 
@@ -117,6 +127,7 @@ public class TestKalturaClient implements KalturaClient {
         mediaEntryListsByReferenceId
                 .computeIfAbsent(mediaEntry.getReferenceId(), (String key) -> new ArrayList<>())
                 .add(mediaEntry);
+        mediaEntriesById.put(mediaEntry.getId(), mediaEntry);
     }
 
     public void clear() {

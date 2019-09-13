@@ -16,13 +16,18 @@ import java.util.stream.Collectors
 
 class KalturaClientContractTest extends Specification {
 
+    String referenceIdOne
+    String referenceIdTwo
+
     void setup() {
+        referenceIdOne = UUID.randomUUID().toString();
+        referenceIdTwo = UUID.randomUUID().toString();
         cleanup()
     }
 
     void cleanup() {
-        tryDeleteMediaEntry("test-reference-id")
-        tryDeleteMediaEntry("another-test-reference-id")
+        tryDeleteMediaEntry(referenceIdOne)
+        tryDeleteMediaEntry(referenceIdTwo)
     }
 
     void tryDeleteMediaEntry(String referenceId) {
@@ -52,22 +57,22 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
-    def "fetch media entries from api"(KalturaClient client) {
+    def "fetch media entries from api by reference id"(KalturaClient client) {
         given:
-        client.createMediaEntry("test-reference-id")
+        client.createMediaEntry(referenceIdOne)
 
         when:
         Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
-                "test-reference-id",
+                referenceIdOne,
                 "unknown-reference-id"
         ])
 
         then:
         mediaEntries.size() == 1
 
-        MediaEntry mediaEntry = mediaEntries['test-reference-id'][0]
+        MediaEntry mediaEntry = mediaEntries[referenceIdOne][0]
         !mediaEntry.id.isEmpty()
-        mediaEntry.referenceId == 'test-reference-id'
+        mediaEntry.referenceId == referenceIdOne
         def hlsStreamUrl = mediaEntry.streams.withFormat(StreamFormat.APPLE_HDS)
         hlsStreamUrl != null
         hlsStreamUrl.contains('/entryId/' + mediaEntry.id)
@@ -86,10 +91,33 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
+    def "fetch media entries from api by entry id"(KalturaClient client) {
+        given:
+        client.createMediaEntry(referenceIdOne)
+
+        when:
+        Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
+                referenceIdOne
+        ])
+
+        then:
+        mediaEntries.size() == 1
+        mediaEntries[referenceIdOne].size().equals(1)
+        MediaEntry mediaEntry = mediaEntries[referenceIdOne][0]
+
+        MediaEntry mediaEntryById = client.getMediaEntriesByIds([mediaEntry.id]).get(mediaEntry.id)
+
+        mediaEntry.id.equals(mediaEntryById.id)
+        mediaEntry.referenceId.equals(mediaEntryById.referenceId)
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
     def "create and list caption files"(KalturaClient client) {
         given:
-        client.createMediaEntry("test-reference-id")
-        client.createMediaEntry("another-test-reference-id")
+        client.createMediaEntry(referenceIdOne)
+        client.createMediaEntry(referenceIdTwo)
 
         when:
         CaptionAsset captionAsset = CaptionAsset.builder()
@@ -97,9 +125,9 @@ class KalturaClientContractTest extends Specification {
                 .language(KalturaLanguage.ENGLISH)
                 .fileType(CaptionFormat.WEBVTT)
                 .build()
-        client.createCaptionsFile("test-reference-id", captionAsset, readResourceFile("/captions.vtt"))
-        List<CaptionAsset> emptyCaptions = client.getCaptionFilesByReferenceId("another-test-reference-id")
-        List<CaptionAsset> captions = client.getCaptionFilesByReferenceId("test-reference-id")
+        client.createCaptionsFile(referenceIdOne, captionAsset, readResourceFile("/captions.vtt"))
+        List<CaptionAsset> emptyCaptions = client.getCaptionFilesByReferenceId(referenceIdTwo)
+        List<CaptionAsset> captions = client.getCaptionFilesByReferenceId(referenceIdOne)
         List<String> contents = captions.stream()
                 .map { caption -> caption.id }
                 .map { id -> client.getCaptionContentByAssetId(id) }
@@ -123,17 +151,17 @@ class KalturaClientContractTest extends Specification {
 
     def "delete caption files"(KalturaClient client) {
         given:
-        client.createMediaEntry("test-reference-id")
+        client.createMediaEntry(referenceIdOne)
         CaptionAsset captionAsset = CaptionAsset.builder()
                 .label("English (auto-generated)")
                 .language(KalturaLanguage.ENGLISH)
                 .fileType(CaptionFormat.WEBVTT)
                 .build()
-        String assetId = client.createCaptionsFile("test-reference-id", captionAsset, readResourceFile("/captions.vtt")).id
+        String assetId = client.createCaptionsFile(referenceIdOne, captionAsset, readResourceFile("/captions.vtt")).id
 
         when:
         client.deleteCaptionContentByAssetId(assetId)
-        List<CaptionAsset> assets = client.getCaptionFilesByReferenceId("test-reference-id")
+        List<CaptionAsset> assets = client.getCaptionFilesByReferenceId(referenceIdOne)
 
         then:
         assets.isEmpty()
@@ -144,11 +172,11 @@ class KalturaClientContractTest extends Specification {
 
     def "can tag base entries"() {
         given:
-        client.createMediaEntry("test-reference-id")
+        client.createMediaEntry(referenceIdOne)
         Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
-                "test-reference-id",
+                referenceIdOne,
         ])
-        String entryId = mediaEntries.get("test-reference-id")[0].id
+        String entryId = mediaEntries.get(referenceIdOne)[0].id
 
         when:
         client.tag(entryId, ["just", "testing"])

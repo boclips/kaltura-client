@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singleton;
+import static java.util.stream.Collectors.toMap;
 
 public class KalturaClientV3 implements KalturaClient {
     private final MediaList mediaList;
@@ -40,6 +41,15 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
+    public Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds) {
+        if (entryIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        List<MediaEntry> mediaEntries = mediaList.get(idIn(entryIds));
+        return mediaEntries.stream().collect(toMap(MediaEntry::getId, mediaEntry -> mediaEntry));
+    }
+
+    @Override
     public Map<String, List<MediaEntry>> getMediaEntriesByReferenceIds(Collection<String> referenceIds) {
         if (referenceIds.isEmpty()) {
             return Collections.emptyMap();
@@ -50,13 +60,13 @@ public class KalturaClientV3 implements KalturaClient {
 
     @Override
     public void deleteMediaEntriesByReferenceId(String referenceId) {
-        final List<MediaEntry> mediaEntryToBeDeleted = getMediaEntriesByReferenceId(referenceId);
+        final List<MediaEntry> mediaEntriesToBeDeleted = getMediaEntriesByReferenceId(referenceId);
 
         List<KalturaClientApiException> errors = new ArrayList<>();
 
-        mediaEntryToBeDeleted.forEach(mediaEntry -> {
+        mediaEntriesToBeDeleted.forEach(mediaEntry -> {
                     try {
-                        mediaDelete.deleteByEntityId(mediaEntry.getId());
+                        mediaDelete.deleteByEntryId(mediaEntry.getId());
                     } catch (KalturaClientApiException e) {
                         errors.add(e);
                     }
@@ -128,6 +138,11 @@ public class KalturaClientV3 implements KalturaClient {
     private RequestFilters entryIdEqual(String entryId) {
         return new RequestFilters()
                 .add("filter[entryIdEqual]", entryId);
+    }
+
+    private RequestFilters idIn(Collection<String> entryIds) {
+        return new RequestFilters()
+                .add("filter[idIn]", String.join(",", entryIds));
     }
 
     private RequestFilters referenceIdIn(Collection<String> referenceIds) {

@@ -15,6 +15,8 @@ public interface KalturaClient {
         return new KalturaClientV3(config, new RestSessionGenerator(new SessionRetriever(config), config.getSessionTtl()));
     }
 
+    Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds);
+
     Map<String, List<MediaEntry>> getMediaEntriesByReferenceIds(Collection<String> referenceIds);
 
     List<MediaEntry> getMediaEntriesByReferenceId(String referenceIds);
