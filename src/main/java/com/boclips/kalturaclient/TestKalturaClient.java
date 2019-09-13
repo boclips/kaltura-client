@@ -18,6 +18,7 @@ public class TestKalturaClient implements KalturaClient {
     private final Map<String, List<MediaEntry>> mediaEntryListsByReferenceId = new HashMap<>();
     private final Map<String, MediaEntry> mediaEntriesById = new HashMap<>();
     private final Map<String, List<CaptionAsset>> captionAssetsByReferenceId = new HashMap<>();
+    private final Map<String, List<CaptionAsset>> captionAssetsByEntryId = new HashMap<>();
     private final Map<String, String> captionContentsByAssetId = new HashMap<>();
     private final Map<String, BaseEntry> baseEntriesByEntryId = new HashMap<>();
 
@@ -36,8 +37,20 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
+    public MediaEntry getMediaEntryById(String entryId) {
+        return mediaEntriesById.get(entryId);
+    }
+
+    @Override
     public List<MediaEntry> getMediaEntriesByReferenceId(String referenceId) {
         return Optional.ofNullable(mediaEntryListsByReferenceId.get(referenceId)).orElse(Collections.emptyList());
+    }
+
+    @Override
+    public void deleteMediaEntryById(String entryId) {
+        MediaEntry mediaEntry = mediaEntriesById.get(entryId);
+        mediaEntryListsByReferenceId.remove(mediaEntry.getReferenceId());
+        mediaEntriesById.remove(entryId);
     }
 
     @Override
@@ -70,16 +83,52 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public CaptionAsset createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
+    public CaptionAsset createCaptionsFileWithEntryId(String entryId, CaptionAsset captionAsset, String content) {
+        MediaEntry mediaEntry = getMediaEntryById(entryId);
+
         String assetId = UUID.randomUUID().toString();
-        CaptionAsset copyWithId = captionAsset
+        CaptionAsset captionAssetWithId = captionAsset
                 .toBuilder()
                 .id(assetId)
                 .build();
-        captionAssetsByReferenceId.computeIfAbsent(referenceId, (refId) -> new ArrayList<>())
-                .add(copyWithId);
+
+        captionAssetsByReferenceId.computeIfAbsent(mediaEntry.getReferenceId(), (refId) -> new ArrayList<>())
+                .add(captionAssetWithId);
+
+        captionAssetsByEntryId.computeIfAbsent(entryId, (id) -> new ArrayList<>())
+                .add(captionAssetWithId);
+
         captionContentsByAssetId.put(assetId, content);
-        return copyWithId;
+        return captionAssetWithId;
+    }
+
+    @Override
+    public CaptionAsset createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
+        List<MediaEntry> mediaEntries = getMediaEntriesByReferenceId(referenceId);
+
+        String assetId = UUID.randomUUID().toString();
+        CaptionAsset captionAssetWithId = captionAsset
+                .toBuilder()
+                .id(assetId)
+                .build();
+
+        captionAssetsByReferenceId.computeIfAbsent(referenceId, (refId) -> new ArrayList<>())
+                .add(captionAssetWithId);
+
+        mediaEntries.forEach(mediaEntry -> captionAssetsByEntryId.computeIfAbsent(mediaEntry.getId(), (id) -> new ArrayList<>())
+                .add(captionAssetWithId));
+
+        captionContentsByAssetId.put(assetId, content);
+        return captionAssetWithId;
+    }
+
+    @Override
+    public List<CaptionAsset> getCaptionFilesByEntryId(String entryId) {
+        List<CaptionAsset> captionFiles = captionAssetsByEntryId.get(entryId);
+        if(captionFiles == null) {
+            return Collections.emptyList();
+        }
+        return captionFiles;
     }
 
     @Override

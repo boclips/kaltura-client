@@ -57,6 +57,26 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
+    def "delete media entries by entryId"(KalturaClient client) {
+        given:
+        def referenceId = UUID.randomUUID().toString()
+        client.createMediaEntry(referenceId)
+        List<MediaEntry> createdMediaEntries = client.getMediaEntriesByReferenceId(referenceId)
+
+        when:
+        client.deleteMediaEntryById(createdMediaEntries.get(0).id)
+        List<MediaEntry> deletedMediaEntry = client.getMediaEntriesByReferenceId(referenceId)
+
+        then:
+        createdMediaEntries.size() == 1
+        createdMediaEntries[0].referenceId == referenceId
+        deletedMediaEntry.isEmpty()
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+
     def "fetch media entries from api by reference id"(KalturaClient client) {
         given:
         client.createMediaEntry(referenceIdOne)
@@ -91,7 +111,7 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
-    def "fetch media entries from api by entry id"(KalturaClient client) {
+    def "fetch media entries from api by entry ids"(KalturaClient client) {
         given:
         client.createMediaEntry(referenceIdOne)
 
@@ -114,7 +134,30 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
-    def "create and list caption files"(KalturaClient client) {
+    def "fetch media entries from api by entry id"(KalturaClient client) {
+        given:
+        client.createMediaEntry(referenceIdOne)
+
+        when:
+        Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
+                referenceIdOne
+        ])
+
+        then:
+        mediaEntries.size() == 1
+        mediaEntries[referenceIdOne].size().equals(1)
+        MediaEntry mediaEntry = mediaEntries[referenceIdOne][0]
+
+        MediaEntry mediaEntryById = client.getMediaEntryById(mediaEntry.id)
+
+        mediaEntry.id.equals(mediaEntryById.id)
+        mediaEntry.referenceId.equals(mediaEntryById.referenceId)
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+    def "create and list caption files by reference id"(KalturaClient client) {
         given:
         client.createMediaEntry(referenceIdOne)
         client.createMediaEntry(referenceIdTwo)
@@ -135,6 +178,39 @@ class KalturaClientContractTest extends Specification {
 
         then:
         emptyCaptions.size() == 0
+        captions.size() == 1
+        captions.first().id.length() > 0
+        captions.first().label == "English (auto-generated)"
+        captions.first().language == KalturaLanguage.ENGLISH
+        captions.first().fileType == CaptionFormat.WEBVTT
+
+        then:
+        contents.size() == 1
+        contents.first().contains("Tintern Abbey")
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+    def "create and list caption files by entry id"(KalturaClient client) {
+        given:
+        client.createMediaEntry(referenceIdOne)
+        MediaEntry mediaEntry = client.getMediaEntriesByReferenceId(referenceIdOne).get(0)
+
+        when:
+        CaptionAsset captionAsset = CaptionAsset.builder()
+                .label("English (auto-generated)")
+                .language(KalturaLanguage.ENGLISH)
+                .fileType(CaptionFormat.WEBVTT)
+                .build()
+        client.createCaptionsFileWithEntryId(mediaEntry.id, captionAsset, readResourceFile("/captions.vtt"))
+        List<CaptionAsset> captions = client.getCaptionFilesByEntryId(mediaEntry.id)
+        List<String> contents = captions.stream()
+                .map { caption -> caption.id }
+                .map { id -> client.getCaptionContentByAssetId(id) }
+                .collect(Collectors.toList())
+
+        then:
         captions.size() == 1
         captions.first().id.length() > 0
         captions.first().label == "English (auto-generated)"

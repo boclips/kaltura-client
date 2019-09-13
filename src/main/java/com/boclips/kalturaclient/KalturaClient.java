@@ -19,13 +19,21 @@ public interface KalturaClient {
 
     Map<String, List<MediaEntry>> getMediaEntriesByReferenceIds(Collection<String> referenceIds);
 
-    List<MediaEntry> getMediaEntriesByReferenceId(String referenceIds);
+    MediaEntry getMediaEntryById(String entryId);
+
+    List<MediaEntry> getMediaEntriesByReferenceId(String referenceId);
+
+    void deleteMediaEntryById(String entryId);
 
     void deleteMediaEntriesByReferenceId(String referenceId);
 
     void createMediaEntry(String referenceId);
 
+    CaptionAsset createCaptionsFileWithEntryId(String entryId, CaptionAsset captionAsset, String content);
+
     CaptionAsset createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content);
+
+    List<CaptionAsset> getCaptionFilesByEntryId(String entryId);
 
     List<CaptionAsset> getCaptionFilesByReferenceId(String referenceId);
 

@@ -41,6 +41,16 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
+    public MediaEntry getMediaEntryById(String entryId) {
+        List<MediaEntry> mediaEntries = mediaList.get(idEqual(entryId));
+        if (mediaEntries.isEmpty()) {
+            return null;
+        }
+
+        return mediaEntries.get(0);
+    }
+
+    @Override
     public Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds) {
         if (entryIds.isEmpty()) {
             return Collections.emptyMap();
@@ -59,18 +69,23 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
+    public void deleteMediaEntryById(String entryId) {
+        mediaDelete.deleteByEntryId(entryId);
+    }
+
+    @Override
     public void deleteMediaEntriesByReferenceId(String referenceId) {
         final List<MediaEntry> mediaEntriesToBeDeleted = getMediaEntriesByReferenceId(referenceId);
 
         List<KalturaClientApiException> errors = new ArrayList<>();
 
         mediaEntriesToBeDeleted.forEach(mediaEntry -> {
-                    try {
-                        mediaDelete.deleteByEntryId(mediaEntry.getId());
-                    } catch (KalturaClientApiException e) {
-                        errors.add(e);
-                    }
+                try {
+                    deleteMediaEntryById(mediaEntry.getId());
+                } catch (KalturaClientApiException e) {
+                    errors.add(e);
                 }
+            }
         );
 
         if (errors.size() > 0) {
@@ -84,17 +99,27 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public CaptionAsset createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
-        String entryId = entryIdFromReferenceId(referenceId);
+    public CaptionAsset createCaptionsFileWithEntryId(String entryId, CaptionAsset captionAsset, String content) {
         CaptionAsset asset = captionAssetAdd.post(entryId, captionAsset);
         return captionAssetSetContent.post(asset.getId(), content);
+    }
+
+    @Override
+    public CaptionAsset createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
+        String entryId = entryIdFromReferenceId(referenceId);
+        return createCaptionsFileWithEntryId(entryId, captionAsset, content);
+    }
+
+    @Override
+    public List<CaptionAsset> getCaptionFilesByEntryId(String entryId) {
+        return captionAssetList.get(entryIdEqual(entryId));
     }
 
     @Override
     public List<CaptionAsset> getCaptionFilesByReferenceId(String referenceId) {
         String entryId = entryIdFromReferenceId(referenceId);
 
-        return captionAssetList.get(entryIdEqual(entryId));
+        return getCaptionFilesByEntryId(entryId);
     }
 
     @Override
@@ -143,6 +168,11 @@ public class KalturaClientV3 implements KalturaClient {
     private RequestFilters idIn(Collection<String> entryIds) {
         return new RequestFilters()
                 .add("filter[idIn]", String.join(",", entryIds));
+    }
+
+    private RequestFilters idEqual(String entryId) {
+        return new RequestFilters()
+                .add("filter[idEqual]", entryId);
     }
 
     private RequestFilters referenceIdIn(Collection<String> referenceIds) {
