@@ -154,6 +154,12 @@ public class TestKalturaClient implements KalturaClient {
                     .findAny()
                     .ifPresent(assets::remove);
         });
+        captionAssetsByEntryId.values().forEach(assets -> {
+            assets.stream()
+                    .filter(asset -> asset.getId().equals(assetId))
+                    .findAny()
+                    .ifPresent(assets::remove);
+        });
     }
 
     @Override
