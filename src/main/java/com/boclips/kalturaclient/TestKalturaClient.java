@@ -187,7 +187,9 @@ public class TestKalturaClient implements KalturaClient {
 
     public void clear() {
         mediaEntryListsByReferenceId.clear();
+        mediaEntriesById.clear();
         captionAssetsByReferenceId.clear();
+        captionAssetsByEntryId.clear();
         captionContentsByAssetId.clear();
         baseEntriesByEntryId.clear();
     }
