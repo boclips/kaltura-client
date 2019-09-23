@@ -60,6 +60,12 @@ dependencyCheck {
     failBuildOnCVSS = 4
 
     data {
-        directory='./dependency-check-cache'
+        directory = './dependency-check-cache'
     }
+
+    analyzers {
+        assemblyEnabled = false
+    }
+
+    suppressionFile = './dependency-check-suppressions.xml'
 }
