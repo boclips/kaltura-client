@@ -264,6 +264,22 @@ class KalturaClientContractTest extends Specification {
         client << [testClient(), realClient()]
     }
 
+    def "can build thumbnail urls"() {
+        given:
+        String entryId = "media-entry-id"
+
+        when:
+        String thumbnailUrl = client.getThumbnailUrl(entryId)
+
+        then:
+        thumbnailUrl.contains("entry_id/media-entry-id")
+        thumbnailUrl.contains("width/{thumbnailWidth}")
+
+        where:
+        client << [testClient(), realClient()]
+
+    }
+
     private static KalturaClient testClient() {
         new TestKalturaClient()
     }

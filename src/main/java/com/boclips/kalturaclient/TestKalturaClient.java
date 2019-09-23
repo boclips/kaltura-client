@@ -163,6 +163,11 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
+    public String getThumbnailUrl(String entryId) {
+        return thumbnailUrl(entryId);
+    }
+
+    @Override
     public void tag(String entryId, List<String> tags) {
         baseEntriesByEntryId.put(
                 entryId,

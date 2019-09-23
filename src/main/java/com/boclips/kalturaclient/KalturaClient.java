@@ -44,4 +44,6 @@ public interface KalturaClient {
     BaseEntry getBaseEntry(String entryId);
 
     void deleteCaptionContentByAssetId(String assetId);
+
+    String getThumbnailUrl(String entryId);
 }

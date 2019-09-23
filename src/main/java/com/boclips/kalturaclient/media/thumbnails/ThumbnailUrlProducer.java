@@ -12,7 +12,10 @@ public class ThumbnailUrlProducer {
     }
 
     public String convert(MediaEntryResource mediaEntryResource) {
-        return String.format(THUMBNAIL_URL_TEMPLATE,
-                config.getPartnerId(), mediaEntryResource.getId());
+        return convert(mediaEntryResource.getId());
+    }
+
+    public String convert(String entryId) {
+        return String.format(THUMBNAIL_URL_TEMPLATE, config.getPartnerId(), entryId);
     }
 }
