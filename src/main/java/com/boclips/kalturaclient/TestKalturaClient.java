@@ -168,6 +168,11 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
+    public String getVideoPreviewUrl(String entryId) {
+        return videoPreviewUrl(entryId);
+    }
+
+    @Override
     public void tag(String entryId, List<String> tags) {
         baseEntriesByEntryId.put(
                 entryId,

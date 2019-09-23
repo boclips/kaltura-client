@@ -46,4 +46,6 @@ public interface KalturaClient {
     void deleteCaptionContentByAssetId(String assetId);
 
     String getThumbnailUrl(String entryId);
+
+    String getVideoPreviewUrl(String entryId);
 }

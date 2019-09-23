@@ -277,7 +277,22 @@ class KalturaClientContractTest extends Specification {
 
         where:
         client << [testClient(), realClient()]
+    }
 
+    def "can build video preview urls"() {
+        given:
+        String entryId = "media-entry-id"
+
+        when:
+        String thumbnailUrl = client.getVideoPreviewUrl(entryId)
+
+        then:
+        thumbnailUrl.contains("entry_id/media-entry-id")
+        thumbnailUrl.contains("width/{thumbnailWidth}")
+        thumbnailUrl.contains("vid_slices/{thumbnailCount}")
+
+        where:
+        client << [testClient(), realClient()]
     }
 
     private static KalturaClient testClient() {

@@ -12,7 +12,10 @@ public class VideoPreviewUrlProducer {
     }
 
     public String convert(MediaEntryResource mediaEntryResource) {
-        return String.format(VIDEO_PREVIEW_TEMPLATE_URL,
-                config.getPartnerId(), mediaEntryResource.getId());
+        return convert(mediaEntryResource.getId());
+    }
+
+    public String convert(String entryId) {
+        return String.format(VIDEO_PREVIEW_TEMPLATE_URL, config.getPartnerId(), entryId);
     }
 }
