@@ -269,7 +269,7 @@ class KalturaClientContractTest extends Specification {
         String entryId = "media-entry-id"
 
         when:
-        String thumbnailUrl = client.getThumbnailUrl(entryId)
+        String thumbnailUrl = client.getLinkBuilder().getThumbnailUrl(entryId)
 
         then:
         thumbnailUrl.contains("entry_id/media-entry-id")
@@ -290,6 +290,22 @@ class KalturaClientContractTest extends Specification {
         thumbnailUrl.contains("entry_id/media-entry-id")
         thumbnailUrl.contains("width/{thumbnailWidth}")
         thumbnailUrl.contains("vid_slices/{thumbnailCount}")
+
+        where:
+        client << [testClient(), realClient()]
+    }
+
+    def "can build hls stream urls"() {
+        given:
+        String entryId = "media-entry-id"
+        StreamFormat streamTechnique = StreamFormat.APPLE_HDS
+
+        when:
+        String hlsStream = client.getLinkBuilder().getStreamUrl(entryId, streamTechnique)
+
+        then:
+        hlsStream.contains("entryId/media-entry-id")
+        hlsStream.contains("format/" + streamTechnique.code)
 
         where:
         client << [testClient(), realClient()]

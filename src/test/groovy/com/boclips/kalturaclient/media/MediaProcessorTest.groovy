@@ -2,11 +2,11 @@ package com.boclips.kalturaclient.media
 
 import com.boclips.kalturaclient.http.KalturaClientApiException
 import com.boclips.kalturaclient.http.ResponseObjectType
+import com.boclips.kalturaclient.media.links.LinkBuilder
 import com.boclips.kalturaclient.media.resources.MediaEntryResource
 import com.boclips.kalturaclient.media.resources.MediaListResource
 import com.boclips.kalturaclient.media.streams.StreamFormat
 import com.boclips.kalturaclient.media.streams.StreamUrlProducer
-import com.boclips.kalturaclient.media.thumbnails.ThumbnailUrlProducer
 import com.boclips.kalturaclient.media.thumbnails.VideoPreviewUrlProducer
 import spock.lang.Specification
 import test_support.Factories
@@ -20,8 +20,8 @@ class MediaProcessorTest extends Specification {
     def setup() {
         processor = new MediaProcessor(
                 new StreamUrlProducer(Factories.exampleConfig()),
-                new ThumbnailUrlProducer(Factories.exampleConfig()),
-                new VideoPreviewUrlProducer(Factories.exampleConfig())
+                new VideoPreviewUrlProducer(Factories.exampleConfig()),
+                new LinkBuilder(Factories.exampleConfig())
         )
 
         MediaEntryResource mediaEntryResource = MediaEntryResource.builder()

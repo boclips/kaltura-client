@@ -6,7 +6,7 @@ import com.boclips.kalturaclient.http.HttpClient;
 import com.boclips.kalturaclient.http.KalturaClientApiException;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.*;
-import com.boclips.kalturaclient.media.thumbnails.ThumbnailUrlProducer;
+import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.media.thumbnails.VideoPreviewUrlProducer;
 import com.boclips.kalturaclient.session.SessionGenerator;
 
@@ -27,8 +27,8 @@ public class KalturaClientV3 implements KalturaClient {
     private final CaptionAssetServeClient captionAssetServe;
     private final BaseEntryGet baseEntryGet;
     private final BaseEntryUpdate baseEntryUpdate;
-    private final ThumbnailUrlProducer thumbnailUrlProducer;
     private final VideoPreviewUrlProducer videoPreviewUrlProducer;
+    private final LinkBuilder linkBuilder;
 
     public KalturaClientV3(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         HttpClient client = new HttpClient(config.getBaseUrl(), sessionGenerator);
@@ -42,8 +42,8 @@ public class KalturaClientV3 implements KalturaClient {
         this.captionAssetServe = new CaptionAssetServeClient(client);
         this.baseEntryGet = new BaseEntryGetClient(client);
         this.baseEntryUpdate = new BaseEntryUpdateClient(client);
-        this.thumbnailUrlProducer = new ThumbnailUrlProducer(config);
         this.videoPreviewUrlProducer = new VideoPreviewUrlProducer(config);
+        this.linkBuilder = new LinkBuilder(config);
     }
 
     @Override
@@ -86,12 +86,12 @@ public class KalturaClientV3 implements KalturaClient {
         List<KalturaClientApiException> errors = new ArrayList<>();
 
         mediaEntriesToBeDeleted.forEach(mediaEntry -> {
-                try {
-                    deleteMediaEntryById(mediaEntry.getId());
-                } catch (KalturaClientApiException e) {
-                    errors.add(e);
+                    try {
+                        deleteMediaEntryById(mediaEntry.getId());
+                    } catch (KalturaClientApiException e) {
+                        errors.add(e);
+                    }
                 }
-            }
         );
 
         if (errors.size() > 0) {
@@ -139,13 +139,13 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public String getThumbnailUrl(String entryId) {
-        return thumbnailUrlProducer.convert(entryId);
+    public String getVideoPreviewUrl(String entryId) {
+        return videoPreviewUrlProducer.convert(entryId);
     }
 
     @Override
-    public String getVideoPreviewUrl(String entryId) {
-        return videoPreviewUrlProducer.convert(entryId);
+    public LinkBuilder getLinkBuilder() {
+        return linkBuilder;
     }
 
     @Override

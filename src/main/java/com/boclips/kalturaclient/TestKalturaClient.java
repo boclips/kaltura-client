@@ -2,6 +2,7 @@ package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
+import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.media.MediaEntry;
 import com.boclips.kalturaclient.media.MediaEntryStatus;
 import com.boclips.kalturaclient.media.streams.StreamUrls;
@@ -21,6 +22,17 @@ public class TestKalturaClient implements KalturaClient {
     private final Map<String, List<CaptionAsset>> captionAssetsByEntryId = new HashMap<>();
     private final Map<String, String> captionContentsByAssetId = new HashMap<>();
     private final Map<String, BaseEntry> baseEntriesByEntryId = new HashMap<>();
+    private final LinkBuilder linkBuilder;
+
+    public TestKalturaClient() {
+        linkBuilder = new LinkBuilder(
+                KalturaClientConfig.builder()
+                        .partnerId("partner-id")
+                        .userId("user-id")
+                        .secret("ssh-it-is-a-secret")
+                        .build()
+        );
+    }
 
     @Override
     public Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds) {
@@ -125,7 +137,7 @@ public class TestKalturaClient implements KalturaClient {
     @Override
     public List<CaptionAsset> getCaptionFilesByEntryId(String entryId) {
         List<CaptionAsset> captionFiles = captionAssetsByEntryId.get(entryId);
-        if(captionFiles == null) {
+        if (captionFiles == null) {
             return Collections.emptyList();
         }
         return captionFiles;
@@ -134,7 +146,7 @@ public class TestKalturaClient implements KalturaClient {
     @Override
     public List<CaptionAsset> getCaptionFilesByReferenceId(String referenceId) {
         List<CaptionAsset> captionFiles = captionAssetsByReferenceId.get(referenceId);
-        if(captionFiles == null) {
+        if (captionFiles == null) {
             return Collections.emptyList();
         }
         return captionFiles;
@@ -163,13 +175,13 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public String getThumbnailUrl(String entryId) {
-        return thumbnailUrl(entryId);
+    public String getVideoPreviewUrl(String entryId) {
+        return videoPreviewUrl(entryId);
     }
 
     @Override
-    public String getVideoPreviewUrl(String entryId) {
-        return videoPreviewUrl(entryId);
+    public LinkBuilder getLinkBuilder() {
+        return linkBuilder;
     }
 
     @Override
