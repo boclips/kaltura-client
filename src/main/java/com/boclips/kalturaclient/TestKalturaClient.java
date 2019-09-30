@@ -2,9 +2,9 @@ package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
-import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.media.MediaEntry;
 import com.boclips.kalturaclient.media.MediaEntryStatus;
+import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.media.streams.StreamUrls;
 
 import java.time.Duration;
@@ -172,11 +172,6 @@ public class TestKalturaClient implements KalturaClient {
                     .findAny()
                     .ifPresent(assets::remove);
         });
-    }
-
-    @Override
-    public String getVideoPreviewUrl(String entryId) {
-        return videoPreviewUrl(entryId);
     }
 
     @Override

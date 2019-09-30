@@ -21,8 +21,20 @@ public class LinkBuilder {
         return getThumbnailUrl(mediaEntryResource.getId());
     }
 
+    @SuppressWarnings("WeakerAccess")
     public String getThumbnailUrl(String entryId) {
         String template = "https://cdnapisec.kaltura.com/p/%s/thumbnail/entry_id/%s/width/{thumbnailWidth}/vid_slices/3/vid_slice/1";
+
+        return String.format(template, config.getPartnerId(), entryId);
+    }
+
+    public String getVideoPreviewUrl(MediaEntryResource mediaEntryResource) {
+        return getVideoPreviewUrl(mediaEntryResource.getId());
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public String getVideoPreviewUrl(String entryId) {
+        String template = "https://cdnapisec.kaltura.com/p/%s/thumbnail/entry_id/%s/width/{thumbnailWidth}/vid_slices/{thumbnailCount}";
 
         return String.format(template, config.getPartnerId(), entryId);
     }

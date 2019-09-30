@@ -20,8 +20,8 @@ class KalturaClientContractTest extends Specification {
     String referenceIdTwo
 
     void setup() {
-        referenceIdOne = UUID.randomUUID().toString();
-        referenceIdTwo = UUID.randomUUID().toString();
+        referenceIdOne = UUID.randomUUID().toString()
+        referenceIdTwo = UUID.randomUUID().toString()
         cleanup()
     }
 
@@ -284,7 +284,7 @@ class KalturaClientContractTest extends Specification {
         String entryId = "media-entry-id"
 
         when:
-        String thumbnailUrl = client.getVideoPreviewUrl(entryId)
+        String thumbnailUrl = client.getLinkBuilder().getVideoPreviewUrl(entryId)
 
         then:
         thumbnailUrl.contains("entry_id/media-entry-id")

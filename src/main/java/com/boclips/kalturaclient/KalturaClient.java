@@ -2,8 +2,8 @@ package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
-import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.media.MediaEntry;
+import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.session.RestSessionGenerator;
 import com.boclips.kalturaclient.session.SessionRetriever;
 
@@ -45,8 +45,6 @@ public interface KalturaClient {
     BaseEntry getBaseEntry(String entryId);
 
     void deleteCaptionContentByAssetId(String assetId);
-
-    String getVideoPreviewUrl(String entryId);
 
     LinkBuilder getLinkBuilder();
 }

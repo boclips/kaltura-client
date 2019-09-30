@@ -6,7 +6,6 @@ import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.media.resources.MediaListResource;
 import com.boclips.kalturaclient.media.streams.StreamUrlProducer;
-import com.boclips.kalturaclient.media.thumbnails.VideoPreviewUrlProducer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +19,6 @@ public class MediaListClient implements MediaList {
         this.client = client;
         this.processor = new MediaProcessor(
                 new StreamUrlProducer(config),
-                new VideoPreviewUrlProducer(config),
                 // TODO - pass this in, or the media processor?
                 new LinkBuilder(config)
         );

@@ -7,7 +7,6 @@ import com.boclips.kalturaclient.http.KalturaClientApiException;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.*;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
-import com.boclips.kalturaclient.media.thumbnails.VideoPreviewUrlProducer;
 import com.boclips.kalturaclient.session.SessionGenerator;
 
 import java.util.*;
@@ -27,7 +26,6 @@ public class KalturaClientV3 implements KalturaClient {
     private final CaptionAssetServeClient captionAssetServe;
     private final BaseEntryGet baseEntryGet;
     private final BaseEntryUpdate baseEntryUpdate;
-    private final VideoPreviewUrlProducer videoPreviewUrlProducer;
     private final LinkBuilder linkBuilder;
 
     public KalturaClientV3(KalturaClientConfig config, SessionGenerator sessionGenerator) {
@@ -42,7 +40,6 @@ public class KalturaClientV3 implements KalturaClient {
         this.captionAssetServe = new CaptionAssetServeClient(client);
         this.baseEntryGet = new BaseEntryGetClient(client);
         this.baseEntryUpdate = new BaseEntryUpdateClient(client);
-        this.videoPreviewUrlProducer = new VideoPreviewUrlProducer(config);
         this.linkBuilder = new LinkBuilder(config);
     }
 
@@ -136,11 +133,6 @@ public class KalturaClientV3 implements KalturaClient {
     @Override
     public void deleteCaptionContentByAssetId(String assetId) {
         captionAssetDelete.post(assetId);
-    }
-
-    @Override
-    public String getVideoPreviewUrl(String entryId) {
-        return videoPreviewUrlProducer.convert(entryId);
     }
 
     @Override
