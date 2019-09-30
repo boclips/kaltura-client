@@ -5,7 +5,6 @@ import com.boclips.kalturaclient.captionasset.CaptionAsset;
 import com.boclips.kalturaclient.media.MediaEntry;
 import com.boclips.kalturaclient.media.MediaEntryStatus;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
-import com.boclips.kalturaclient.media.streams.StreamUrls;
 
 import java.time.Duration;
 import java.util.*;
@@ -86,9 +85,6 @@ public class TestKalturaClient implements KalturaClient {
                 .id(id)
                 .downloadUrl(downloadUrl(id))
                 .duration(duration)
-                .streams(streamUrl(id))
-                .thumbnailUrl(thumbnailUrl(id))
-                .videoPreviewUrl(videoPreviewUrl(id))
                 .status(status)
                 .build()
         );
@@ -213,18 +209,6 @@ public class TestKalturaClient implements KalturaClient {
 
     private static String downloadUrl(String id) {
         return "https://download.com/entryId/" + id + "/format/download";
-    }
-
-    private static StreamUrls streamUrl(String id) {
-        return new StreamUrls("https://stream.com/entryId/" + id + "/format/[FORMAT]");
-    }
-
-    private static String thumbnailUrl(String id) {
-        return "https://thumbnail.com/entry_id/" + id + "/width/{thumbnailWidth}";
-    }
-
-    private static String videoPreviewUrl(String id) {
-        return "https://videopreview.com/entry_id/" + id + "/width/{thumbnailWidth}/vid_slices/{thumbnailCount}";
     }
 
 }

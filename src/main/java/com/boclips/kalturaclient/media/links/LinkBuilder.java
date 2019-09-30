@@ -1,7 +1,6 @@
 package com.boclips.kalturaclient.media.links;
 
 import com.boclips.kalturaclient.KalturaClientConfig;
-import com.boclips.kalturaclient.media.resources.MediaEntryResource;
 import com.boclips.kalturaclient.media.streams.StreamFormat;
 
 public class LinkBuilder {
@@ -17,22 +16,33 @@ public class LinkBuilder {
         return String.format(template, config.getPartnerId(), config.getPartnerId(), entryId, streamingTechnique.getCode());
     }
 
-    public String getThumbnailUrl(MediaEntryResource mediaEntryResource) {
-        return getThumbnailUrl(mediaEntryResource.getId());
-    }
-
-    @SuppressWarnings("WeakerAccess")
+    /**
+     * @param entryId
+     * @return A templated URL:
+     * <ul>
+     * <li>
+     * thumbnailWidth - width in pixels of the thumbnail to be returned
+     * </li>
+     * </ul>
+     */
     public String getThumbnailUrl(String entryId) {
         String template = "https://cdnapisec.kaltura.com/p/%s/thumbnail/entry_id/%s/width/{thumbnailWidth}/vid_slices/3/vid_slice/1";
 
         return String.format(template, config.getPartnerId(), entryId);
     }
 
-    public String getVideoPreviewUrl(MediaEntryResource mediaEntryResource) {
-        return getVideoPreviewUrl(mediaEntryResource.getId());
-    }
-
-    @SuppressWarnings("WeakerAccess")
+    /**
+     * @param entryId
+     * @return A templated URL:
+     * <ul>
+     * <li>
+     * thumbnailWidth - width in pixels of the thumbnail to be returned
+     * </li>
+     * <li>
+     * thumbnailCount - number of thumbnails to be returned in image
+     * </li>
+     * </ul>
+     */
     public String getVideoPreviewUrl(String entryId) {
         String template = "https://cdnapisec.kaltura.com/p/%s/thumbnail/entry_id/%s/width/{thumbnailWidth}/vid_slices/{thumbnailCount}";
 
