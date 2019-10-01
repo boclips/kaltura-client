@@ -14,6 +14,7 @@ class KalturaClientV3Test extends Specification {
                 .userId("1")
                 .secret("123")
                 .partnerId("999")
+                .streamFlavorParamIds("1,2,3,4")
                 .build()
 
         then:
@@ -26,6 +27,7 @@ class KalturaClientV3Test extends Specification {
                 .baseUrl("common://www.kaltura.com")
                 .secret("123")
                 .partnerId("999")
+                .streamFlavorParamIds("1,2,3,4")
                 .build()
         new KalturaClientV3(config, Mock(SessionGenerator))
 
@@ -39,6 +41,7 @@ class KalturaClientV3Test extends Specification {
                 .baseUrl("common://www.kaltura.com")
                 .userId("1")
                 .partnerId("999")
+                .streamFlavorParamIds("1,2,3,4")
                 .build()
         new KalturaClientV3(config, Mock(SessionGenerator))
 
@@ -52,6 +55,7 @@ class KalturaClientV3Test extends Specification {
                 .baseUrl("common://www.kaltura.com")
                 .userId("1")
                 .secret("123")
+                .streamFlavorParamIds("1,2,3,4")
                 .build()
         new KalturaClientV3(config, Mock(SessionGenerator))
 
@@ -66,6 +70,7 @@ class KalturaClientV3Test extends Specification {
                 .partnerId("not a real partner id")
                 .userId("not a real user id")
                 .secret("not a real secret")
+                .streamFlavorParamIds("1,2,3,4")
                 .build()
         KalturaClientV3 client = new KalturaClientV3(config, Mock(SessionGenerator))
 

@@ -29,6 +29,7 @@ public class TestKalturaClient implements KalturaClient {
                         .partnerId("partner-id")
                         .userId("user-id")
                         .secret("ssh-it-is-a-secret")
+                        .streamFlavorParamIds("1,2,3,4")
                         .build()
         );
     }

@@ -9,10 +9,12 @@ cwd="$(cd "$(dirname "$0")" && pwd)"
 partner_id="$(get-k8s-concourse-secret kaltura-client kaltura-client partner-id)"
 user_id="$(get-k8s-concourse-secret kaltura-client kaltura-client user-id)"
 secret="$(get-k8s-concourse-secret kaltura-client kaltura-client secret)"
+flavor_param_ids="$(get-k8s-concourse-secret kaltura-client kaltura-client flavor-param-ids)"
 
 # We're going to update the yml file here
 output="$cwd/contract-test-setup.yml"
 
-echo "PARTNER_ID: \"$partner_id\""  > "$output"
-echo "USER_ID: \"$user_id\""        >> "$output"
-echo "SECRET: \"$secret\""          >> "$output"
+echo "PARTNER_ID: \"$partner_id\""             > "$output"
+echo "USER_ID: \"$user_id\""                   >> "$output"
+echo "SECRET: \"$secret\""                     >> "$output"
+echo "FLAVOR_PARAM_IDS: \"$flavor_param_ids\"" >> "$output"

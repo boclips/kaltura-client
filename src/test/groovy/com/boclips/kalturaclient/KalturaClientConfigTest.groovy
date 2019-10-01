@@ -1,7 +1,5 @@
 package com.boclips.kalturaclient
 
-import com.boclips.kalturaclient.KalturaClientConfig
-import com.boclips.kalturaclient.KalturaClientConfigException
 import spock.lang.Specification
 
 class KalturaClientConfigTest extends Specification {
@@ -14,6 +12,7 @@ class KalturaClientConfigTest extends Specification {
                 .secret("secret")
                 .baseUrl("common://kaltura.com/api")
                 .sessionTtl(120)
+                .streamFlavorParamIds("1,2,3")
                 .build()
 
         then:
@@ -22,6 +21,22 @@ class KalturaClientConfigTest extends Specification {
         config.secret == "secret"
         config.baseUrl == "common://kaltura.com/api"
         config.sessionTtl == 120
+        config.streamFlavorParamIds == "1,2,3"
+    }
+
+    def 'accepts a single streamFlavorParamId'() {
+        when:
+        KalturaClientConfig config = KalturaClientConfig.builder()
+                .partnerId("partner-id")
+                .userId("user-id")
+                .secret("secret")
+                .baseUrl("common://kaltura.com/api")
+                .sessionTtl(120)
+                .streamFlavorParamIds("13")
+                .build()
+
+        then:
+        config.streamFlavorParamIds == "13"
     }
 
     def 'throws when userId is blank'() {
@@ -30,6 +45,7 @@ class KalturaClientConfigTest extends Specification {
                 .partnerId("partner id")
                 .userId("")
                 .secret("secret")
+                .streamFlavorParamIds("1,2,3")
                 .build()
 
         then:
@@ -43,6 +59,7 @@ class KalturaClientConfigTest extends Specification {
                 .partnerId("")
                 .userId("user")
                 .secret("secret")
+                .streamFlavorParamIds("1,2,3")
                 .build()
 
         then:
@@ -56,11 +73,40 @@ class KalturaClientConfigTest extends Specification {
                 .partnerId("partnerid")
                 .userId("user")
                 .secret("")
+                .streamFlavorParamIds("1,2,3")
                 .build()
 
         then:
         KalturaClientConfigException ex = thrown()
         ex.message == "Invalid secret: []"
+    }
+
+    def 'throws when streamFlavorParamIds is blank'() {
+        when:
+        KalturaClientConfig.builder()
+                .partnerId("partnerid")
+                .userId("user")
+                .secret("secret")
+                .streamFlavorParamIds("")
+                .build()
+
+        then:
+        KalturaClientConfigException ex = thrown()
+        ex.message == "Invalid streamFlavorParamIds: []"
+    }
+
+    def 'throws when streamFlavorParamIds is not a number or list of numbers'() {
+        when:
+        KalturaClientConfig.builder()
+                .partnerId("partnerid")
+                .userId("user")
+                .secret("secret")
+                .streamFlavorParamIds("af32")
+                .build()
+
+        then:
+        KalturaClientConfigException ex = thrown()
+        ex.message == "Invalid streamFlavorParamIds: [af32]. Must be a comma separated list of numbers"
     }
 
 }

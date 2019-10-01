@@ -1,18 +1,22 @@
 package com.boclips.kalturaclient;
 
+import java.util.regex.Pattern;
+
 public class KalturaClientConfig {
     private final String baseUrl;
     private final Integer sessionTtl;
     private final String partnerId;
     private final String userId;
     private final String secret;
+    private final String streamFlavorParamIds;
 
-    private KalturaClientConfig(String partnerId, String userId, String secret, String baseUrl, Integer sessionTtl) {
+    private KalturaClientConfig(String partnerId, String userId, String secret, String baseUrl, Integer sessionTtl, String streamFlavorParamIds) {
         this.partnerId = partnerId;
         this.userId = userId;
         this.secret = secret;
         this.baseUrl = baseUrl;
         this.sessionTtl = sessionTtl;
+        this.streamFlavorParamIds = streamFlavorParamIds;
     }
 
     public String getBaseUrl() {
@@ -35,6 +39,10 @@ public class KalturaClientConfig {
         return secret;
     }
 
+    public String getStreamFlavorParamIds() {
+        return streamFlavorParamIds;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -45,6 +53,7 @@ public class KalturaClientConfig {
         private String partnerId;
         private String userId;
         private String secret;
+        private String streamFlavorParamIds;
 
         private Builder() {
         }
@@ -52,7 +61,7 @@ public class KalturaClientConfig {
         public KalturaClientConfig build() {
             validate();
 
-            return new KalturaClientConfig(partnerId, userId, secret, baseUrl, sessionTtl);
+            return new KalturaClientConfig(partnerId, userId, secret, baseUrl, sessionTtl, streamFlavorParamIds);
         }
 
         public Builder baseUrl(String baseUrl) {
@@ -80,6 +89,11 @@ public class KalturaClientConfig {
             return this;
         }
 
+        public Builder streamFlavorParamIds(String streamFlavorParamIds) {
+            this.streamFlavorParamIds = streamFlavorParamIds;
+            return this;
+        }
+
         private void validate() {
             if (isNullOrEmpty(this.partnerId)) {
                 throw new KalturaClientConfigException(String.format("Invalid partner id: [%s]", this.partnerId));
@@ -90,10 +104,21 @@ public class KalturaClientConfig {
             if (isNullOrEmpty(this.secret)) {
                 throw new KalturaClientConfigException(String.format("Invalid secret: [%s]", this.secret));
             }
+            if (isNullOrEmpty(this.streamFlavorParamIds)) {
+                throw new KalturaClientConfigException(String.format("Invalid streamFlavorParamIds: [%s]", this.streamFlavorParamIds));
+            }
+            if (isNotCommaSeparatedListOfNumbers(this.streamFlavorParamIds)) {
+                throw new KalturaClientConfigException(String.format("Invalid streamFlavorParamIds: [%s]. Must be a comma separated list of numbers", this.streamFlavorParamIds));
+            }
         }
 
         private boolean isNullOrEmpty(String input) {
             return (input == null || "".equals(input));
+        }
+
+        private boolean isNotCommaSeparatedListOfNumbers(String input) {
+            Pattern pattern = Pattern.compile("^[\\d,]*$");
+            return !pattern.matcher(input).find();
         }
     }
 }
