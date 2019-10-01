@@ -11,9 +11,9 @@ public class LinkBuilder {
     }
 
     public String getStreamUrl(String entryId, StreamFormat streamingTechnique) {
-        String template = "https://cdnapisec.kaltura.com/p/%s/sp/%s00/playManifest/entryId/%s/format/%s/protocol/https/video.mp4";
+        String template = "https://cdnapisec.kaltura.com/p/%s/sp/%s00/playManifest/entryId/%s/format/%s/flavorParamIds/%s/protocol/https/video.mp4";
 
-        return String.format(template, config.getPartnerId(), config.getPartnerId(), entryId, streamingTechnique.getCode());
+        return String.format(template, config.getPartnerId(), config.getPartnerId(), entryId, streamingTechnique.getCode(), config.getStreamFlavorParamIds());
     }
 
     /**

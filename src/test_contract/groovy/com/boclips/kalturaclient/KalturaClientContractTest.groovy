@@ -6,7 +6,6 @@ import com.boclips.kalturaclient.captionasset.CaptionFormat
 import com.boclips.kalturaclient.captionasset.KalturaLanguage
 import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaEntryStatus
-import com.boclips.kalturaclient.media.streams.StreamFormat
 import org.apache.commons.io.IOUtils
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
@@ -250,53 +249,6 @@ class KalturaClientContractTest extends Specification {
 
         then:
         client.getBaseEntry(entryId).tags == ["just", "testing"]
-
-        where:
-        client << [testClient(), realClient()]
-    }
-
-    def "can build thumbnail urls"() {
-        given:
-        String entryId = "media-entry-id"
-
-        when:
-        String thumbnailUrl = client.getLinkBuilder().getThumbnailUrl(entryId)
-
-        then:
-        thumbnailUrl.contains("entry_id/media-entry-id")
-        thumbnailUrl.contains("width/{thumbnailWidth}")
-
-        where:
-        client << [testClient(), realClient()]
-    }
-
-    def "can build video preview urls"() {
-        given:
-        String entryId = "media-entry-id"
-
-        when:
-        String thumbnailUrl = client.getLinkBuilder().getVideoPreviewUrl(entryId)
-
-        then:
-        thumbnailUrl.contains("entry_id/media-entry-id")
-        thumbnailUrl.contains("width/{thumbnailWidth}")
-        thumbnailUrl.contains("vid_slices/{thumbnailCount}")
-
-        where:
-        client << [testClient(), realClient()]
-    }
-
-    def "can build hls stream urls"() {
-        given:
-        String entryId = "media-entry-id"
-        StreamFormat streamTechnique = StreamFormat.APPLE_HDS
-
-        when:
-        String hlsStream = client.getLinkBuilder().getStreamUrl(entryId, streamTechnique)
-
-        then:
-        hlsStream.contains("entryId/media-entry-id")
-        hlsStream.contains("format/" + streamTechnique.code)
 
         where:
         client << [testClient(), realClient()]
