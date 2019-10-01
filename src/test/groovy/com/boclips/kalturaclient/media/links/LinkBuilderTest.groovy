@@ -4,6 +4,8 @@ import com.boclips.kalturaclient.KalturaClientConfig
 import com.boclips.kalturaclient.media.streams.StreamFormat
 import spock.lang.Specification
 
+import java.nio.charset.StandardCharsets
+
 class LinkBuilderTest extends Specification {
 
     private LinkBuilder linkBuilder
@@ -55,6 +57,6 @@ class LinkBuilderTest extends Specification {
         then:
         hlsStream.contains("entryId/media-entry-id")
         hlsStream.contains("format/" + streamTechnique.code)
-        hlsStream.contains("flavorParamIds/" + config.getStreamFlavorParamIds())
+        hlsStream.contains("flavorParamIds/" + URLEncoder.encode(config.getStreamFlavorParamIds(), StandardCharsets.UTF_8.toString()))
     }
 }
