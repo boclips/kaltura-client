@@ -12,4 +12,9 @@ public class MediaEntryResource {
     private String downloadUrl;
     private Integer duration;
     public int status;
+    public long createdAt;
+    public int conversionProfileId;
+    public String tags;
+    public int plays;
+    public String flavorParamsIds;
 }

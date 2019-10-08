@@ -7,6 +7,9 @@ import com.boclips.kalturaclient.media.resources.MediaEntryStatusResource;
 import com.boclips.kalturaclient.media.resources.MediaListResource;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,13 +27,18 @@ public class MediaProcessor {
                 .collect(Collectors.toList());
     }
 
-    private MediaEntry process(MediaEntryResource mediaEntryResource) {
+    private MediaEntry process(MediaEntryResource resource) {
         return MediaEntry.builder()
-                .id(mediaEntryResource.getId())
-                .referenceId(mediaEntryResource.getReferenceId())
-                .downloadUrl(mediaEntryResource.getDownloadUrl())
-                .duration(Duration.ofSeconds(mediaEntryResource.getDuration()))
-                .status(MediaEntryStatus.from(MediaEntryStatusResource.fromInteger(mediaEntryResource.status)))
+                .id(resource.getId())
+                .referenceId(resource.getReferenceId())
+                .downloadUrl(resource.getDownloadUrl())
+                .duration(Duration.ofSeconds(resource.getDuration()))
+                .status(MediaEntryStatus.from(MediaEntryStatusResource.fromInteger(resource.status)))
+                .conversionProfileId(resource.getConversionProfileId())
+                .createdAt(LocalDateTime.ofEpochSecond(resource.createdAt, 0, ZoneOffset.UTC))
+                .flavorParamsIds(Arrays.asList(resource.getFlavorParamsIds().split(",")))
+                .tags(Arrays.asList(resource.tags.split(",")))
+                .playCount(resource.getPlays())
                 .build();
     }
 }
