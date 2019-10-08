@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,9 +36,9 @@ public class MediaProcessor {
                 .duration(Duration.ofSeconds(resource.getDuration()))
                 .status(MediaEntryStatus.from(MediaEntryStatusResource.fromInteger(resource.status)))
                 .conversionProfileId(resource.getConversionProfileId())
-                .createdAt(LocalDateTime.ofEpochSecond(resource.createdAt, 0, ZoneOffset.UTC))
-                .flavorParamsIds(Arrays.asList(resource.getFlavorParamsIds().split(",")))
-                .tags(Arrays.asList(resource.tags.split(",")))
+                .createdAt(LocalDateTime.ofEpochSecond(resource.getCreatedAt(), 0, ZoneOffset.UTC))
+                .flavorParamsIds(resource.getFlavorParamsIds() != null ? Arrays.asList(resource.getFlavorParamsIds().split(",")) : Collections.emptyList())
+                .tags(resource.getTags() != null ? Arrays.asList(resource.getTags().split(",")) : Collections.emptyList())
                 .playCount(resource.getPlays())
                 .build();
     }

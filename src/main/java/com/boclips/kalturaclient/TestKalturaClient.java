@@ -7,6 +7,8 @@ import com.boclips.kalturaclient.media.MediaEntryStatus;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static java.util.stream.Collectors.toMap;
@@ -81,14 +83,24 @@ public class TestKalturaClient implements KalturaClient {
 
     @SuppressWarnings("WeakerAccess")
     public void createMediaEntry(String id, String referenceId, Duration duration, MediaEntryStatus status) {
-        addMediaEntry(MediaEntry.builder()
+        createMediaEntry(MediaEntry.builder()
                 .referenceId(referenceId)
                 .id(id)
                 .downloadUrl(downloadUrl(id))
                 .duration(duration)
                 .status(status)
+                .playCount(0)
+                .tags(Collections.emptyList())
+                .flavorParamsIds(Arrays.asList("1","2","3","4"))
+                .createdAt(LocalDateTime.now())
+                .conversionProfileId(1234560)
                 .build()
         );
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public void createMediaEntry(MediaEntry mediaEntry) {
+        addMediaEntry(mediaEntry);
     }
 
     @Override
