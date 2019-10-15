@@ -8,7 +8,6 @@ import com.boclips.kalturaclient.media.links.LinkBuilder;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 
 import static java.util.stream.Collectors.toMap;
