@@ -42,6 +42,7 @@ dependencies {
     testImplementation group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4'
     testImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.9'
     testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.8.22'
+    testImplementation group: 'org.objenesis', name: 'objenesis', version: '1.2'
 
     testContractImplementation sourceSets.main.output
 
