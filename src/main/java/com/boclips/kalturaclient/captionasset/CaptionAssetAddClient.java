@@ -1,16 +1,16 @@
 package com.boclips.kalturaclient.captionasset;
 
 import com.boclips.kalturaclient.captionasset.resources.CaptionAssetResource;
-import com.boclips.kalturaclient.http.HttpClient;
+import com.boclips.kalturaclient.http.KalturaRestClient;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CaptionAssetAddClient implements CaptionAssetAdd {
 
-    private final HttpClient client;
+    private final KalturaRestClient client;
 
-    public CaptionAssetAddClient(HttpClient client) {
+    public CaptionAssetAddClient(KalturaRestClient client) {
         this.client = client;
     }
 

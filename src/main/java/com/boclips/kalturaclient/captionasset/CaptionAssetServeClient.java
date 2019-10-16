@@ -1,13 +1,13 @@
 package com.boclips.kalturaclient.captionasset;
 
-import com.boclips.kalturaclient.http.HttpClient;
+import com.boclips.kalturaclient.http.KalturaRestClient;
 
 import static java.util.Collections.singletonMap;
 
 public class CaptionAssetServeClient implements CaptionAssetServe {
-    private final HttpClient client;
+    private final KalturaRestClient client;
 
-    public CaptionAssetServeClient(HttpClient client) {
+    public CaptionAssetServeClient(KalturaRestClient client) {
         this.client = client;
     }
 

@@ -2,7 +2,7 @@ package com.boclips.kalturaclient.captionasset;
 
 import com.boclips.kalturaclient.captionasset.resources.CaptionAssetResource;
 import com.boclips.kalturaclient.captionasset.resources.CaptionAssetListResource;
-import com.boclips.kalturaclient.http.HttpClient;
+import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.http.RequestFilters;
 
 import java.util.List;
@@ -11,9 +11,9 @@ import static java.util.stream.Collectors.toList;
 
 public class CaptionAssetListClient implements CaptionAssetList {
 
-    private final HttpClient client;
+    private final KalturaRestClient client;
 
-    public CaptionAssetListClient(HttpClient client) {
+    public CaptionAssetListClient(KalturaRestClient client) {
         this.client = client;
     }
 

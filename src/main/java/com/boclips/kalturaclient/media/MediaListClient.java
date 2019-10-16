@@ -1,6 +1,6 @@
 package com.boclips.kalturaclient.media;
 
-import com.boclips.kalturaclient.http.HttpClient;
+import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.resources.MediaListResource;
 
@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 public class MediaListClient implements MediaList {
-    private final HttpClient client;
+    private final KalturaRestClient client;
     private final MediaProcessor processor;
 
-    public MediaListClient(HttpClient client) {
+    public MediaListClient(KalturaRestClient client) {
         this.client = client;
         this.processor = new MediaProcessor();
     }

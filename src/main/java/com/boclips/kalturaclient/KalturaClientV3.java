@@ -4,7 +4,7 @@ import com.boclips.kalturaclient.baseentry.*;
 import com.boclips.kalturaclient.captionasset.*;
 import com.boclips.kalturaclient.flavorParams.FlavorParams;
 import com.boclips.kalturaclient.flavorParams.FlavorParamsListClient;
-import com.boclips.kalturaclient.http.HttpClient;
+import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.http.KalturaClientApiException;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.*;
@@ -28,36 +28,34 @@ public class KalturaClientV3 implements KalturaClient {
     private final CaptionAssetServeClient captionAssetServe;
     private final BaseEntryGet baseEntryGet;
     private final BaseEntryUpdate baseEntryUpdate;
-    private final HttpClient client;
     private final LinkBuilder linkBuilder;
     private final FlavorParamsListClient flavorParamsList;
     private final KalturaClientConfig config;
     private final List<FlavorParams> flavorParams;
 
     public static KalturaClientV3 create(KalturaClientConfig config, SessionGenerator sessionGenerator) {
-        HttpClient client = new HttpClient(config.getBaseUrl(), sessionGenerator);
+        KalturaRestClient client = KalturaRestClient.create(config.getBaseUrl(), sessionGenerator);
 
         return new KalturaClientV3(client, config);
     }
 
-    KalturaClientV3(HttpClient client, KalturaClientConfig config) {
-        this.client = client;
+    KalturaClientV3(KalturaRestClient restClient, KalturaClientConfig config) {
         this.config = config;
 
-        this.baseEntryGet = new BaseEntryGetClient(this.client);
-        this.baseEntryUpdate = new BaseEntryUpdateClient(this.client);
+        this.baseEntryGet = new BaseEntryGetClient(restClient);
+        this.baseEntryUpdate = new BaseEntryUpdateClient(restClient);
 
-        this.mediaList = new MediaListClient(this.client);
-        this.mediaDelete = new MediaDeleteClient(this.client);
-        this.mediaAdd = new MediaAddClient(this.client);
+        this.mediaList = new MediaListClient(restClient);
+        this.mediaDelete = new MediaDeleteClient(restClient);
+        this.mediaAdd = new MediaAddClient(restClient);
 
-        this.flavorParamsList = new FlavorParamsListClient(this.client);
+        this.flavorParamsList = new FlavorParamsListClient(restClient);
 
-        this.captionAssetList = new CaptionAssetListClient(this.client);
-        this.captionAssetAdd = new CaptionAssetAddClient(this.client);
-        this.captionAssetDelete = new CaptionAssetDelete(this.client);
-        this.captionAssetSetContent = new CaptionAssetSetContentClient(this.client);
-        this.captionAssetServe = new CaptionAssetServeClient(this.client);
+        this.captionAssetList = new CaptionAssetListClient(restClient);
+        this.captionAssetAdd = new CaptionAssetAddClient(restClient);
+        this.captionAssetDelete = new CaptionAssetDelete(restClient);
+        this.captionAssetSetContent = new CaptionAssetSetContentClient(restClient);
+        this.captionAssetServe = new CaptionAssetServeClient(restClient);
 
         this.linkBuilder = new LinkBuilder(this);
 

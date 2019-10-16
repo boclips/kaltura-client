@@ -1,15 +1,15 @@
 package com.boclips.kalturaclient.baseentry;
 
 import com.boclips.kalturaclient.baseentry.resources.BaseEntryResource;
-import com.boclips.kalturaclient.http.HttpClient;
+import com.boclips.kalturaclient.http.KalturaRestClient;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class BaseEntryGetClient implements BaseEntryGet {
-    private final HttpClient client;
+    private final KalturaRestClient client;
 
-    public BaseEntryGetClient(HttpClient client) {
+    public BaseEntryGetClient(KalturaRestClient client) {
         this.client = client;
     }
 

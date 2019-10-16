@@ -1,18 +1,18 @@
 package com.boclips.kalturaclient.captionasset;
 
-import com.boclips.kalturaclient.http.HttpClient;
+import com.boclips.kalturaclient.http.KalturaRestClient;
 
 import static java.util.Collections.singletonMap;
 
 public class CaptionAssetDelete {
 
-    private final HttpClient httpClient;
+    private final KalturaRestClient kalturaRestClient;
 
-    public CaptionAssetDelete(HttpClient httpClient) {
-        this.httpClient = httpClient;
+    public CaptionAssetDelete(KalturaRestClient kalturaRestClient) {
+        this.kalturaRestClient = kalturaRestClient;
     }
 
     public void post(String assetId) {
-        httpClient.post("/caption_captionasset/action/delete", singletonMap("captionAssetId", assetId), String.class);
+        kalturaRestClient.post("/caption_captionasset/action/delete", singletonMap("captionAssetId", assetId), String.class);
     }
 }

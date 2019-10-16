@@ -1,14 +1,14 @@
 package com.boclips.kalturaclient.media;
 
-import com.boclips.kalturaclient.http.HttpClient;
+import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.http.KalturaClientApiException;
 
 import static java.util.Collections.singletonMap;
 
 public class MediaDeleteClient implements MediaDelete {
-    private final HttpClient client;
+    private final KalturaRestClient client;
 
-    public MediaDeleteClient(HttpClient client) {
+    public MediaDeleteClient(KalturaRestClient client) {
         this.client = client;
     }
 

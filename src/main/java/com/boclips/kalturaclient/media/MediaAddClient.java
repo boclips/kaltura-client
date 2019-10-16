@@ -1,14 +1,14 @@
 package com.boclips.kalturaclient.media;
 
-import com.boclips.kalturaclient.http.HttpClient;
+import com.boclips.kalturaclient.http.KalturaRestClient;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MediaAddClient implements MediaAdd {
-    private final HttpClient client;
+    private final KalturaRestClient client;
 
-    public MediaAddClient(HttpClient client) {
+    public MediaAddClient(KalturaRestClient client) {
         this.client = client;
     }
 

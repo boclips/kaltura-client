@@ -2,7 +2,7 @@ package com.boclips.kalturaclient.flavorParams
 
 
 import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsListResource
-import com.boclips.kalturaclient.http.HttpClient
+import com.boclips.kalturaclient.http.KalturaRestClient
 import spock.lang.Specification
 
 import static com.boclips.kalturaclient.testsupport.TestFactories.*
@@ -11,7 +11,7 @@ class FlavorParamsListClientTest extends Specification {
 
     def "fetches all flavors from Kaltura"() {
         given:
-        HttpClient httpClient = Mock(HttpClient)
+        KalturaRestClient httpClient = Mock(KalturaRestClient)
         FlavorParamsListClient client = new FlavorParamsListClient(httpClient)
 
         when:

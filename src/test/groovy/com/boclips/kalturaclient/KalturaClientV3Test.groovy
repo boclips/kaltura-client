@@ -1,7 +1,7 @@
 package com.boclips.kalturaclient
 
 import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsListResource
-import com.boclips.kalturaclient.http.HttpClient
+import com.boclips.kalturaclient.http.KalturaRestClient
 import spock.lang.Specification
 
 import static com.boclips.kalturaclient.testsupport.TestFactories.FlavorParamsListResourceFactory
@@ -10,7 +10,7 @@ class KalturaClientV3Test extends Specification {
 
     def "it loads the project flavorParams on instantiation"() {
         given:
-        HttpClient httpClient = Mock(HttpClient)
+        KalturaRestClient httpClient = Mock(KalturaRestClient)
         KalturaClientConfig config = KalturaClientConfig.builder()
                 .partnerId("partner-id")
                 .userId("user-id")

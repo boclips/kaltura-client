@@ -1,6 +1,6 @@
 package com.boclips.kalturaclient.flavorParams;
 
-import com.boclips.kalturaclient.http.HttpClient;
+import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsListResource;
 
 import java.util.*;
@@ -9,10 +9,10 @@ import java.util.*;
  * @see <a href="https://developer.kaltura.com/api-docs/service/flavorParams/action/list">flavorParams.list</a>
  */
 public class FlavorParamsListClient {
-    private final HttpClient client;
+    private final KalturaRestClient client;
     private final FlavorParamsProcessor processor;
 
-    public FlavorParamsListClient(HttpClient client) {
+    public FlavorParamsListClient(KalturaRestClient client) {
         this.client = client;
         this.processor = new FlavorParamsProcessor();
     }
