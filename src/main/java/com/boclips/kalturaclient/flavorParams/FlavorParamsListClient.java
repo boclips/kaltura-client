@@ -12,9 +12,9 @@ public class FlavorParamsListClient {
     private final HttpClient client;
     private final FlavorParamsProcessor processor;
 
-    public FlavorParamsListClient(HttpClient client, FlavorParamsProcessor processor) {
+    public FlavorParamsListClient(HttpClient client) {
         this.client = client;
-        this.processor = processor;
+        this.processor = new FlavorParamsProcessor();
     }
 
     public List<FlavorParams> get() {

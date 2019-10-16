@@ -2,6 +2,7 @@ package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
+import com.boclips.kalturaclient.flavorParams.FlavorParams;
 import com.boclips.kalturaclient.media.MediaEntry;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.session.RestSessionGenerator;
@@ -13,7 +14,7 @@ import java.util.Map;
 
 public interface KalturaClient {
     static KalturaClient create(KalturaClientConfig config) {
-        return new KalturaClientV3(config, new RestSessionGenerator(new SessionRetriever(config), config.getSessionTtl()));
+        return KalturaClientV3.create(config, new RestSessionGenerator(new SessionRetriever(config), config.getSessionTtl()));
     }
 
     Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds);
@@ -47,6 +48,8 @@ public interface KalturaClient {
     void deleteCaptionContentByAssetId(String assetId);
 
     LinkBuilder getLinkBuilder();
+
+    List<FlavorParams> getFlavorParams();
 
 
 }

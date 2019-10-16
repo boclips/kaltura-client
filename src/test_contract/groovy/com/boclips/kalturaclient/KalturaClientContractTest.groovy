@@ -4,6 +4,8 @@ package com.boclips.kalturaclient
 import com.boclips.kalturaclient.captionasset.CaptionAsset
 import com.boclips.kalturaclient.captionasset.CaptionFormat
 import com.boclips.kalturaclient.captionasset.KalturaLanguage
+import com.boclips.kalturaclient.flavorParams.FlavorParams
+import com.boclips.kalturaclient.flavorParams.Quality
 import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaEntryStatus
 import org.apache.commons.io.IOUtils
@@ -249,6 +251,35 @@ class KalturaClientContractTest extends Specification {
 
         then:
         client.getBaseEntry(entryId).tags == ["just", "testing"]
+
+        where:
+        client << [testClient(), realClient()]
+    }
+
+    def "gets flavors"() {
+        when:
+        List<FlavorParams> flavorParams = client.getFlavorParams()
+
+        Map<Integer, List<FlavorParams>> flavorParamsMap = flavorParams.groupBy {it.id}
+
+        then:
+        flavorParamsMap.size() > 1
+
+        flavorParamsMap.get(487041).first().getHeight() == 360
+        flavorParamsMap.get(487041).first().getWidth() == 0
+        flavorParamsMap.get(487041).first().getQuality() == Quality.LOW
+
+        flavorParamsMap.get(487071).first().getHeight() == 720
+        flavorParamsMap.get(487071).first().getWidth() == 0
+        flavorParamsMap.get(487071).first().getQuality() == Quality.MEDIUM
+
+        flavorParamsMap.get(487081).first().getHeight() == 720
+        flavorParamsMap.get(487081).first().getWidth() == 0
+        flavorParamsMap.get(487081).first().getQuality() == Quality.HIGH
+
+        flavorParamsMap.get(487091).first().getHeight() == 1080
+        flavorParamsMap.get(487091).first().getWidth() == 0
+        flavorParamsMap.get(487091).first().getQuality() == Quality.HIGH
 
         where:
         client << [testClient(), realClient()]

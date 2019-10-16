@@ -2,6 +2,8 @@ package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.baseentry.*;
 import com.boclips.kalturaclient.captionasset.*;
+import com.boclips.kalturaclient.flavorParams.FlavorParams;
+import com.boclips.kalturaclient.flavorParams.FlavorParamsListClient;
 import com.boclips.kalturaclient.http.HttpClient;
 import com.boclips.kalturaclient.http.KalturaClientApiException;
 import com.boclips.kalturaclient.http.RequestFilters;
@@ -26,21 +28,40 @@ public class KalturaClientV3 implements KalturaClient {
     private final CaptionAssetServeClient captionAssetServe;
     private final BaseEntryGet baseEntryGet;
     private final BaseEntryUpdate baseEntryUpdate;
+    private final HttpClient client;
     private final LinkBuilder linkBuilder;
+    private final FlavorParamsListClient flavorParamsList;
+    private final KalturaClientConfig config;
+    private final List<FlavorParams> flavorParams;
 
-    public KalturaClientV3(KalturaClientConfig config, SessionGenerator sessionGenerator) {
+    public static KalturaClientV3 create(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         HttpClient client = new HttpClient(config.getBaseUrl(), sessionGenerator);
-        this.mediaList = new MediaListClient(client);
-        this.mediaDelete = new MediaDeleteClient(client);
-        this.mediaAdd = new MediaAddClient(client);
-        this.captionAssetList = new CaptionAssetListClient(client);
-        this.captionAssetAdd = new CaptionAssetAddClient(client);
-        this.captionAssetDelete = new CaptionAssetDelete(client);
-        this.captionAssetSetContent = new CaptionAssetSetContentClient(client);
-        this.captionAssetServe = new CaptionAssetServeClient(client);
-        this.baseEntryGet = new BaseEntryGetClient(client);
-        this.baseEntryUpdate = new BaseEntryUpdateClient(client);
-        this.linkBuilder = new LinkBuilder(config);
+
+        return new KalturaClientV3(client, config);
+    }
+
+    KalturaClientV3(HttpClient client, KalturaClientConfig config) {
+        this.client = client;
+        this.config = config;
+
+        this.baseEntryGet = new BaseEntryGetClient(this.client);
+        this.baseEntryUpdate = new BaseEntryUpdateClient(this.client);
+
+        this.mediaList = new MediaListClient(this.client);
+        this.mediaDelete = new MediaDeleteClient(this.client);
+        this.mediaAdd = new MediaAddClient(this.client);
+
+        this.flavorParamsList = new FlavorParamsListClient(this.client);
+
+        this.captionAssetList = new CaptionAssetListClient(this.client);
+        this.captionAssetAdd = new CaptionAssetAddClient(this.client);
+        this.captionAssetDelete = new CaptionAssetDelete(this.client);
+        this.captionAssetSetContent = new CaptionAssetSetContentClient(this.client);
+        this.captionAssetServe = new CaptionAssetServeClient(this.client);
+
+        this.linkBuilder = new LinkBuilder(this.config);
+
+        this.flavorParams = flavorParamsList.get();
     }
 
     @Override
@@ -186,5 +207,9 @@ public class KalturaClientV3 implements KalturaClient {
     private RequestFilters referenceIdIn(Collection<String> referenceIds) {
         return new RequestFilters()
                 .add("filter[referenceIdIn]", String.join(",", referenceIds));
+    }
+
+    public List<FlavorParams> getFlavorParams() {
+        return flavorParams;
     }
 }

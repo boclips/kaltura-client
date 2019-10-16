@@ -2,6 +2,8 @@ package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
+import com.boclips.kalturaclient.flavorParams.FlavorParams;
+import com.boclips.kalturaclient.flavorParams.Quality;
 import com.boclips.kalturaclient.media.MediaEntry;
 import com.boclips.kalturaclient.media.MediaEntryStatus;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
@@ -90,7 +92,7 @@ public class TestKalturaClient implements KalturaClient {
                 .status(status)
                 .playCount(0)
                 .tags(Collections.emptyList())
-                .flavorParamsIds(Arrays.asList("1","2","3","4"))
+                .flavorParamsIds(Arrays.asList("1", "2", "3", "4"))
                 .createdAt(LocalDateTime.now())
                 .conversionProfileId(1234560)
                 .build()
@@ -201,6 +203,36 @@ public class TestKalturaClient implements KalturaClient {
     @Override
     public BaseEntry getBaseEntry(String entryId) {
         return baseEntriesByEntryId.get(entryId);
+    }
+
+    @Override
+    public List<FlavorParams> getFlavorParams() {
+        return Arrays.asList(
+                FlavorParams.builder()
+                        .id(487041)
+                        .height(360)
+                        .width(0)
+                        .quality(Quality.LOW)
+                        .build(),
+                FlavorParams.builder()
+                        .id(487071)
+                        .height(720)
+                        .width(0)
+                        .quality(Quality.MEDIUM)
+                        .build(),
+                FlavorParams.builder()
+                        .id(487081)
+                        .height(720)
+                        .width(0)
+                        .quality(Quality.HIGH)
+                        .build(),
+                FlavorParams.builder()
+                        .id(487091)
+                        .height(1080)
+                        .width(0)
+                        .quality(Quality.HIGH)
+                        .build()
+        );
     }
 
     public void addMediaEntry(MediaEntry mediaEntry) {

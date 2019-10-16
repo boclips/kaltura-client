@@ -12,8 +12,7 @@ class FlavorListClientTest extends Specification {
     def "fetches all flavors from Kaltura"() {
         given:
         HttpClient httpClient = Mock(HttpClient)
-        FlavorParamsProcessor processor = new FlavorParamsProcessor()
-        FlavorParamsListClient client = new FlavorParamsListClient(httpClient, processor)
+        FlavorParamsListClient client = new FlavorParamsListClient(httpClient)
 
         when:
         List<FlavorParams> flavors = client.get()
