@@ -1,24 +1,26 @@
 package com.boclips.kalturaclient.media.links
 
+import com.boclips.kalturaclient.KalturaClient
 import com.boclips.kalturaclient.KalturaClientConfig
 import com.boclips.kalturaclient.media.streams.StreamFormat
 import spock.lang.Specification
 
-import java.nio.charset.StandardCharsets
+import static com.boclips.kalturaclient.testsupport.TestFactories.FlavorParamsListFactory
 
 class LinkBuilderTest extends Specification {
 
+    private KalturaClient client
     private LinkBuilder linkBuilder
-    private KalturaClientConfig config
 
     def "setup"() {
-        config = KalturaClientConfig.builder()
-                .partnerId("partner1")
-                .userId("user")
-                .secret("secret")
-                .streamFlavorParamIds('1111,2222,3333')
-                .build()
-        linkBuilder = new LinkBuilder(config)
+        client = Mock(KalturaClient) {
+            getConfig() >> KalturaClientConfig.builder()
+                    .partnerId("partner1")
+                    .userId("user")
+                    .secret("secret")
+                    .build()
+        }
+        linkBuilder = new LinkBuilder(client)
     }
 
     def "can build thumbnail urls"() {
@@ -55,8 +57,9 @@ class LinkBuilderTest extends Specification {
         String hlsStream = linkBuilder.getStreamUrl(entryId, streamTechnique)
 
         then:
+        1 * client.getFlavorParams() >> FlavorParamsListFactory.sample()
         hlsStream.contains("entryId/media-entry-id")
         hlsStream.contains("format/" + streamTechnique.code)
-        hlsStream.contains("flavorParamIds/" + URLEncoder.encode(config.getStreamFlavorParamIds(), StandardCharsets.UTF_8.toString()))
+        hlsStream.contains("flavorParamIds/1111%2C2222%2C3333")
     }
 }

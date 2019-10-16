@@ -59,7 +59,7 @@ public class KalturaClientV3 implements KalturaClient {
         this.captionAssetSetContent = new CaptionAssetSetContentClient(this.client);
         this.captionAssetServe = new CaptionAssetServeClient(this.client);
 
-        this.linkBuilder = new LinkBuilder(this.config);
+        this.linkBuilder = new LinkBuilder(this);
 
         this.flavorParams = flavorParamsList.get();
     }
@@ -211,5 +211,10 @@ public class KalturaClientV3 implements KalturaClient {
 
     public List<FlavorParams> getFlavorParams() {
         return flavorParams;
+    }
+
+    @Override
+    public KalturaClientConfig getConfig() {
+        return this.config;
     }
 }

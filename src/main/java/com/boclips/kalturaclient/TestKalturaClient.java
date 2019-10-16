@@ -25,16 +25,15 @@ public class TestKalturaClient implements KalturaClient {
     private final Map<String, String> captionContentsByAssetId = new HashMap<>();
     private final Map<String, BaseEntry> baseEntriesByEntryId = new HashMap<>();
     private final LinkBuilder linkBuilder;
+    private KalturaClientConfig config;
 
     public TestKalturaClient() {
-        linkBuilder = new LinkBuilder(
-                KalturaClientConfig.builder()
-                        .partnerId("partner-id")
-                        .userId("user-id")
-                        .secret("ssh-it-is-a-secret")
-                        .streamFlavorParamIds("1,2,3,4")
-                        .build()
-        );
+        config = KalturaClientConfig.builder()
+                .partnerId("partner-id")
+                .userId("user-id")
+                .secret("ssh-it-is-a-secret")
+                .build();
+        linkBuilder = new LinkBuilder(this);
     }
 
     @Override
@@ -170,18 +169,16 @@ public class TestKalturaClient implements KalturaClient {
     @Override
     public void deleteCaptionContentByAssetId(String assetId) {
         captionContentsByAssetId.remove(assetId);
-        captionAssetsByReferenceId.values().forEach(assets -> {
-            assets.stream()
-                    .filter(asset -> asset.getId().equals(assetId))
-                    .findAny()
-                    .ifPresent(assets::remove);
-        });
-        captionAssetsByEntryId.values().forEach(assets -> {
-            assets.stream()
-                    .filter(asset -> asset.getId().equals(assetId))
-                    .findAny()
-                    .ifPresent(assets::remove);
-        });
+
+        captionAssetsByReferenceId.values().forEach(assets -> assets.stream()
+                .filter(asset -> asset.getId().equals(assetId))
+                .findAny()
+                .ifPresent(assets::remove));
+
+        captionAssetsByEntryId.values().forEach(assets -> assets.stream()
+                .filter(asset -> asset.getId().equals(assetId))
+                .findAny()
+                .ifPresent(assets::remove));
     }
 
     @Override
@@ -233,6 +230,11 @@ public class TestKalturaClient implements KalturaClient {
                         .quality(Quality.HIGH)
                         .build()
         );
+    }
+
+    @Override
+    public KalturaClientConfig getConfig() {
+        return this.config;
     }
 
     public void addMediaEntry(MediaEntry mediaEntry) {

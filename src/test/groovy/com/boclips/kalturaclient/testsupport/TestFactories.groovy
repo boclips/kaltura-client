@@ -1,7 +1,9 @@
 package com.boclips.kalturaclient.testsupport
 
-import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsResource
+import com.boclips.kalturaclient.flavorParams.FlavorParams
+import com.boclips.kalturaclient.flavorParams.Quality
 import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsListResource
+import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsResource
 
 class TestFactories {
 
@@ -31,6 +33,31 @@ class TestFactories {
                 )
         ) {
             return FlavorParamsListResource.builder().objects(objects).build()
+        }
+    }
+
+    static class FlavorParamsListFactory {
+        static List<FlavorParams> sample() {
+            return Arrays.asList(
+                    FlavorParams.builder()
+                            .id(1111)
+                            .width(0)
+                            .height(320)
+                            .quality(Quality.LOW)
+                            .build(),
+                    FlavorParams.builder()
+                            .id(2222)
+                            .width(0)
+                            .height(720)
+                            .quality(Quality.MEDIUM)
+                            .build(),
+                    FlavorParams.builder()
+                            .id(3333)
+                            .width(0)
+                            .height(1080)
+                            .quality(Quality.HIGH)
+                            .build(),
+            )
         }
     }
 

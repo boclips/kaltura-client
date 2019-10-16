@@ -295,7 +295,6 @@ class KalturaClientContractTest extends Specification {
                 .partnerId(configuration.get("PARTNER_ID"))
                 .userId(configuration.get("USER_ID"))
                 .secret(configuration.get("SECRET"))
-                .streamFlavorParamIds(configuration.get("FLAVOR_PARAM_IDS"))
                 .build()
 
         return KalturaClient.create(config)

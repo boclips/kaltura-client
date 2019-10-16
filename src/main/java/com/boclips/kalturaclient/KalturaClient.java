@@ -51,5 +51,5 @@ public interface KalturaClient {
 
     List<FlavorParams> getFlavorParams();
 
-
+    KalturaClientConfig getConfig();
 }

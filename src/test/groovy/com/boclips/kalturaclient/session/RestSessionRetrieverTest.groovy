@@ -17,7 +17,6 @@ class RestSessionRetrieverTest extends Specification {
                         .secret("123")
                         .partnerId("abc")
                         .sessionTtl(8675309)
-                        .streamFlavorParamIds("1,2,3,4")
                         .build()
         )
 

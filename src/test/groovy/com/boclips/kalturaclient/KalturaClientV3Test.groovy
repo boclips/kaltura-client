@@ -4,7 +4,7 @@ import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsListResource
 import com.boclips.kalturaclient.http.HttpClient
 import spock.lang.Specification
 
-import static com.boclips.kalturaclient.testsupport.TestFactories.*
+import static com.boclips.kalturaclient.testsupport.TestFactories.FlavorParamsListResourceFactory
 
 class KalturaClientV3Test extends Specification {
 
@@ -17,7 +17,6 @@ class KalturaClientV3Test extends Specification {
                 .secret("secret")
                 .baseUrl("common://kaltura.com/api")
                 .sessionTtl(120)
-                .streamFlavorParamIds("1,2,3")
                 .build()
 
         FlavorParamsListResource flavorParamsListResource = FlavorParamsListResourceFactory.sample()

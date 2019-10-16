@@ -1,14 +1,16 @@
 package com.boclips.kalturaclient.media.links;
 
-import com.boclips.kalturaclient.KalturaClientConfig;
+import com.boclips.kalturaclient.KalturaClient;
 import com.boclips.kalturaclient.media.streams.StreamFormat;
 import com.damnhandy.uri.template.UriTemplate;
 
-public class LinkBuilder {
-    private final KalturaClientConfig config;
+import java.util.stream.Collectors;
 
-    public LinkBuilder(KalturaClientConfig config) {
-        this.config = config;
+public class LinkBuilder {
+    private final KalturaClient kalturaClient;
+
+    public LinkBuilder(KalturaClient kalturaClient) {
+        this.kalturaClient = kalturaClient;
     }
 
     /**
@@ -28,10 +30,14 @@ public class LinkBuilder {
                         "/flavorParamIds/{flavorParamIds}" +
                         "/protocol/https/video.mp4"
         )
-                .set("partnerId", config.getPartnerId())
+                .set("partnerId", kalturaClient.getConfig().getPartnerId())
                 .set("entryId", entryId)
                 .set("format", streamingTechnique.getCode())
-                .set("flavorParamIds", config.getStreamFlavorParamIds())
+                .set("flavorParamIds", kalturaClient.getFlavorParams()
+                        .stream()
+                        .map(flavorParams -> String.valueOf(flavorParams.getId()))
+                        .collect(Collectors.joining(","))
+                )
                 .expand();
     }
 
@@ -54,7 +60,7 @@ public class LinkBuilder {
                         "/vid_slices/3" +
                         "/vid_slice/1"
         )
-                .set("partnerId", config.getPartnerId())
+                .set("partnerId", kalturaClient.getConfig().getPartnerId())
                 .set("entryId", entryId)
                 .expandPartial();
     }
@@ -80,7 +86,7 @@ public class LinkBuilder {
                         "/width/{thumbnailWidth}" +
                         "/vid_slices/{thumbnailCount}"
         )
-                .set("partnerId", config.getPartnerId())
+                .set("partnerId", kalturaClient.getConfig().getPartnerId())
                 .set("entryId", entryId)
                 .expandPartial();
     }
