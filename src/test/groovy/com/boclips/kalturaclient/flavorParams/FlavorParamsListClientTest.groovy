@@ -7,7 +7,7 @@ import spock.lang.Specification
 
 import static com.boclips.kalturaclient.testsupport.TestFactories.*
 
-class FlavorListClientTest extends Specification {
+class FlavorParamsListClientTest extends Specification {
 
     def "fetches all flavors from Kaltura"() {
         given:
