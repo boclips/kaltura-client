@@ -37,6 +37,11 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
+    public Iterator<List<MediaEntry>> getMediaEntries() {
+        return Collections.emptyIterator();
+    }
+
+    @Override
     public Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds) {
         return entryIds.stream()
                 .filter(mediaEntriesById::containsKey)

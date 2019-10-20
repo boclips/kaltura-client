@@ -4,12 +4,14 @@ import com.boclips.kalturaclient.baseentry.*;
 import com.boclips.kalturaclient.captionasset.*;
 import com.boclips.kalturaclient.flavorParams.FlavorParams;
 import com.boclips.kalturaclient.flavorParams.FlavorParamsListClient;
-import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.http.KalturaClientApiException;
+import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.*;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
+import com.boclips.kalturaclient.media.list.AllMediaList;
 import com.boclips.kalturaclient.session.SessionGenerator;
+import org.apache.http.annotation.Experimental;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,6 +21,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class KalturaClientV3 implements KalturaClient {
     private final MediaList mediaList;
+    private final AllMediaList allMediaList;
     private final MediaDelete mediaDelete;
     private final MediaAdd mediaAdd;
     private final CaptionAssetList captionAssetList;
@@ -46,6 +49,8 @@ public class KalturaClientV3 implements KalturaClient {
         this.baseEntryUpdate = new BaseEntryUpdateClient(restClient);
 
         this.mediaList = new MediaListClient(restClient);
+        this.allMediaList = new AllMediaList(this.mediaList, 1000, 100);
+
         this.mediaDelete = new MediaDeleteClient(restClient);
         this.mediaAdd = new MediaAddClient(restClient);
 
@@ -60,6 +65,11 @@ public class KalturaClientV3 implements KalturaClient {
         this.linkBuilder = new LinkBuilder(this);
 
         this.flavorParams = flavorParamsList.get();
+    }
+
+    @Override
+    public Iterator<List<MediaEntry>> getMediaEntries() {
+        return allMediaList.get(new RequestFilters());
     }
 
     @Override

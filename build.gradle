@@ -29,6 +29,8 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.10'
     implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'org.apache.commons:commons-collections4:4.0'
+
 
     testImplementation 'au.com.dius:pact-jvm-provider_2.11:3.5.6'
     testImplementation 'au.com.dius:pact-jvm-consumer-groovy_2.11:3.5.6'

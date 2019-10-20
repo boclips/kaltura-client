@@ -10,6 +10,7 @@ import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaEntryStatus
 import org.apache.commons.io.IOUtils
 import org.yaml.snakeyaml.Yaml
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.nio.charset.StandardCharsets
@@ -76,7 +77,6 @@ class KalturaClientContractTest extends Specification {
         where:
         client << [realClient(), testClient()]
     }
-
 
     def "fetch media entries from api by reference id"(KalturaClient client) {
         given:
@@ -260,7 +260,7 @@ class KalturaClientContractTest extends Specification {
         when:
         List<FlavorParams> flavorParams = client.getFlavorParams()
 
-        Map<Integer, List<FlavorParams>> flavorParamsMap = flavorParams.groupBy {it.id}
+        Map<Integer, List<FlavorParams>> flavorParamsMap = flavorParams.groupBy { it.id }
 
         then:
         flavorParamsMap.size() > 1
@@ -283,6 +283,18 @@ class KalturaClientContractTest extends Specification {
 
         where:
         client << [testClient(), realClient()]
+    }
+
+    @Ignore
+    def "fetch all videos"(KalturaClient client) {
+        when:
+        Iterator<List<MediaEntry>> mediaEntriesIterator = client.getMediaEntries()
+
+        then:
+        IteratorHelper.toList(mediaEntriesIterator).size() == 100
+
+        where:
+        client << [realClient()]
     }
 
     private static KalturaClient testClient() {
