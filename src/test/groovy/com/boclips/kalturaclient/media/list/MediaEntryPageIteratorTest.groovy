@@ -6,7 +6,7 @@ import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaList
 import spock.lang.Specification
 
-class MediaEntryIteratorTest extends Specification {
+class MediaEntryPageIteratorTest extends Specification {
     def "fetches one page worth of Media Entries"() {
         given:
         def mediaEntries = Arrays.asList(
@@ -19,7 +19,7 @@ class MediaEntryIteratorTest extends Specification {
 
         when:
         def filters = new RequestFilters()
-        def iterator = new MediaEntryIterator(mediaListMock, 100, 2).getIterator(filters)
+        def iterator = new MediaEntryPageIterator(mediaListMock, 100, 2).getIterator(filters)
 
         then:
         IteratorHelper.toList(iterator).size() == 2
@@ -33,7 +33,7 @@ class MediaEntryIteratorTest extends Specification {
 
         when:
         def filters = new RequestFilters()
-        def iterator = new MediaEntryIterator(mediaListMock, 1, 2).getIterator(filters)
+        def iterator = new MediaEntryPageIterator(mediaListMock, 1, 2).getIterator(filters)
 
         then:
         IteratorHelper.toList(iterator).size() == 2
@@ -47,7 +47,7 @@ class MediaEntryIteratorTest extends Specification {
 
         when:
         def filters = new RequestFilters()
-        def iterator = new MediaEntryIterator(mediaListMock, 1, 0).getIterator(filters)
+        def iterator = new MediaEntryPageIterator(mediaListMock, 1, 0).getIterator(filters)
 
         then:
         IteratorHelper.toList(iterator).size() == 0

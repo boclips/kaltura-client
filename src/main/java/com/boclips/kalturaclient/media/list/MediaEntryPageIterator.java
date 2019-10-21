@@ -13,7 +13,7 @@ import static com.boclips.kalturaclient.http.RequestFilters.merge;
 
 @Slf4j
 @AllArgsConstructor
-public class MediaEntryIterator {
+public class MediaEntryPageIterator {
     private MediaList mediaList;
     private Integer pageSize;
     private Long count;

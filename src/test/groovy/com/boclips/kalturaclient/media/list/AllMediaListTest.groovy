@@ -1,6 +1,6 @@
 package com.boclips.kalturaclient.media.list
 
-import com.boclips.kalturaclient.IteratorHelper
+
 import com.boclips.kalturaclient.http.RequestFilters
 import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaList
@@ -18,7 +18,7 @@ class AllMediaListTest extends Specification {
         def iterator = allMediaList.get(new RequestFilters())
 
         then:
-        IteratorHelper.toList(iterator).size() == 0
+        iterator.toList().size() == 0
     }
 
     def "fetch intervals"() {
@@ -34,10 +34,10 @@ class AllMediaListTest extends Specification {
         def allMediaList = new AllMediaList(mediaEntryMock, 5, 3)
 
         when:
-        Iterator<List<MediaEntry>> iterator = allMediaList.get(new RequestFilters())
+        Iterator<MediaEntry> iterator = allMediaList.get(new RequestFilters())
 
         then:
-        def mediaEntries = IteratorHelper.toList(iterator)
+        def mediaEntries = iterator.toList()
         mediaEntries.size() == 6
     }
 
@@ -50,10 +50,10 @@ class AllMediaListTest extends Specification {
         def allMediaList = new AllMediaList(mediaEntryMock, 5, 1)
 
         when:
-        Iterator<List<MediaEntry>> iterator = allMediaList.get(new RequestFilters())
+        Iterator<MediaEntry> iterator = allMediaList.get(new RequestFilters())
 
         then:
-        def mediaEntries = IteratorHelper.toList(iterator)
+        def mediaEntries = iterator.toList()
         mediaEntries.size() == 6
     }
 }

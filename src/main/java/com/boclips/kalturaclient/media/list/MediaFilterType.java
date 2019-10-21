@@ -6,7 +6,8 @@ public enum MediaFilterType {
     STATUS_IN("filter[statusIn]"),
     STATUS_NOT_IN("filter[statusNotIn]"),
     PAGE_INDEX("pager[pageIndex]"),
-    PAGE_SIZE("pager[pageSize]");
+    PAGE_SIZE("pager[pageSize]"),
+    ORDER_BY("filter[orderBy]");
 
     private String value;
 

@@ -7,6 +7,7 @@ import com.boclips.kalturaclient.flavorParams.Quality;
 import com.boclips.kalturaclient.media.MediaEntry;
 import com.boclips.kalturaclient.media.MediaEntryStatus;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
+import org.apache.http.annotation.Experimental;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -36,9 +37,10 @@ public class TestKalturaClient implements KalturaClient {
         linkBuilder = new LinkBuilder(this);
     }
 
+    @Experimental
     @Override
-    public Iterator<List<MediaEntry>> getMediaEntries() {
-        return Collections.emptyIterator();
+    public Iterator<MediaEntry> getMediaEntries() {
+        return new ArrayList<>(mediaEntriesById.values()).iterator();
     }
 
     @Override

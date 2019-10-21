@@ -20,7 +20,7 @@ public interface KalturaClient {
     }
 
     @Experimental()
-    Iterator<List<MediaEntry>> getMediaEntries();
+    Iterator<MediaEntry> getMediaEntries();
 
     Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds);
 

@@ -25,20 +25,20 @@ import static java.util.Collections.emptyIterator;
  * page size = 500, page index = 0 is equivalent to page index = 1.
  * page size = 500, page index = 20 is valid.
  * page size = 500, page index = 21 is invalid
- *
+ * <p>
  * Therefore with page size of 500, the max elements you can retrieve is 500 * 19 = 9500.
- *
+ * <p>
  * page size = 250, page index = 0 is equivalent to page index = 1.
  * page size = 250, page index = 40 is valid
  * page size = 250, page index = 41 is invalid
- *
+ * <p>
  * Therefore with page size of 250, the max elements you can retrieve is 250 * 39 = 9750.
  * page size = 100, page index = 0 is equivalent to page index = 1.
  * page size = 100, page index = 100 is valid
  * page size = 100, page index = 101 is invalid
- *
+ * <p>
  * Therefore with page size of 100, the max elements you can retrieve is 100 * 99 = 9900.
- *
+ * <p>
  * Even though having a page size of 100 will return a greater number of entries, it takes longer
  * due to the network call. We've found the optimal configuration is 19 pages of 500 entries.
  * <p>
@@ -66,12 +66,12 @@ public class AllMediaList {
     private Integer maxEntries;
     private Integer pageSize;
 
-    public Iterator<List<MediaEntry>> get(RequestFilters searchFilters) {
+    public Iterator<MediaEntry> get(RequestFilters searchFilters) {
         long beginningOfTime = LocalDateTime.of(2013, Month.JANUARY, 1, 0, 0, 0).toEpochSecond(ZoneOffset.UTC);
         long endOfTime = LocalDateTime.now().plusDays(1).toEpochSecond(ZoneOffset.UTC);
 
         log.info("Start fetching Media Entries from {} to {} with filters {}", beginningOfTime, endOfTime, searchFilters);
-        return fetchOrDivide(searchFilters, beginningOfTime, endOfTime);
+        return new PageFlatteningIterator<>(fetchOrDivide(searchFilters, beginningOfTime, endOfTime));
     }
 
     private Iterator<List<MediaEntry>> fetchOrDivide(RequestFilters filters, Long dateStart, Long dateEnd) {
@@ -87,8 +87,8 @@ public class AllMediaList {
             log.info("Splitting time interval in half as {} is greater than {}", numberOfEntriesForInterval, maxEntries);
             long mid = (dateEnd - dateStart) / 2;
             long offset = dateStart + mid;
-            Iterator<List<MediaEntry>> leftInterval = fetchOrDivide(filters, dateStart, offset - 1);
-            Iterator<List<MediaEntry>> rightInterval = fetchOrDivide(filters, offset, dateEnd);
+            Iterator<List<MediaEntry>> leftInterval = fetchOrDivide(filters, offset, dateEnd);
+            Iterator<List<MediaEntry>> rightInterval = fetchOrDivide(filters, dateStart, offset - 1);
             return new IteratorChain<>(leftInterval, rightInterval);
         } else {
             log.info("Fetching {} entries for interval {} - {}",
@@ -96,8 +96,9 @@ public class AllMediaList {
                     Instant.ofEpochSecond(dateStart).atZone(ZoneOffset.UTC).toOffsetDateTime(),
                     Instant.ofEpochSecond(dateEnd).atZone(ZoneOffset.UTC).toOffsetDateTime());
 
-            Iterator<List<MediaEntry>> result = new MediaEntryIterator(mediaList, pageSize, numberOfEntriesForInterval)
+            Iterator<List<MediaEntry>> result = new MediaEntryPageIterator(mediaList, pageSize, numberOfEntriesForInterval)
                     .getIterator(merge(filters, timeFilters));
+
             log.info("Results from time range ({} until {}) have the expected size {}", dateStart, dateEnd, numberOfEntriesForInterval);
             return result;
         }

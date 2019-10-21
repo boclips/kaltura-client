@@ -1,6 +1,5 @@
 package com.boclips.kalturaclient
 
-
 import com.boclips.kalturaclient.captionasset.CaptionAsset
 import com.boclips.kalturaclient.captionasset.CaptionFormat
 import com.boclips.kalturaclient.captionasset.KalturaLanguage
@@ -10,7 +9,6 @@ import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaEntryStatus
 import org.apache.commons.io.IOUtils
 import org.yaml.snakeyaml.Yaml
-import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.nio.charset.StandardCharsets
@@ -285,16 +283,24 @@ class KalturaClientContractTest extends Specification {
         client << [testClient(), realClient()]
     }
 
-    @Ignore
+//    @Ignore("This is pretty expensive, in terms of time. Run at your own risk.")
     def "fetch all videos"(KalturaClient client) {
+        given:
+        client.createMediaEntry(referenceIdOne)
+
         when:
-        Iterator<List<MediaEntry>> mediaEntriesIterator = client.getMediaEntries()
+        Iterator<MediaEntry> mediaEntriesIterator = client.getMediaEntries()
 
         then:
-        IteratorHelper.toList(mediaEntriesIterator).size() == 100
+
+        def index = mediaEntriesIterator.findIndexOf { mediaEntry ->
+            mediaEntry.referenceId == referenceIdOne
+        }
+
+        index != -1
 
         where:
-        client << [realClient()]
+        client << [testClient(), realClient()]
     }
 
     private static KalturaClient testClient() {

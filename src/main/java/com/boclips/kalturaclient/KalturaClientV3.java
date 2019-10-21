@@ -67,8 +67,9 @@ public class KalturaClientV3 implements KalturaClient {
         this.flavorParams = flavorParamsList.get();
     }
 
+    @Experimental
     @Override
-    public Iterator<List<MediaEntry>> getMediaEntries() {
+    public Iterator<MediaEntry> getMediaEntries() {
         return allMediaList.get(new RequestFilters());
     }
 
