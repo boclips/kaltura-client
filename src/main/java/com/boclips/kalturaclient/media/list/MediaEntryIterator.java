@@ -20,20 +20,20 @@ public class MediaEntryIterator {
 
     public Iterator<List<MediaEntry>> getIterator(RequestFilters filters) {
         return new Iterator<List<MediaEntry>>() {
-            private Integer currentPage = 0;
-            private Integer numberOfRequests = (int) Math.ceil(count.doubleValue() / pageSize.doubleValue());
+            private Integer currentPage = 1;
+            private Integer numberOfPages = (int) Math.ceil(count.doubleValue() / pageSize.doubleValue()) + 1;
 
             @Override
             public boolean hasNext() {
-                return currentPage < numberOfRequests;
+                return currentPage < numberOfPages;
             }
 
             @Override
             public List<MediaEntry> next() {
-                log.info("Fetching page {} with filters {}", currentPage, filters);
+                log.info("Fetching page {} of {} with filters {}", currentPage, numberOfPages, filters);
                 List<MediaEntry> onePage = mediaList.get(merge(createPageFilters(currentPage), filters));
                 currentPage++;
-                log.info("Fetched {} of {} entries with filters {}", onePage.size(), count, filters);
+                log.info("Fetched page {} of {} with {} out of {} entries with filters {}", currentPage, numberOfPages,onePage.size(), count, filters);
                 return onePage;
             }
         };

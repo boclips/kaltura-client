@@ -78,7 +78,7 @@ public class AllMediaList {
         RequestFilters timeFilters = createTimeFilters(dateEnd, dateStart);
         Long numberOfEntriesForInterval = mediaList.count(merge(filters, timeFilters));
 
-        log.info("Found {} entries to be fetched for current request ({} until {}})", numberOfEntriesForInterval, dateStart, dateEnd);
+        log.info("Found {} entries to be fetched for current request ({} until {})", numberOfEntriesForInterval, dateStart, dateEnd);
 
         if (numberOfEntriesForInterval == 0L) {
             log.info("Aborting execution as no videos in interval found");
@@ -86,8 +86,9 @@ public class AllMediaList {
         } else if (numberOfEntriesForInterval > maxEntries) {
             log.info("Splitting time interval in half as {} is greater than {}", numberOfEntriesForInterval, maxEntries);
             long mid = (dateEnd - dateStart) / 2;
-            Iterator<List<MediaEntry>> leftInterval = fetchOrDivide(filters, dateStart, dateStart + mid);
-            Iterator<List<MediaEntry>> rightInterval = fetchOrDivide(filters, dateStart + mid, dateEnd);
+            long offset = dateStart + mid;
+            Iterator<List<MediaEntry>> leftInterval = fetchOrDivide(filters, dateStart, offset - 1);
+            Iterator<List<MediaEntry>> rightInterval = fetchOrDivide(filters, offset, dateEnd);
             return new IteratorChain<>(leftInterval, rightInterval);
         } else {
             log.info("Fetching {} entries for interval {} - {}",
