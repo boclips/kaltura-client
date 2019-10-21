@@ -49,7 +49,7 @@ public class KalturaClientV3 implements KalturaClient {
         this.baseEntryUpdate = new BaseEntryUpdateClient(restClient);
 
         this.mediaList = new MediaListClient(restClient);
-        this.allMediaList = new AllMediaList(this.mediaList, 1000, 100);
+        this.allMediaList = new AllMediaList(this.mediaList, 9500, 500);
 
         this.mediaDelete = new MediaDeleteClient(restClient);
         this.mediaAdd = new MediaAddClient(restClient);

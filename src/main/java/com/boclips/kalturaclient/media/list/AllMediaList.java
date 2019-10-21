@@ -19,18 +19,33 @@ import static com.boclips.kalturaclient.http.RequestFilters.merge;
 import static java.util.Collections.emptyIterator;
 
 /**
- * The Kaltura API has a hard limit of 10000 elements that can be returned per request.
+ * The Kaltura API has a hard limit of X elements that can be returned per request.
  * <p>
- * Example: Requesting 2m videos will only work for page size and page index combinations which result in describing less than 10000 elements.
- * page size = 500, page index = 20 is valid
+ * Example: Requesting 2m videos will only work for page size and page index combinations which result in describing less than X elements.
+ * page size = 500, page index = 0 is equivalent to page index = 1.
+ * page size = 500, page index = 20 is valid.
  * page size = 500, page index = 21 is invalid
+ *
+ * Therefore with page size of 500, the max elements you can retrieve is 500 * 19 = 9500.
+ *
+ * page size = 250, page index = 0 is equivalent to page index = 1.
+ * page size = 250, page index = 40 is valid
+ * page size = 250, page index = 41 is invalid
+ *
+ * Therefore with page size of 250, the max elements you can retrieve is 250 * 39 = 9750.
+ * page size = 100, page index = 0 is equivalent to page index = 1.
  * page size = 100, page index = 100 is valid
  * page size = 100, page index = 101 is invalid
+ *
+ * Therefore with page size of 100, the max elements you can retrieve is 100 * 99 = 9900.
+ *
+ * Even though having a page size of 100 will return a greater number of entries, it takes longer
+ * due to the network call. We've found the optimal configuration is 19 pages of 500 entries.
  * <p>
  * The invalid cases will yield the following error on Kaltura:
  * QUERY_EXCEEDED_MAX_MATCHES_ALLOWED: Unable to generate list. max matches value was reached
  * <p>
- * Problem: Kaltura can only return 10000 elements per request, this prevents clients to page through more than 10000 videos.
+ * Problem: Kaltura can only return 9900 (max) elements per request, this prevents clients to page through more than 9900 videos.
  * <p>
  * Solution: Page through catalogue, dicing it by time interval.
  * <p>
@@ -39,9 +54,9 @@ import static java.util.Collections.emptyIterator;
  * Algorithm (essentially Binary Search):
  * 1) Define the time interval (beginning of time to now)
  * 2) Count the entries in interval
- * 3) If count is larger than 10000, go to 2) (recursive)
- * 4) If count is smaller than 10000, fetch all media entries (recursive base case)
- * 5) Return iterator of pages with equal or less than 10000 elements
+ * 3) If count is larger than 9500, go to 2) (recursive)
+ * 4) If count is smaller than 9500, fetch all media entries (page size of 500) (recursive base case)
+ * 5) Return iterator of pages with equal or less than 9500 elements
  */
 @Builder
 @Slf4j
