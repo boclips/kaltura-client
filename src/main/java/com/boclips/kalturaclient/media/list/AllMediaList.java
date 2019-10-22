@@ -71,7 +71,7 @@ public class AllMediaList {
         long endOfTime = LocalDateTime.now().plusDays(1).toEpochSecond(ZoneOffset.UTC);
 
         log.info("Start fetching Media Entries from {} to {} with filters {}", beginningOfTime, endOfTime, searchFilters);
-        return new PageFlatteningIterator<>(fetchOrDivide(searchFilters, beginningOfTime, endOfTime));
+        return new MediaEntryIterator(fetchOrDivide(searchFilters, beginningOfTime, endOfTime));
     }
 
     private Iterator<List<MediaEntry>> fetchOrDivide(RequestFilters filters, Long dateStart, Long dateEnd) {
@@ -96,7 +96,7 @@ public class AllMediaList {
                     Instant.ofEpochSecond(dateStart).atZone(ZoneOffset.UTC).toOffsetDateTime(),
                     Instant.ofEpochSecond(dateEnd).atZone(ZoneOffset.UTC).toOffsetDateTime());
 
-            Iterator<List<MediaEntry>> result = new MediaEntryPageIterator(mediaList, pageSize, numberOfEntriesForInterval)
+            Iterator<List<MediaEntry>> result = new MediaEntryListIterator(mediaList, pageSize, numberOfEntriesForInterval)
                     .getIterator(merge(filters, timeFilters));
 
             log.info("Results from time range ({} until {}) have the expected size {}", dateStart, dateEnd, numberOfEntriesForInterval);

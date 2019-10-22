@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient.media.list;
 
+import com.boclips.kalturaclient.media.MediaEntry;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -7,12 +8,12 @@ import java.util.Iterator;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class PageFlatteningIterator<T> implements Iterator<T> {
+public class MediaEntryIterator implements Iterator {
 
     @NonNull
-    private Iterator<List<T>> pageIterator;
+    private Iterator<List<MediaEntry>> pageIterator;
 
-    private Iterator<T> currentPage = null;
+    private Iterator<MediaEntry> currentPage = null;
 
     @Override
     public boolean hasNext() {
@@ -20,12 +21,11 @@ public class PageFlatteningIterator<T> implements Iterator<T> {
     }
 
     @Override
-    public T next() {
+    public MediaEntry next() {
         if (currentPage == null || (!currentPage.hasNext() && pageIterator.hasNext())) {
             currentPage = pageIterator.next().iterator();
         }
 
         return currentPage.next();
     }
-
 }
