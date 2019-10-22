@@ -18,7 +18,7 @@ class KalturaRestClientTest extends Specification {
             }
         }
 
-        client = new KalturaRestClient(this.httpClient,"https://my.base.url/path", this.sessionGenerator)
+        client = new KalturaRestClient(this.httpClient, "https://my.base.url/path", this.sessionGenerator)
     }
 
     def "it makes a get request to the right endpoint"() {
@@ -29,6 +29,16 @@ class KalturaRestClientTest extends Specification {
         1 * httpClient.get("https://my.base.url/path/request", _, String.class) >> "Hello World"
 
         result == "Hello World"
+    }
+
+    def "it makes a get request to the right endpoint three times when it fails"() {
+        when:
+        def result = client.get("/request", [headerOne: "valueOne", headerTwo: "valueTwo"], String.class)
+
+        then:
+        3 * httpClient.get(_, _, _) >> { throw new Exception() } >> { throw new Exception() } >> "hey"
+
+        result == "hey"
     }
 
     def "it adds a session token query parameter on a get"() {

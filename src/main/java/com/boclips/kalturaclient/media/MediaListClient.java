@@ -3,7 +3,9 @@ package com.boclips.kalturaclient.media;
 import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.resources.MediaListResource;
+import net.jodah.failsafe.RetryPolicy;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
