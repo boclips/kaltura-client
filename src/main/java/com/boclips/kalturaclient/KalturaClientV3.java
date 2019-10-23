@@ -2,6 +2,9 @@ package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.baseentry.*;
 import com.boclips.kalturaclient.captionasset.*;
+import com.boclips.kalturaclient.flavorAsset.FlavorAsset;
+import com.boclips.kalturaclient.flavorAsset.FlavorAssetList;
+import com.boclips.kalturaclient.flavorAsset.FlavorAssetListClient;
 import com.boclips.kalturaclient.flavorParams.FlavorParams;
 import com.boclips.kalturaclient.flavorParams.FlavorParamsListClient;
 import com.boclips.kalturaclient.http.KalturaClientApiException;
@@ -35,6 +38,7 @@ public class KalturaClientV3 implements KalturaClient {
     private final FlavorParamsListClient flavorParamsList;
     private final KalturaClientConfig config;
     private final List<FlavorParams> flavorParams;
+    private final FlavorAssetList flavorAssetList;
 
     public static KalturaClientV3 create(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         KalturaRestClient client = KalturaRestClient.create(config.getBaseUrl(), sessionGenerator);
@@ -65,12 +69,18 @@ public class KalturaClientV3 implements KalturaClient {
         this.linkBuilder = new LinkBuilder(this);
 
         this.flavorParams = flavorParamsList.get();
+        this.flavorAssetList = new FlavorAssetListClient(restClient);
     }
 
     @Experimental
     @Override
     public Iterator<MediaEntry> getMediaEntries() {
         return allMediaList.get(new RequestFilters());
+    }
+
+    @Override
+    public List<FlavorAsset> getFlavorAssetsForEntry(String entryId) {
+        return flavorAssetList.list(entryIdEqual(entryId));
     }
 
     @Override
