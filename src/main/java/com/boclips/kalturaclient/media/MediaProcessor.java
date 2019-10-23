@@ -40,6 +40,9 @@ public class MediaProcessor {
                 .flavorParamsIds(resource.getFlavorParamsIds() != null ? Arrays.asList(resource.getFlavorParamsIds().split(",")) : Collections.emptyList())
                 .tags(resource.getTags() != null ? Arrays.asList(resource.getTags().split(",")) : Collections.emptyList())
                 .playCount(resource.getPlays())
+                .name(resource.name)
+                .width(resource.width)
+                .height(resource.height)
                 .build();
     }
 }

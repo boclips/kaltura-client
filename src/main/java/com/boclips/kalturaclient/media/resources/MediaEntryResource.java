@@ -17,4 +17,7 @@ public class MediaEntryResource {
     public String tags;
     public int plays;
     public String flavorParamsIds;
+    public String name;
+    public int width;
+    public int height;
 }

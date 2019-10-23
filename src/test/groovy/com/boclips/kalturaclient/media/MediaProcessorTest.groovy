@@ -28,6 +28,9 @@ class MediaProcessorTest extends Specification {
                 .flavorParamsIds("1111,2222,3333,4444")
                 .tags("some,very,nice,tags")
                 .plays(56)
+                .name("My Video Name")
+                .width(100)
+                .height(200)
                 .build()
 
         resource = MediaListResource.builder()
@@ -53,6 +56,10 @@ class MediaProcessorTest extends Specification {
         mediaEntry[0].flavorParamsIds == ["1111", "2222", "3333", "4444"]
         mediaEntry[0].tags == ["some", "very", "nice", "tags"]
         mediaEntry[0].playCount == 56
+        mediaEntry[0].name == "My Video Name"
+        mediaEntry[0].width == 100
+        mediaEntry[0].height == 200
+
     }
 
     def "throws when the resource is unsuccessful"() {

@@ -20,6 +20,10 @@ public class MediaEntry {
     private final List<String> tags;
     private final int playCount;
     private final List<String> flavorParamsIds;
+    private final String name;
+    private final int width;
+    private final int height;
+
 
     @Override
     public String toString() {
