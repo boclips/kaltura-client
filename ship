@@ -4,6 +4,8 @@ set -ex
 
 git pull -r
 
+./src/test_contract/resources/setup-contract-test
+
 ./gradlew build dependencyCheckAnalyze test testContract --info
 
 git push
