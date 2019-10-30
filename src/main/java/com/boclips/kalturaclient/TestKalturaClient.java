@@ -88,6 +88,11 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
+    public void deleteAssetById(String assetId) {
+
+    }
+
+    @Override
     public void createMediaEntry(String referenceId) {
         String id = UUID.randomUUID().toString();
 

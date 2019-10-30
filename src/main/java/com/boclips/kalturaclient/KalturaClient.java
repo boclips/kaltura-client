@@ -38,6 +38,8 @@ public interface KalturaClient {
 
     void deleteMediaEntriesByReferenceId(String referenceId);
 
+    void deleteAssetById(String assetId);
+
     void createMediaEntry(String referenceId);
 
     CaptionAsset createCaptionsFileWithEntryId(String entryId, CaptionAsset captionAsset, String content);

@@ -2,9 +2,7 @@ package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.baseentry.*;
 import com.boclips.kalturaclient.captionasset.*;
-import com.boclips.kalturaclient.flavorAsset.Asset;
-import com.boclips.kalturaclient.flavorAsset.FlavorAssetList;
-import com.boclips.kalturaclient.flavorAsset.FlavorAssetListClient;
+import com.boclips.kalturaclient.flavorAsset.*;
 import com.boclips.kalturaclient.flavorParams.FlavorParams;
 import com.boclips.kalturaclient.flavorParams.FlavorParamsListClient;
 import com.boclips.kalturaclient.http.KalturaClientApiException;
@@ -26,6 +24,7 @@ public class KalturaClientV3 implements KalturaClient {
     private final MediaList mediaList;
     private final AllMediaList allMediaList;
     private final MediaDelete mediaDelete;
+    private final FlavorAssetDelete flavorAssetDelete;
     private final MediaAdd mediaAdd;
     private final CaptionAssetList captionAssetList;
     private final CaptionAssetAdd captionAssetAdd;
@@ -59,6 +58,7 @@ public class KalturaClientV3 implements KalturaClient {
         this.mediaAdd = new MediaAddClient(restClient);
 
         this.flavorParamsList = new FlavorParamsListClient(restClient);
+        this.flavorAssetDelete = new FlavorAssetDeleteClient(restClient);
 
         this.captionAssetList = new CaptionAssetListClient(restClient);
         this.captionAssetAdd = new CaptionAssetAddClient(restClient);
@@ -109,6 +109,11 @@ public class KalturaClientV3 implements KalturaClient {
         }
         List<MediaEntry> mediaEntries = mediaList.get(referenceIdIn(referenceIds));
         return mediaEntries.stream().collect(Collectors.groupingBy(MediaEntry::getReferenceId, Collectors.toList()));
+    }
+
+    @Override
+    public void deleteAssetById(String assetId) {
+        flavorAssetDelete.deleteByAssetId(assetId);
     }
 
     @Override
