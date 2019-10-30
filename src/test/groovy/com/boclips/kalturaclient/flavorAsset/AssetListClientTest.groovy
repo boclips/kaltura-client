@@ -6,7 +6,7 @@ import com.boclips.kalturaclient.http.RequestFilters
 import com.boclips.kalturaclient.testsupport.TestFactories
 import spock.lang.Specification
 
-class FlavorAssetListClientTest extends Specification {
+class AssetListClientTest extends Specification {
 
     def "it can get all of the flavor assets for an entry"() {
         given:
@@ -14,7 +14,7 @@ class FlavorAssetListClientTest extends Specification {
         FlavorAssetListClient client = new FlavorAssetListClient(httpClient)
 
         when:
-        List<FlavorAsset> flavorAssets = client.list(new RequestFilters())
+        List<Asset> flavorAssets = client.list(new RequestFilters())
 
         then:
         1 * httpClient.get(

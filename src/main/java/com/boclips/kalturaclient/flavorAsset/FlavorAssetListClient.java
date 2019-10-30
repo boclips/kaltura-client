@@ -17,7 +17,7 @@ public class FlavorAssetListClient implements FlavorAssetList {
     }
 
     @Override
-    public List<FlavorAsset> list(RequestFilters filters) {
+    public List<Asset> list(RequestFilters filters) {
         FlavorAssetListResource listResource = this.client.get("/flavorasset/action/list", filters.toMap(), FlavorAssetListResource.class);
 
         return processor.processFlavorAssetListResource(listResource);

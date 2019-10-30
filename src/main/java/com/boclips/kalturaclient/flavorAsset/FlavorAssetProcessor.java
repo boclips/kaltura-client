@@ -8,16 +8,18 @@ import java.util.stream.Collectors;
 
 public class FlavorAssetProcessor {
 
-    public List<FlavorAsset> processFlavorAssetListResource(FlavorAssetListResource listResource) {
+    public List<Asset> processFlavorAssetListResource(FlavorAssetListResource listResource) {
         return listResource.objects.stream().map(this::processFlavorAssetResource).collect(Collectors.toList());
     }
 
-    private FlavorAsset processFlavorAssetResource(FlavorAssetResource assetResource) {
-        return FlavorAsset.builder()
+    private Asset processFlavorAssetResource(FlavorAssetResource assetResource) {
+        return Asset.builder()
                 .id(assetResource.getId())
                 .entryId(assetResource.getEntryId())
                 .flavorParamsId(assetResource.getFlavorParamsId())
                 .size(assetResource.getSize())
+                .width(assetResource.getWidth())
+                .height(assetResource.getHeight())
                 .isOriginal(assetResource.getIsOriginal())
                 .build();
     }

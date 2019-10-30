@@ -5,10 +5,12 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class FlavorAsset {
+public class Asset {
     private String id;
     private Integer size;
     private Integer flavorParamsId;
     private String entryId;
     private Boolean isOriginal;
+    private Integer width;
+    private Integer height;
 }

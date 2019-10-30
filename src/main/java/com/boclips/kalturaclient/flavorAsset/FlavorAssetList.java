@@ -5,5 +5,5 @@ import com.boclips.kalturaclient.http.RequestFilters;
 import java.util.List;
 
 public interface FlavorAssetList {
-    List<FlavorAsset> list(RequestFilters filters);
+    List<Asset> list(RequestFilters filters);
 }

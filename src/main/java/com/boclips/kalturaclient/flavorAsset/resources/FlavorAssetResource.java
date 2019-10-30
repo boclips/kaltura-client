@@ -12,4 +12,6 @@ public class FlavorAssetResource {
     private Integer flavorParamsId;
     private String entryId;
     private Boolean isOriginal;
+    private Integer width;
+    private Integer height;
 }

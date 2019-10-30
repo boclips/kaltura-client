@@ -2,7 +2,7 @@ package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.baseentry.*;
 import com.boclips.kalturaclient.captionasset.*;
-import com.boclips.kalturaclient.flavorAsset.FlavorAsset;
+import com.boclips.kalturaclient.flavorAsset.Asset;
 import com.boclips.kalturaclient.flavorAsset.FlavorAssetList;
 import com.boclips.kalturaclient.flavorAsset.FlavorAssetListClient;
 import com.boclips.kalturaclient.flavorParams.FlavorParams;
@@ -79,7 +79,7 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public List<FlavorAsset> getFlavorAssetsForEntry(String entryId) {
+    public List<Asset> getAssetsForEntry(String entryId) {
         return flavorAssetList.list(entryIdEqual(entryId));
     }
 

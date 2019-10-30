@@ -2,7 +2,7 @@ package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
-import com.boclips.kalturaclient.flavorAsset.FlavorAsset;
+import com.boclips.kalturaclient.flavorAsset.Asset;
 import com.boclips.kalturaclient.flavorParams.FlavorParams;
 import com.boclips.kalturaclient.media.MediaEntry;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
@@ -24,7 +24,7 @@ public interface KalturaClient {
     Iterator<MediaEntry> getMediaEntries();
 
     @Experimental()
-    List<FlavorAsset> getFlavorAssetsForEntry(String entryId);
+    List<Asset> getAssetsForEntry(String entryId);
 
     Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds);
 
