@@ -7,6 +7,7 @@ import com.boclips.kalturaclient.flavorParams.FlavorParams
 import com.boclips.kalturaclient.flavorParams.Quality
 import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.MediaEntryStatus
+import com.boclips.kalturaclient.testsupport.TestFactories
 import org.apache.commons.io.IOUtils
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
@@ -36,6 +37,25 @@ class KalturaClientContractTest extends Specification {
         } catch (Exception e) {
             e.printStackTrace()
         }
+    }
+
+    def "retrieve assets by entry ids"(KalturaClient client) {
+        given:
+        def entryIds = ["1_zk9l1gj8", "1_1sv8y1q6"]
+
+        when:
+        def retrievedAssetIds = client.getAssetsByEntryIds(entryIds).stream()
+                .map({ asset -> asset.id })
+                .collect(Collectors.toList())
+
+        then:
+        retrievedAssetIds.size() == 2
+        retrievedAssetIds.containsAll([
+                "1_eian2fxp", "1_ogi1ui0u"
+        ])
+
+        where:
+        client << [realClient(), testClient()]
     }
 
     def "create and delete media entries"(KalturaClient client) {
@@ -303,8 +323,11 @@ class KalturaClientContractTest extends Specification {
         client << [testClient(), realClient()]
     }
 
-    private static KalturaClient testClient() {
-        new TestKalturaClient()
+    private static TestKalturaClient testClient() {
+        def testClient = new TestKalturaClient()
+        testClient.setAssets("1_zk9l1gj8", Collections.singletonList(TestFactories.asset("1_eian2fxp")))
+        testClient.setAssets("1_1sv8y1q6", Collections.singletonList(TestFactories.asset("1_ogi1ui0u")))
+        return testClient
     }
 
     private KalturaClient realClient() {

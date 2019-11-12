@@ -32,6 +32,8 @@ public interface KalturaClient {
 
     MediaEntry getMediaEntryById(String entryId);
 
+    List<Asset> getAssetsByEntryIds(Collection<String> entryIds);
+
     List<MediaEntry> getMediaEntriesByReferenceId(String referenceId);
 
     void deleteMediaEntryById(String entryId);

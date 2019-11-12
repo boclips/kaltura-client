@@ -94,6 +94,11 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
+    public List<Asset> getAssetsByEntryIds(Collection<String> entryIds) {
+        return flavorAssetList.list(entryIdIn(entryIds));
+    }
+
+    @Override
     public Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds) {
         if (entryIds.isEmpty()) {
             return Collections.emptyMap();
@@ -216,6 +221,11 @@ public class KalturaClientV3 implements KalturaClient {
     private RequestFilters entryIdEqual(String entryId) {
         return new RequestFilters()
                 .add("filter[entryIdEqual]", entryId);
+    }
+
+    private RequestFilters entryIdIn(Collection<String> entryIds) {
+        return new RequestFilters()
+                .add("filter[entryIdIn]", String.join(",", entryIds));
     }
 
     private RequestFilters idIn(Collection<String> entryIds) {

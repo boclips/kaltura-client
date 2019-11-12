@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient.testsupport
 
+import com.boclips.kalturaclient.flavorAsset.Asset
 import com.boclips.kalturaclient.flavorAsset.resources.FlavorAssetListResource
 import com.boclips.kalturaclient.flavorAsset.resources.FlavorAssetResource
 import com.boclips.kalturaclient.flavorParams.FlavorParams
@@ -8,6 +9,26 @@ import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsListResource
 import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsResource
 
 class TestFactories {
+
+    static Asset asset(
+            String id = UUID.randomUUID().toString(),
+            Integer size = 123456,
+            Integer flavorParamsId = 0,
+            String entryId = UUID.randomUUID().toString(),
+            Boolean isOriginal = true,
+            Integer width = 1920,
+            Integer height = 1080
+    ) {
+        return Asset.builder()
+        .id(id)
+        .size(size)
+        .flavorParamsId(flavorParamsId)
+        .entryId(entryId)
+        .isOriginal(isOriginal)
+        .width(width)
+        .height(height)
+        .build()
+    }
 
     static class FlavorParamResourceFactory {
         static FlavorParamsResource sample(

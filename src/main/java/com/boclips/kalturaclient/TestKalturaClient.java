@@ -14,6 +14,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -26,6 +27,7 @@ public class TestKalturaClient implements KalturaClient {
     private final Map<String, List<CaptionAsset>> captionAssetsByEntryId = new HashMap<>();
     private final Map<String, String> captionContentsByAssetId = new HashMap<>();
     private final Map<String, BaseEntry> baseEntriesByEntryId = new HashMap<>();
+    private final Map<String, List<Asset>> assetsByEntryId = new HashMap<>();
     private final LinkBuilder linkBuilder;
     private KalturaClientConfig config;
 
@@ -66,6 +68,13 @@ public class TestKalturaClient implements KalturaClient {
     @Override
     public MediaEntry getMediaEntryById(String entryId) {
         return mediaEntriesById.get(entryId);
+    }
+
+    @Override
+    public List<Asset> getAssetsByEntryIds(Collection<String> entryIds) {
+        return entryIds.stream()
+                .flatMap(entryId ->  assetsByEntryId.get(entryId).stream())
+                .collect(toList());
     }
 
     @Override
@@ -262,6 +271,10 @@ public class TestKalturaClient implements KalturaClient {
         mediaEntriesById.put(mediaEntry.getId(), mediaEntry);
     }
 
+    public void setAssets(String entryId, List<Asset> assets) {
+        assetsByEntryId.put(entryId, assets);
+    }
+
     public void clear() {
         mediaEntryListsByReferenceId.clear();
         mediaEntriesById.clear();
@@ -269,6 +282,7 @@ public class TestKalturaClient implements KalturaClient {
         captionAssetsByEntryId.clear();
         captionContentsByAssetId.clear();
         baseEntriesByEntryId.clear();
+        assetsByEntryId.clear();
     }
 
     private static String downloadUrl(String id) {
