@@ -39,6 +39,26 @@ class KalturaClientContractTest extends Specification {
         }
     }
 
+    def "retrieve assets by entry id"(KalturaClient client) {
+        given:
+        def entryId = "1_zk9l1gj8"
+
+        when:
+        def assets = client.getAssetsForEntry(entryId)
+
+        then:
+        assets.size() == 1
+        assets.first().id == "1_eian2fxp"
+        assets.first().entryId == "1_zk9l1gj8"
+        assets.first().bitrate == 377
+        assets.first().size == 6645
+        assets.first().width == 320
+        assets.first().height == 176
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
     def "retrieve assets by entry ids"(KalturaClient client) {
         given:
         def entryIds = ["1_zk9l1gj8", "1_1sv8y1q6"]
@@ -325,7 +345,7 @@ class KalturaClientContractTest extends Specification {
 
     private static TestKalturaClient testClient() {
         def testClient = new TestKalturaClient()
-        testClient.setAssets("1_zk9l1gj8", Collections.singletonList(TestFactories.asset("1_eian2fxp")))
+        testClient.setAssets("1_zk9l1gj8", Collections.singletonList(TestFactories.asset("1_eian2fxp", 6645, 377, 0, "1_zk9l1gj8", false, 320, 176)))
         testClient.setAssets("1_1sv8y1q6", Collections.singletonList(TestFactories.asset("1_ogi1ui0u")))
         return testClient
     }

@@ -18,6 +18,7 @@ public class FlavorAssetProcessor {
                 .entryId(assetResource.getEntryId())
                 .flavorParamsId(assetResource.getFlavorParamsId())
                 .size(assetResource.getSize())
+                .bitrate(assetResource.getBitrate())
                 .width(assetResource.getWidth())
                 .height(assetResource.getHeight())
                 .isOriginal(assetResource.getIsOriginal())

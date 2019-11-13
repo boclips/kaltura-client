@@ -48,7 +48,7 @@ public class TestKalturaClient implements KalturaClient {
 
     @Override
     public List<Asset> getAssetsForEntry(String entryId) {
-        return null;
+        return assetsByEntryId.get(entryId);
     }
 
     @Override

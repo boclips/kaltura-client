@@ -13,6 +13,7 @@ class TestFactories {
     static Asset asset(
             String id = UUID.randomUUID().toString(),
             Integer size = 123456,
+            Integer bitrate = 1000,
             Integer flavorParamsId = 0,
             String entryId = UUID.randomUUID().toString(),
             Boolean isOriginal = true,
@@ -22,6 +23,7 @@ class TestFactories {
         return Asset.builder()
         .id(id)
         .size(size)
+        .bitrate(bitrate)
         .flavorParamsId(flavorParamsId)
         .entryId(entryId)
         .isOriginal(isOriginal)

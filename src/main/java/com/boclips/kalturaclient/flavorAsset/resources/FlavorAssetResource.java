@@ -9,6 +9,7 @@ import lombok.*;
 public class FlavorAssetResource {
     private String id;
     private Integer size;
+    private Integer bitrate;
     private Integer flavorParamsId;
     private String entryId;
     private Boolean isOriginal;
