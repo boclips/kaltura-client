@@ -95,7 +95,13 @@ public class KalturaClientV3 implements KalturaClient {
 
     @Override
     public List<Asset> getAssetsByEntryIds(Collection<String> entryIds) {
-        return flavorAssetList.list(entryIdIn(entryIds));
+        int pageSize = 500;
+        int pageIndex = 1;
+        int maxEntries = pageSize / 10;
+        if(entryIds.size() > maxEntries) {
+            throw new IllegalArgumentException("Too many entry ids. Max " + maxEntries + ", got " + entryIds.size());
+        }
+        return flavorAssetList.list(page(pageSize, pageIndex, entryIdIn(entryIds)));
     }
 
     @Override
@@ -241,6 +247,12 @@ public class KalturaClientV3 implements KalturaClient {
     private RequestFilters referenceIdIn(Collection<String> referenceIds) {
         return new RequestFilters()
                 .add("filter[referenceIdIn]", String.join(",", referenceIds));
+    }
+
+    private RequestFilters page(Integer pageSize, Integer pageIndex, RequestFilters filters) {
+        return filters
+                .add("pager[pageSize]", pageSize.toString())
+                .add("pager[pageIndex]", pageIndex.toString());
     }
 
     public List<FlavorParams> getFlavorParams() {
