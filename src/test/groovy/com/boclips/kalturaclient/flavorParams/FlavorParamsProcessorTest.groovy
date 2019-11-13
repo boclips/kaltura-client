@@ -55,6 +55,26 @@ class FlavorParamsProcessorTest extends Specification {
         resultingFlavors[0].id == 1111
     }
 
+    def "it filters out 3GP KalturaFlavorParams"() {
+        given:
+        FlavorParamsResource flavorParamOne = FlavorParamResourceFactory.sample(260, 100, 1111, 0)
+        FlavorParamsResource flavorParamTwo = FlavorParamResourceFactory.sample(768, 1000, 2222, 0, "KalturaFlavorParams", "3gp")
+
+        FlavorParamsListResource listResource = FlavorParamsListResource.builder().
+                objects(Arrays.asList(flavorParamOne, flavorParamTwo))
+                .totalCount(2)
+                .build()
+
+        when:
+        FlavorParamsProcessor processor = new FlavorParamsProcessor()
+        List<FlavorParams> resultingFlavors = processor.process(listResource)
+
+        then:
+        resultingFlavors.size() == 1
+
+        resultingFlavors[0].id == 1111
+    }
+
     def "Processes a low quality flavor (360/400)"() {
         given:
         FlavorParamsResource flavorParamResource = FlavorParamResourceFactory.sample(360, 400)

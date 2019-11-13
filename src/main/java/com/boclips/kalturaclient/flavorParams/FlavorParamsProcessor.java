@@ -26,6 +26,10 @@ public class FlavorParamsProcessor {
             return null;
         }
 
+        if((resource.getFormat().equals("3gp"))){
+            return null;
+        }
+
         return FlavorParams.builder().id(resource.getId())
                 .height(resource.getHeight())
                 .width(resource.getWidth())

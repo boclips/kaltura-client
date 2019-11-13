@@ -18,4 +18,5 @@ public class FlavorParamsResource {
     private Integer width;
     private Integer videoBitrate;
     private String objectType;
+    private String format;
 }

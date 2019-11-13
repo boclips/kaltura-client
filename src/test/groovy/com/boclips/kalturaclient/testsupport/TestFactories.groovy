@@ -21,15 +21,15 @@ class TestFactories {
             Integer height = 1080
     ) {
         return Asset.builder()
-        .id(id)
-        .size(size)
-        .bitrate(bitrate)
-        .flavorParamsId(flavorParamsId)
-        .entryId(entryId)
-        .isOriginal(isOriginal)
-        .width(width)
-        .height(height)
-        .build()
+                .id(id)
+                .size(size)
+                .bitrate(bitrate)
+                .flavorParamsId(flavorParamsId)
+                .entryId(entryId)
+                .isOriginal(isOriginal)
+                .width(width)
+                .height(height)
+                .build()
     }
 
     static class FlavorParamResourceFactory {
@@ -38,7 +38,8 @@ class TestFactories {
                 int bitrate,
                 int id = 1111,
                 int width = 0,
-                String objectType = "KalturaFlavorParams"
+                String objectType = "KalturaFlavorParams",
+                String format = ""
         ) {
             return FlavorParamsResource.builder()
                     .id(id)
@@ -46,6 +47,7 @@ class TestFactories {
                     .height(height)
                     .videoBitrate(bitrate)
                     .objectType(objectType)
+                    .format(format)
                     .build()
         }
     }
@@ -63,7 +65,7 @@ class TestFactories {
 
     static FlavorAssetListResource flavorAssetListResource(
             List<FlavorAssetResource> objects = Arrays.asList(
-                flavorAssetResource("flavor-asset-id")
+                    flavorAssetResource("flavor-asset-id")
             )
     ) {
         return FlavorAssetListResource
