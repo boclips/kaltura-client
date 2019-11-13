@@ -33,7 +33,7 @@ class KalturaClientContractTest extends Specification {
 
     void tryDeleteMediaEntry(String referenceId) {
         try {
-            realClient().deleteMediaEntriesByReferenceId(referenceId)
+            realClient().deleteEntriesByReferenceId(referenceId)
         } catch (Exception e) {
             e.printStackTrace()
         }
@@ -44,7 +44,7 @@ class KalturaClientContractTest extends Specification {
         def entryId = "1_zk9l1gj8"
 
         when:
-        def assets = client.getAssetsForEntry(entryId)
+        def assets = client.getAssetsByEntryId(entryId)
 
         then:
         assets.size() == 1
@@ -81,12 +81,12 @@ class KalturaClientContractTest extends Specification {
     def "create and delete media entries"(KalturaClient client) {
         given:
         def referenceId = UUID.randomUUID().toString()
-        client.createMediaEntry(referenceId)
-        List<MediaEntry> createdMediaEntry = client.getMediaEntriesByReferenceId(referenceId)
+        client.createEntry(referenceId)
+        List<MediaEntry> createdMediaEntry = client.getEntriesByReferenceId(referenceId)
 
         when:
-        client.deleteMediaEntriesByReferenceId(referenceId)
-        List<MediaEntry> deletedMediaEntry = client.getMediaEntriesByReferenceId(referenceId)
+        client.deleteEntriesByReferenceId(referenceId)
+        List<MediaEntry> deletedMediaEntry = client.getEntriesByReferenceId(referenceId)
 
         then:
         createdMediaEntry.size() == 1
@@ -100,12 +100,12 @@ class KalturaClientContractTest extends Specification {
     def "delete media entries by entryId"(KalturaClient client) {
         given:
         def referenceId = UUID.randomUUID().toString()
-        client.createMediaEntry(referenceId)
-        List<MediaEntry> createdMediaEntries = client.getMediaEntriesByReferenceId(referenceId)
+        client.createEntry(referenceId)
+        List<MediaEntry> createdMediaEntries = client.getEntriesByReferenceId(referenceId)
 
         when:
-        client.deleteMediaEntryById(createdMediaEntries.get(0).id)
-        List<MediaEntry> deletedMediaEntry = client.getMediaEntriesByReferenceId(referenceId)
+        client.deleteEntryById(createdMediaEntries.get(0).id)
+        List<MediaEntry> deletedMediaEntry = client.getEntriesByReferenceId(referenceId)
 
         then:
         createdMediaEntries.size() == 1
@@ -118,10 +118,10 @@ class KalturaClientContractTest extends Specification {
 
     def "fetch media entries from api by reference id"(KalturaClient client) {
         given:
-        client.createMediaEntry(referenceIdOne)
+        client.createEntry(referenceIdOne)
 
         when:
-        Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
+        Map<String, List<MediaEntry>> mediaEntries = client.getEntriesByReferenceIds([
                 referenceIdOne,
                 "unknown-reference-id"
         ])
@@ -143,10 +143,10 @@ class KalturaClientContractTest extends Specification {
 
     def "fetch media entries from api by entry ids"(KalturaClient client) {
         given:
-        client.createMediaEntry(referenceIdOne)
+        client.createEntry(referenceIdOne)
 
         when:
-        Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
+        Map<String, List<MediaEntry>> mediaEntries = client.getEntriesByReferenceIds([
                 referenceIdOne
         ])
 
@@ -155,7 +155,7 @@ class KalturaClientContractTest extends Specification {
         mediaEntries[referenceIdOne].size().equals(1)
         MediaEntry mediaEntry = mediaEntries[referenceIdOne][0]
 
-        MediaEntry mediaEntryById = client.getMediaEntriesByIds([mediaEntry.id]).get(mediaEntry.id)
+        MediaEntry mediaEntryById = client.getEntriesByIds([mediaEntry.id]).get(mediaEntry.id)
 
         mediaEntry.id.equals(mediaEntryById.id)
         mediaEntry.referenceId.equals(mediaEntryById.referenceId)
@@ -166,10 +166,10 @@ class KalturaClientContractTest extends Specification {
 
     def "fetch media entries from api by entry id"(KalturaClient client) {
         given:
-        client.createMediaEntry(referenceIdOne)
+        client.createEntry(referenceIdOne)
 
         when:
-        Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
+        Map<String, List<MediaEntry>> mediaEntries = client.getEntriesByReferenceIds([
                 referenceIdOne
         ])
 
@@ -178,7 +178,7 @@ class KalturaClientContractTest extends Specification {
         mediaEntries[referenceIdOne].size().equals(1)
         MediaEntry mediaEntry = mediaEntries[referenceIdOne][0]
 
-        MediaEntry mediaEntryById = client.getMediaEntryById(mediaEntry.id)
+        MediaEntry mediaEntryById = client.getEntryById(mediaEntry.id)
 
         mediaEntry.id.equals(mediaEntryById.id)
         mediaEntry.referenceId.equals(mediaEntryById.referenceId)
@@ -189,8 +189,8 @@ class KalturaClientContractTest extends Specification {
 
     def "create and list caption files by reference id"(KalturaClient client) {
         given:
-        client.createMediaEntry(referenceIdOne)
-        client.createMediaEntry(referenceIdTwo)
+        client.createEntry(referenceIdOne)
+        client.createEntry(referenceIdTwo)
 
         when:
         CaptionAsset captionAsset = CaptionAsset.builder()
@@ -224,8 +224,8 @@ class KalturaClientContractTest extends Specification {
 
     def "create and list caption files by entry id"(KalturaClient client) {
         given:
-        client.createMediaEntry(referenceIdOne)
-        MediaEntry mediaEntry = client.getMediaEntriesByReferenceId(referenceIdOne).get(0)
+        client.createEntry(referenceIdOne)
+        MediaEntry mediaEntry = client.getEntriesByReferenceId(referenceIdOne).get(0)
 
         when:
         CaptionAsset captionAsset = CaptionAsset.builder()
@@ -257,7 +257,7 @@ class KalturaClientContractTest extends Specification {
 
     def "delete caption files"(KalturaClient client) {
         given:
-        client.createMediaEntry(referenceIdOne)
+        client.createEntry(referenceIdOne)
         CaptionAsset captionAsset = CaptionAsset.builder()
                 .label("English (auto-generated)")
                 .language(KalturaLanguage.ENGLISH)
@@ -278,8 +278,8 @@ class KalturaClientContractTest extends Specification {
 
     def "can tag base entries"() {
         given:
-        client.createMediaEntry(referenceIdOne)
-        Map<String, List<MediaEntry>> mediaEntries = client.getMediaEntriesByReferenceIds([
+        client.createEntry(referenceIdOne)
+        Map<String, List<MediaEntry>> mediaEntries = client.getEntriesByReferenceIds([
                 referenceIdOne,
         ])
         String entryId = mediaEntries.get(referenceIdOne)[0].id
@@ -326,10 +326,10 @@ class KalturaClientContractTest extends Specification {
 //    @Ignore("This is pretty expensive, in terms of time. Run at your own risk.")
     def "fetch all videos"(KalturaClient client) {
         given:
-        client.createMediaEntry(referenceIdOne)
+        client.createEntry(referenceIdOne)
 
         when:
-        Iterator<MediaEntry> mediaEntriesIterator = client.getMediaEntries()
+        Iterator<MediaEntry> mediaEntriesIterator = client.getEntries()
 
         then:
 

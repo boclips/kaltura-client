@@ -15,7 +15,7 @@ class TestKalturaClientTest extends Specification {
         client.clear()
 
         then:
-        List<MediaEntry> entries = client.getMediaEntriesByReferenceId("1")
+        List<MediaEntry> entries = client.getEntriesByReferenceId("1")
         entries.isEmpty()
     }
 }

@@ -42,31 +42,31 @@ public class TestKalturaClient implements KalturaClient {
 
     @Experimental
     @Override
-    public Iterator<MediaEntry> getMediaEntries() {
+    public Iterator<MediaEntry> getEntries() {
         return new ArrayList<>(mediaEntriesById.values()).iterator();
     }
 
     @Override
-    public List<Asset> getAssetsForEntry(String entryId) {
+    public List<Asset> getAssetsByEntryId(String entryId) {
         return assetsByEntryId.get(entryId);
     }
 
     @Override
-    public Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds) {
+    public Map<String, MediaEntry> getEntriesByIds(Collection<String> entryIds) {
         return entryIds.stream()
                 .filter(mediaEntriesById::containsKey)
                 .collect(toMap(entryId -> entryId, mediaEntriesById::get));
     }
 
     @Override
-    public Map<String, List<MediaEntry>> getMediaEntriesByReferenceIds(Collection<String> referenceIds) {
+    public Map<String, List<MediaEntry>> getEntriesByReferenceIds(Collection<String> referenceIds) {
         return referenceIds.stream()
                 .filter(mediaEntryListsByReferenceId::containsKey)
                 .collect(toMap(referenceId -> referenceId, mediaEntryListsByReferenceId::get));
     }
 
     @Override
-    public MediaEntry getMediaEntryById(String entryId) {
+    public MediaEntry getEntryById(String entryId) {
         return mediaEntriesById.get(entryId);
     }
 
@@ -78,19 +78,19 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public List<MediaEntry> getMediaEntriesByReferenceId(String referenceId) {
+    public List<MediaEntry> getEntriesByReferenceId(String referenceId) {
         return Optional.ofNullable(mediaEntryListsByReferenceId.get(referenceId)).orElse(Collections.emptyList());
     }
 
     @Override
-    public void deleteMediaEntryById(String entryId) {
+    public void deleteEntryById(String entryId) {
         MediaEntry mediaEntry = mediaEntriesById.get(entryId);
         mediaEntryListsByReferenceId.remove(mediaEntry.getReferenceId());
         mediaEntriesById.remove(entryId);
     }
 
     @Override
-    public void deleteMediaEntriesByReferenceId(String referenceId) {
+    public void deleteEntriesByReferenceId(String referenceId) {
         List<MediaEntry> mediaEntries = mediaEntryListsByReferenceId.get(referenceId);
         mediaEntries.forEach(mediaEntry -> mediaEntriesById.remove(mediaEntry.getId()));
         mediaEntryListsByReferenceId.remove(referenceId);
@@ -102,7 +102,7 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public void createMediaEntry(String referenceId) {
+    public void createEntry(String referenceId) {
         String id = UUID.randomUUID().toString();
 
         createMediaEntry(id, referenceId, Duration.ofSeconds(92), MediaEntryStatus.NOT_READY);
@@ -132,7 +132,7 @@ public class TestKalturaClient implements KalturaClient {
 
     @Override
     public CaptionAsset createCaptionsFileWithEntryId(String entryId, CaptionAsset captionAsset, String content) {
-        MediaEntry mediaEntry = getMediaEntryById(entryId);
+        MediaEntry mediaEntry = getEntryById(entryId);
 
         String assetId = UUID.randomUUID().toString();
         CaptionAsset captionAssetWithId = captionAsset
@@ -152,7 +152,7 @@ public class TestKalturaClient implements KalturaClient {
 
     @Override
     public CaptionAsset createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
-        List<MediaEntry> mediaEntries = getMediaEntriesByReferenceId(referenceId);
+        List<MediaEntry> mediaEntries = getEntriesByReferenceId(referenceId);
 
         String assetId = UUID.randomUUID().toString();
         CaptionAsset captionAssetWithId = captionAsset

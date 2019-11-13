@@ -74,17 +74,17 @@ public class KalturaClientV3 implements KalturaClient {
 
     @Experimental
     @Override
-    public Iterator<MediaEntry> getMediaEntries() {
+    public Iterator<MediaEntry> getEntries() {
         return allMediaList.get(new RequestFilters());
     }
 
     @Override
-    public List<Asset> getAssetsForEntry(String entryId) {
+    public List<Asset> getAssetsByEntryId(String entryId) {
         return flavorAssetList.list(entryIdEqual(entryId));
     }
 
     @Override
-    public MediaEntry getMediaEntryById(String entryId) {
+    public MediaEntry getEntryById(String entryId) {
         List<MediaEntry> mediaEntries = mediaList.get(idEqual(entryId));
         if (mediaEntries.isEmpty()) {
             return null;
@@ -105,7 +105,7 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds) {
+    public Map<String, MediaEntry> getEntriesByIds(Collection<String> entryIds) {
         if (entryIds.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -114,7 +114,7 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public Map<String, List<MediaEntry>> getMediaEntriesByReferenceIds(Collection<String> referenceIds) {
+    public Map<String, List<MediaEntry>> getEntriesByReferenceIds(Collection<String> referenceIds) {
         if (referenceIds.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -128,19 +128,19 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public void deleteMediaEntryById(String entryId) {
+    public void deleteEntryById(String entryId) {
         mediaDelete.deleteByEntryId(entryId);
     }
 
     @Override
-    public void deleteMediaEntriesByReferenceId(String referenceId) {
-        final List<MediaEntry> mediaEntriesToBeDeleted = getMediaEntriesByReferenceId(referenceId);
+    public void deleteEntriesByReferenceId(String referenceId) {
+        final List<MediaEntry> mediaEntriesToBeDeleted = getEntriesByReferenceId(referenceId);
 
         List<KalturaClientApiException> errors = new ArrayList<>();
 
         mediaEntriesToBeDeleted.forEach(mediaEntry -> {
                     try {
-                        deleteMediaEntryById(mediaEntry.getId());
+                        deleteEntryById(mediaEntry.getId());
                     } catch (KalturaClientApiException e) {
                         errors.add(e);
                     }
@@ -153,7 +153,7 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public void createMediaEntry(String referenceId) {
+    public void createEntry(String referenceId) {
         mediaAdd.add(referenceId);
     }
 
@@ -207,7 +207,7 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     private String entryIdFromReferenceId(String referenceId) {
-        List<MediaEntry> mediaEntries = getMediaEntriesByReferenceId(referenceId);
+        List<MediaEntry> mediaEntries = getEntriesByReferenceId(referenceId);
 
         if (mediaEntries.size() != 1) {
             throw new RuntimeException(mediaEntries.size() + " media entries for reference id " + referenceId);
@@ -219,8 +219,8 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public List<MediaEntry> getMediaEntriesByReferenceId(String referenceId) {
-        return Optional.ofNullable(getMediaEntriesByReferenceIds(singleton(referenceId)).get(referenceId))
+    public List<MediaEntry> getEntriesByReferenceId(String referenceId) {
+        return Optional.ofNullable(getEntriesByReferenceIds(singleton(referenceId)).get(referenceId))
                 .orElse(Collections.emptyList());
     }
 

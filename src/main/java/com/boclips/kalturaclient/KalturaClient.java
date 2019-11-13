@@ -8,7 +8,6 @@ import com.boclips.kalturaclient.media.MediaEntry;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.session.RestSessionGenerator;
 import com.boclips.kalturaclient.session.SessionRetriever;
-import org.apache.http.annotation.Experimental;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -20,29 +19,27 @@ public interface KalturaClient {
         return KalturaClientV3.create(config, new RestSessionGenerator(new SessionRetriever(config), config.getSessionTtl()));
     }
 
-    @Experimental()
-    Iterator<MediaEntry> getMediaEntries();
+    Iterator<MediaEntry> getEntries();
 
-    @Experimental()
-    List<Asset> getAssetsForEntry(String entryId);
+    List<Asset> getAssetsByEntryId(String entryId);
 
-    Map<String, MediaEntry> getMediaEntriesByIds(Collection<String> entryIds);
+    Map<String, MediaEntry> getEntriesByIds(Collection<String> entryIds);
 
-    Map<String, List<MediaEntry>> getMediaEntriesByReferenceIds(Collection<String> referenceIds);
+    Map<String, List<MediaEntry>> getEntriesByReferenceIds(Collection<String> referenceIds);
 
-    MediaEntry getMediaEntryById(String entryId);
+    MediaEntry getEntryById(String entryId);
 
     List<Asset> getAssetsByEntryIds(Collection<String> entryIds);
 
-    List<MediaEntry> getMediaEntriesByReferenceId(String referenceId);
+    List<MediaEntry> getEntriesByReferenceId(String referenceId);
 
-    void deleteMediaEntryById(String entryId);
+    void deleteEntryById(String entryId);
 
-    void deleteMediaEntriesByReferenceId(String referenceId);
+    void deleteEntriesByReferenceId(String referenceId);
 
     void deleteAssetById(String assetId);
 
-    void createMediaEntry(String referenceId);
+    void createEntry(String referenceId);
 
     CaptionAsset createCaptionsFileWithEntryId(String entryId, CaptionAsset captionAsset, String content);
 
