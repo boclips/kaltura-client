@@ -6,9 +6,9 @@ set -e
 cwd="$(cd "$(dirname "$0")" && pwd)"
 
 # With these secrets from concourse
-partner_id="$(get-k8s-concourse-secret kaltura-client kaltura-client partner-id)"
-user_id="$(get-k8s-concourse-secret kaltura-client kaltura-client user-id)"
-secret="$(get-k8s-concourse-secret kaltura-client kaltura-client secret)"
+partner_id="$(bo show credential concourse-main kaltura-client.kaltura-client partner-id)"
+user_id="$(bo show credential concourse-main kaltura-client.kaltura-client user-id)"
+secret="$(bo show credential concourse-main kaltura-client.kaltura-client secret)"
 
 # We're going to update the yml file here
 output="$cwd/contract-test-setup.yml"
