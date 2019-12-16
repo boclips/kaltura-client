@@ -17,6 +17,7 @@ import org.apache.http.annotation.Experimental;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toMap;
 
@@ -96,6 +97,9 @@ public class KalturaClientV3 implements KalturaClient {
 
     @Override
     public Map<String, List<Asset>> getAssetsByEntryIds(Collection<String> entryIds) {
+        if(entryIds.isEmpty()) {
+            return emptyMap();
+        }
         int pageSize = 500;
         int pageIndex = 1;
         int maxEntries = pageSize / 10;

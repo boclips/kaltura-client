@@ -75,6 +75,20 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
+    def "retrieve assets by entry ids when no entry ids"(KalturaClient client) {
+        given:
+        def entryIds = []
+
+        when:
+        def retrievedAssetsByEntryIds = client.getAssetsByEntryIds(entryIds)
+
+        then:
+        retrievedAssetsByEntryIds.size() == 0
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
     def "create and delete media entries"(KalturaClient client) {
         given:
         def referenceId = UUID.randomUUID().toString()
