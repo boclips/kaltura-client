@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 public class Asset {
     private String id;
-    private Integer size;
-    private Integer bitrate;
+    private Integer sizeKb;
+    private Integer bitrateKbps;
     private Integer flavorParamsId;
     private String entryId;
     private Boolean isOriginal;

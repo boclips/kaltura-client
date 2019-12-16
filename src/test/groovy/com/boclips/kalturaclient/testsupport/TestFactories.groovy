@@ -22,8 +22,8 @@ class TestFactories {
     ) {
         return Asset.builder()
                 .id(id)
-                .size(size)
-                .bitrate(bitrate)
+                .sizeKb(size)
+                .bitrateKbps(bitrate)
                 .flavorParamsId(flavorParamsId)
                 .entryId(entryId)
                 .isOriginal(isOriginal)

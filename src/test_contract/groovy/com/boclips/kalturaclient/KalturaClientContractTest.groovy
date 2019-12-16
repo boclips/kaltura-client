@@ -50,8 +50,8 @@ class KalturaClientContractTest extends Specification {
         assets.size() == 1
         assets.first().id == "1_eian2fxp"
         assets.first().entryId == "1_zk9l1gj8"
-        assets.first().bitrate == 377
-        assets.first().size == 6645
+        assets.first().bitrateKbps == 377
+        assets.first().sizeKb == 6645
         assets.first().width == 320
         assets.first().height == 176
 
