@@ -29,7 +29,7 @@ public interface KalturaClient {
 
     MediaEntry getEntryById(String entryId);
 
-    List<Asset> getAssetsByEntryIds(Collection<String> entryIds);
+    Map<String, List<Asset>> getAssetsByEntryIds(Collection<String> entryIds);
 
     List<MediaEntry> getEntriesByReferenceId(String referenceId);
 

@@ -13,8 +13,8 @@ import org.apache.http.annotation.Experimental;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -71,10 +71,10 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public List<Asset> getAssetsByEntryIds(Collection<String> entryIds) {
-        return entryIds.stream()
-                .flatMap(entryId ->  assetsByEntryId.get(entryId).stream())
-                .collect(toList());
+    public Map<String, List<Asset>> getAssetsByEntryIds(Collection<String> entryIds) {
+        return assetsByEntryId.entrySet().stream()
+                .filter(entry -> entryIds.contains(entry.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override

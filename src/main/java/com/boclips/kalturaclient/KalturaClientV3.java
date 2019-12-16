@@ -78,6 +78,7 @@ public class KalturaClientV3 implements KalturaClient {
         return allMediaList.get(new RequestFilters());
     }
 
+
     @Override
     public List<Asset> getAssetsByEntryId(String entryId) {
         return flavorAssetList.list(entryIdEqual(entryId));
@@ -94,14 +95,25 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public List<Asset> getAssetsByEntryIds(Collection<String> entryIds) {
+    public Map<String, List<Asset>> getAssetsByEntryIds(Collection<String> entryIds) {
         int pageSize = 500;
         int pageIndex = 1;
         int maxEntries = pageSize / 10;
-        if(entryIds.size() > maxEntries) {
+        if (entryIds.size() > maxEntries) {
             throw new IllegalArgumentException("Too many entry ids. Max " + maxEntries + ", got " + entryIds.size());
         }
-        return flavorAssetList.list(page(pageSize, pageIndex, entryIdIn(entryIds)));
+        List<Asset> assets = flavorAssetList.list(page(pageSize, pageIndex, entryIdIn(entryIds)));
+
+        Map<String, List<Asset>> assetsByEntryId = new HashMap<>();
+
+        assets.forEach(asset -> {
+            if (!assetsByEntryId.containsKey(asset.getEntryId())) {
+                assetsByEntryId.put(asset.getEntryId(), new ArrayList<>());
+            }
+            assetsByEntryId.get(asset.getEntryId()).add(asset);
+        });
+
+        return assetsByEntryId;
     }
 
     @Override

@@ -64,15 +64,12 @@ class KalturaClientContractTest extends Specification {
         def entryIds = ["1_zk9l1gj8", "1_1sv8y1q6"]
 
         when:
-        def retrievedAssetIds = client.getAssetsByEntryIds(entryIds).stream()
-                .map({ asset -> asset.id })
-                .collect(Collectors.toList())
+        def retrievedAssetsByEntryIds = client.getAssetsByEntryIds(entryIds)
 
         then:
-        retrievedAssetIds.size() == 2
-        retrievedAssetIds.containsAll([
-                "1_eian2fxp", "1_ogi1ui0u"
-        ])
+        retrievedAssetsByEntryIds.keySet().size() == 2
+        retrievedAssetsByEntryIds.get("1_zk9l1gj8").size() == 1
+        retrievedAssetsByEntryIds.get("1_zk9l1gj8").first().id == "1_eian2fxp"
 
         where:
         client << [realClient(), testClient()]
