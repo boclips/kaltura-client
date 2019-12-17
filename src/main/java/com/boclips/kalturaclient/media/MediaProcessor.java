@@ -6,9 +6,7 @@ import com.boclips.kalturaclient.media.resources.MediaEntryResource;
 import com.boclips.kalturaclient.media.resources.MediaEntryStatusResource;
 import com.boclips.kalturaclient.media.resources.MediaListResource;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +34,7 @@ public class MediaProcessor {
                 .duration(Duration.ofSeconds(resource.getDuration()))
                 .status(MediaEntryStatus.from(MediaEntryStatusResource.fromInteger(resource.status)))
                 .conversionProfileId(resource.getConversionProfileId())
-                .createdAt(LocalDateTime.ofEpochSecond(resource.getCreatedAt(), 0, ZoneOffset.UTC))
+                .createdAt(ZonedDateTime.ofInstant(Instant.ofEpochSecond(resource.getCreatedAt()), ZoneOffset.UTC))
                 .flavorParamsIds(resource.getFlavorParamsIds() != null ? Arrays.asList(resource.getFlavorParamsIds().split(",")) : Collections.emptyList())
                 .tags(resource.getTags() != null ? Arrays.asList(resource.getTags().split(",")) : Collections.emptyList())
                 .playCount(resource.getPlays())

@@ -11,7 +11,7 @@ import com.boclips.kalturaclient.media.links.LinkBuilder;
 import org.apache.http.annotation.Experimental;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -119,7 +119,7 @@ public class TestKalturaClient implements KalturaClient {
                 .playCount(0)
                 .tags(Collections.emptyList())
                 .flavorParamsIds(Arrays.asList("1", "2", "3", "4"))
-                .createdAt(LocalDateTime.now())
+                .createdAt(ZonedDateTime.now())
                 .conversionProfileId(1234560)
                 .build()
         );

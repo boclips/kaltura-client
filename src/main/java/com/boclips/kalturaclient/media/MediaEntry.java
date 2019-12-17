@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Getter
@@ -15,7 +15,7 @@ public class MediaEntry {
     private final String downloadUrl;
     private final Duration duration;
     private final MediaEntryStatus status;
-    private final LocalDateTime createdAt;
+    private final ZonedDateTime createdAt;
     private final int conversionProfileId;
     private final List<String> tags;
     private final int playCount;

@@ -3,6 +3,9 @@ package com.boclips.kalturaclient.flavorAsset;
 import com.boclips.kalturaclient.flavorAsset.resources.FlavorAssetListResource;
 import com.boclips.kalturaclient.flavorAsset.resources.FlavorAssetResource;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +25,7 @@ public class FlavorAssetProcessor {
                 .width(assetResource.getWidth())
                 .height(assetResource.getHeight())
                 .isOriginal(assetResource.getIsOriginal())
+                .createdAt(ZonedDateTime.ofInstant(Instant.ofEpochSecond(assetResource.getCreatedAt()), ZoneOffset.UTC))
                 .build();
     }
 }

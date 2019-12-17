@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 public class FlavorAssetResource {
     private String id;
+    private Long createdAt;
     private Integer size;
     private Integer bitrate;
     private Integer flavorParamsId;

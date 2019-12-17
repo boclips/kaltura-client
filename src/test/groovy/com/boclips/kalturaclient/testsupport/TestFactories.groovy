@@ -8,6 +8,8 @@ import com.boclips.kalturaclient.flavorParams.Quality
 import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsListResource
 import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsResource
 
+import java.time.ZonedDateTime
+
 class TestFactories {
 
     static Asset asset(
@@ -18,7 +20,8 @@ class TestFactories {
             String entryId = UUID.randomUUID().toString(),
             Boolean isOriginal = true,
             Integer width = 1920,
-            Integer height = 1080
+            Integer height = 1080,
+            ZonedDateTime createdAt = ZonedDateTime.now()
     ) {
         return Asset.builder()
                 .id(id)
@@ -29,6 +32,7 @@ class TestFactories {
                 .isOriginal(isOriginal)
                 .width(width)
                 .height(height)
+                .createdAt(createdAt)
                 .build()
     }
 
@@ -55,6 +59,7 @@ class TestFactories {
     static FlavorAssetResource flavorAssetResource(String id) {
         return FlavorAssetResource
                 .builder()
+                .createdAt(ZonedDateTime.now().toEpochSecond())
                 .id(id)
                 .entryId("entry-id")
                 .flavorParamsId(0)
