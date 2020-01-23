@@ -1,7 +1,7 @@
 package com.boclips.kalturaclient.flavorParams;
 
-import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsListResource;
+import com.boclips.kalturaclient.http.KalturaRestClient;
 
 import java.util.*;
 
@@ -29,7 +29,11 @@ public class FlavorParamsListClient {
         params.put("pager[pageIndex]", 0);
         params.put("pager[objectType]", "KalturaFilterPager");
 
-        return client.get("/flavorparams/action/list", params, FlavorParamsListResource.class);
+        Optional<FlavorParamsListResource> optionalFlavours
+                = Optional.ofNullable(client.get("/flavorparams/action/list", params, FlavorParamsListResource.class));
+
+        return optionalFlavours
+                .orElse(FlavorParamsListResource.builder().objects(Collections.emptyList()).totalCount(0).build());
     }
 
 }

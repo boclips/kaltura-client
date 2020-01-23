@@ -59,6 +59,8 @@ public class KalturaClientV3 implements KalturaClient {
         this.mediaAdd = new MediaAddClient(restClient);
 
         this.flavorParamsList = new FlavorParamsListClient(restClient);
+        this.flavorParams = flavorParamsList.get();
+
         this.flavorAssetDelete = new FlavorAssetDeleteClient(restClient);
 
         this.captionAssetList = new CaptionAssetListClient(restClient);
@@ -69,7 +71,6 @@ public class KalturaClientV3 implements KalturaClient {
 
         this.linkBuilder = new LinkBuilder(this);
 
-        this.flavorParams = flavorParamsList.get();
         this.flavorAssetList = new FlavorAssetListClient(restClient);
     }
 

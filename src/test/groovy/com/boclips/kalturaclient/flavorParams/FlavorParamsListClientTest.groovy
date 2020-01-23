@@ -38,4 +38,22 @@ class FlavorParamsListClientTest extends Specification {
         flavors[1].id == 2222
         flavors[2].id == 4444
     }
+
+    def "can handle nulls"() {
+        given:
+        KalturaRestClient httpClient = Mock(KalturaRestClient)
+        FlavorParamsListClient client = new FlavorParamsListClient(httpClient)
+
+        when:
+        List<FlavorParams> flavors = client.get()
+
+        then:
+        1 * httpClient.get(
+                "/flavorparams/action/list",
+                _,
+                FlavorParamsListResource.class
+        ) >> null
+
+        flavors.size() == 0
+    }
 }
