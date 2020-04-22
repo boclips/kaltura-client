@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,7 +20,7 @@ public class BaseEntryResource {
     public BaseEntry toBaseEntry() {
         return BaseEntry.builder()
                 .id(id)
-                .tags(Arrays.asList(tags.split(", ")))
+                .tags(tags == null ? Collections.emptyList() : Arrays.asList(tags.split(", ")))
                 .build();
     }
 }
