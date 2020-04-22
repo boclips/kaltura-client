@@ -1,6 +1,5 @@
 package com.boclips.kalturaclient.baseentry;
 
-import com.boclips.kalturaclient.baseentry.resources.BaseEntryResource;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,4 +10,14 @@ import java.util.List;
 public class BaseEntry {
     private final String id;
     private final List<String> tags;
+
+    public boolean isTaggedWith(String tag) {
+        return this.getTags() != null
+                && this.getTags().contains(tag);
+    }
+
+    public boolean isTagged() {
+        return this.getTags() != null
+                && this.getTags().size() > 0;
+    }
 }

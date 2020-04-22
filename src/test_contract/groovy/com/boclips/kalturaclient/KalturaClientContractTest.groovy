@@ -307,6 +307,109 @@ class KalturaClientContractTest extends Specification {
         client << [testClient(), realClient()]
     }
 
+    def "can request captions"() {
+        given:
+        client.createEntry(referenceIdOne)
+        Map<String, List<MediaEntry>> mediaEntries = client.getEntriesByReferenceIds([
+                referenceIdOne,
+        ])
+        String entryId = mediaEntries.get(referenceIdOne)[0].id
+
+        when:
+        client.requestCaptions(entryId)
+
+        then:
+        client.getBaseEntry(entryId).tags == ["caption48"]
+
+        where:
+        client << [testClient(), realClient()]
+    }
+
+    def "fetch caption status by entry id - available captions"(KalturaClient client) {
+        given:
+        client.createEntry(referenceIdOne)
+        MediaEntry mediaEntry = client.getEntriesByReferenceId(referenceIdOne).get(0)
+
+        when:
+        def captionAsset = CaptionAsset.builder()
+                .label("English (auto-generated)")
+                .language(KalturaLanguage.ENGLISH)
+                .fileType(CaptionFormat.WEBVTT)
+                .build()
+        client.createCaptionsFileWithEntryId(mediaEntry.id, captionAsset, readResourceFile("/captions.vtt"))
+        def captionStatus = client.getCaptionStatus(mediaEntry.id)
+
+        then:
+        captionStatus == KalturaCaptionManager.CaptionStatus.AVAILABLE
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+    def "fetch caption status by entry id - no captions requested, no captions available"(KalturaClient client) {
+        given:
+        client.createEntry(referenceIdOne)
+        MediaEntry mediaEntry = client.getEntriesByReferenceId(referenceIdOne).get(0)
+
+        when:
+        def captionStatus = client.getCaptionStatus(mediaEntry.id)
+
+        then:
+        captionStatus == KalturaCaptionManager.CaptionStatus.NOT_AVAILABLE
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+    def "fetch caption status by entry id - captions requested"(KalturaClient client) {
+        given:
+        client.createEntry(referenceIdOne)
+        MediaEntry mediaEntry = client.getEntriesByReferenceId(referenceIdOne).get(0)
+
+        when:
+        client.requestCaptions(mediaEntry.id)
+        def captionStatus = client.getCaptionStatus(mediaEntry.id)
+
+        then:
+        captionStatus == KalturaCaptionManager.CaptionStatus.REQUESTED
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+    def "fetch caption status by entry id - captions being processed"(KalturaClient client) {
+        given:
+        client.createEntry(referenceIdOne)
+        MediaEntry mediaEntry = client.getEntriesByReferenceId(referenceIdOne).get(0)
+
+        when:
+        client.tag(mediaEntry.id, Arrays.asList("processing"))
+        def captionStatus = client.getCaptionStatus(mediaEntry.id)
+
+
+        then:
+        captionStatus == KalturaCaptionManager.CaptionStatus.PROCESSING
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+    def "fetch caption status by entry id - nonsensical tags"(KalturaClient client) {
+        given:
+        client.createEntry(referenceIdOne)
+        MediaEntry mediaEntry = client.getEntriesByReferenceId(referenceIdOne).get(0)
+
+        when:
+        client.tag(mediaEntry.id, Arrays.asList("duknow"))
+        def captionStatus = client.getCaptionStatus(mediaEntry.id)
+
+        then:
+        captionStatus == KalturaCaptionManager.CaptionStatus.UNKNOWN
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
     def "gets flavors"() {
         when:
         List<FlavorParams> flavorParams = client.getFlavorParams()
