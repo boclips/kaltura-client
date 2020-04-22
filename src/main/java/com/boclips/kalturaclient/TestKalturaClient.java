@@ -269,6 +269,7 @@ public class TestKalturaClient implements KalturaClient {
                 .computeIfAbsent(mediaEntry.getReferenceId(), (String key) -> new ArrayList<>())
                 .add(mediaEntry);
         mediaEntriesById.put(mediaEntry.getId(), mediaEntry);
+        baseEntriesByEntryId.put(mediaEntry.getId(), BaseEntry.builder().id(mediaEntry.getId()).build());
     }
 
     public void setAssets(String entryId, List<Asset> assets) {
