@@ -298,7 +298,7 @@ class KalturaClientContractTest extends Specification {
         String entryId = mediaEntries.get(referenceIdOne)[0].id
 
         when:
-        client.tag(entryId, ["just", "testing"])
+        client.tagByEntryId(entryId, ["just", "testing"])
 
         then:
         client.getBaseEntry(entryId).tags == ["just", "testing"]
@@ -337,7 +337,7 @@ class KalturaClientContractTest extends Specification {
                 .fileType(CaptionFormat.WEBVTT)
                 .build()
         client.createCaptionsFileWithEntryId(mediaEntry.id, captionAsset, readResourceFile("/captions.vtt"))
-        def captionStatus = client.getCaptionStatus(mediaEntry.id)
+        def captionStatus = client.getCaptionStatusByEntryId(mediaEntry.id)
 
         then:
         captionStatus == KalturaCaptionManager.CaptionStatus.AVAILABLE
@@ -352,7 +352,7 @@ class KalturaClientContractTest extends Specification {
         MediaEntry mediaEntry = client.getEntriesByReferenceId(referenceIdOne).get(0)
 
         when:
-        def captionStatus = client.getCaptionStatus(mediaEntry.id)
+        def captionStatus = client.getCaptionStatusByEntryId(mediaEntry.id)
 
         then:
         captionStatus == KalturaCaptionManager.CaptionStatus.NOT_AVAILABLE
@@ -368,7 +368,7 @@ class KalturaClientContractTest extends Specification {
 
         when:
         client.requestCaptions(mediaEntry.id)
-        def captionStatus = client.getCaptionStatus(mediaEntry.id)
+        def captionStatus = client.getCaptionStatusByEntryId(mediaEntry.id)
 
         then:
         captionStatus == KalturaCaptionManager.CaptionStatus.REQUESTED
@@ -383,8 +383,8 @@ class KalturaClientContractTest extends Specification {
         MediaEntry mediaEntry = client.getEntriesByReferenceId(referenceIdOne).get(0)
 
         when:
-        client.tag(mediaEntry.id, Arrays.asList("processing"))
-        def captionStatus = client.getCaptionStatus(mediaEntry.id)
+        client.tagByEntryId(mediaEntry.id, Arrays.asList("processing"))
+        def captionStatus = client.getCaptionStatusByEntryId(mediaEntry.id)
 
 
         then:
@@ -400,8 +400,8 @@ class KalturaClientContractTest extends Specification {
         MediaEntry mediaEntry = client.getEntriesByReferenceId(referenceIdOne).get(0)
 
         when:
-        client.tag(mediaEntry.id, Arrays.asList("duknow"))
-        def captionStatus = client.getCaptionStatus(mediaEntry.id)
+        client.tagByEntryId(mediaEntry.id, Arrays.asList("duknow"))
+        def captionStatus = client.getCaptionStatusByEntryId(mediaEntry.id)
 
         then:
         captionStatus == KalturaCaptionManager.CaptionStatus.UNKNOWN

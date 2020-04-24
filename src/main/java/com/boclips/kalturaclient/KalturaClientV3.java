@@ -214,25 +214,13 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public void tag(String entryId, List<String> tags) {
+    public void tagByEntryId(String entryId, List<String> tags) {
         baseEntryUpdate.post(entryId, BaseEntry.builder().id(entryId).tags(tags).build());
     }
 
     @Override
     public BaseEntry getBaseEntry(String entryId) {
         return baseEntryGet.get(entryId);
-    }
-
-    private String entryIdFromReferenceId(String referenceId) {
-        List<MediaEntry> mediaEntries = getEntriesByReferenceId(referenceId);
-
-        if (mediaEntries.size() != 1) {
-            throw new RuntimeException(mediaEntries.size() + " media entries for reference id " + referenceId);
-        }
-
-        MediaEntry mediaEntry = mediaEntries.get(0);
-
-        return mediaEntry.getId();
     }
 
     @Override
