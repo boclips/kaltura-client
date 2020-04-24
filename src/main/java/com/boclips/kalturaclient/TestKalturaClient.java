@@ -214,7 +214,7 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public void tagByEntryId(String entryId, List<String> tags) {
+    public void tag(String entryId, List<String> tags) {
         baseEntriesByEntryId.put(
                 entryId,
                 BaseEntry.builder()

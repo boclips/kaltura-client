@@ -38,16 +38,4 @@ public interface KalturaEntryManager {
     void createEntry(String referenceId);
 
     BaseEntry getBaseEntry(String entryId);
-
-    default String entryIdFromReferenceId(String referenceId) {
-        List<MediaEntry> mediaEntries = getEntriesByReferenceId(referenceId);
-
-        if (mediaEntries.size() != 1) {
-            throw new RuntimeException(mediaEntries.size() + " media entries for reference id " + referenceId);
-        }
-
-        MediaEntry mediaEntry = mediaEntries.get(0);
-
-        return mediaEntry.getId();
-    }
 }

@@ -33,21 +33,13 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
 
     String getCaptionContentByAssetId(String assetId);
 
-    void tagByEntryId(String entryId, List<String> tags);
+    void tag(String entryId, List<String> tags);
 
-    default void tagByReferenceId(String referenceId, List<String> tags) {
-        tagByEntryId(entryIdFromReferenceId(referenceId), tags);
+    default void requestCaptions(String entryId) {
+        tag(entryId, Arrays.asList(CaptionRequest.DEFAULT_LANGUAGE_48_HOURS.tag));
     }
 
-    default void requestCaptionsByEntryId(String entryId) {
-        tagByEntryId(entryId, Arrays.asList(CaptionRequest.DEFAULT_LANGUAGE_48_HOURS.tag));
-    }
-
-    default void requestCaptionsByReferenceId(String referenceId) {
-        requestCaptionsByEntryId(entryIdFromReferenceId(referenceId));
-    }
-
-    default CaptionStatus getCaptionStatusByEntryId(String entryId) {
+    default CaptionStatus getCaptionStatus(String entryId) {
         if (getCaptionFilesByEntryId(entryId).size() > 0) {
             return CaptionStatus.AVAILABLE;
         } else {
@@ -66,10 +58,6 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
             }
             return CaptionStatus.NOT_AVAILABLE;
         }
-    }
-
-    default CaptionStatus getCaptionStatusByReferenceId(String referenceId) {
-        return getCaptionStatusByEntryId(entryIdFromReferenceId(referenceId));
     }
 
     void deleteCaptionContentByAssetId(String assetId);
