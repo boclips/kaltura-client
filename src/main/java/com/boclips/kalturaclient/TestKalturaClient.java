@@ -269,7 +269,21 @@ public class TestKalturaClient implements KalturaClient {
                 .computeIfAbsent(mediaEntry.getReferenceId(), (String key) -> new ArrayList<>())
                 .add(mediaEntry);
         mediaEntriesById.put(mediaEntry.getId(), mediaEntry);
-        baseEntriesByEntryId.put(mediaEntry.getId(), BaseEntry.builder().id(mediaEntry.getId()).build());
+        baseEntriesByEntryId.put(
+            mediaEntry.getId(),
+            BaseEntry.builder().id(mediaEntry.getId()).thumbnailUrl("defaultThumbnailUrl").build());
+    }
+
+    @Override
+    public void updateDefaultThumbnailWithMiddleFrame(String entryId) {
+        BaseEntry entry = baseEntriesByEntryId.get(entryId);
+        baseEntriesByEntryId.put(
+            entryId,
+            BaseEntry.builder()
+                .id(entry.getId())
+                .tags(entry.getTags())
+                .thumbnailUrl(entry.getThumbnailUrl() + UUID.randomUUID().toString())
+                .build());
     }
 
     public void setAssets(String entryId, List<Asset> assets) {
@@ -289,5 +303,4 @@ public class TestKalturaClient implements KalturaClient {
     private static String downloadUrl(String id) {
         return "https://download.com/entryId/" + id + "/format/download";
     }
-
 }

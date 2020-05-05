@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient
 
+import com.boclips.kalturaclient.baseentry.BaseEntry
 import com.boclips.kalturaclient.captionasset.CaptionAsset
 import com.boclips.kalturaclient.captionasset.CaptionFormat
 import com.boclips.kalturaclient.captionasset.KalturaLanguage
@@ -439,6 +440,22 @@ class KalturaClientContractTest extends Specification {
         client << [testClient(), realClient()]
     }
 
+    def "can set default thumbnail"() {
+        given:
+        def entryId = "1_zk9l1gj8"
+        BaseEntry entryBefore = client.getBaseEntry(entryId)
+
+        when:
+        client.updateDefaultThumbnailWithMiddleFrame(entryId)
+
+        then:
+        BaseEntry entryAfter = client.getBaseEntry(entryId)
+        entryBefore.thumbnailUrl != entryAfter.thumbnailUrl
+
+        where:
+        client << [testClient(), realClient()]
+    }
+
 //    @Ignore("This is pretty expensive, in terms of time. Run at your own risk.")
     def "fetch all videos"(KalturaClient client) {
         given:
@@ -463,6 +480,7 @@ class KalturaClientContractTest extends Specification {
         def testClient = new TestKalturaClient()
         testClient.setAssets("1_zk9l1gj8", Collections.singletonList(TestFactories.asset("1_eian2fxp", 6645, 377, 0, "1_zk9l1gj8", false, 320, 176, ZonedDateTime.parse("2019-11-11T18:03:33Z"))))
         testClient.setAssets("1_1sv8y1q6", Collections.singletonList(TestFactories.asset("1_ogi1ui0u")))
+        testClient.addMediaEntry(MediaEntry.builder().id("1_zk9l1gj8").build())
         return testClient
     }
 

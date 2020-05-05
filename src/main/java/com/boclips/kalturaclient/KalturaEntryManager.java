@@ -37,5 +37,7 @@ public interface KalturaEntryManager {
 
     void createEntry(String referenceId);
 
+    void updateDefaultThumbnailWithMiddleFrame(String entryId);
+
     BaseEntry getBaseEntry(String entryId);
 }

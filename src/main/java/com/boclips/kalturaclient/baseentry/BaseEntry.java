@@ -10,6 +10,7 @@ import java.util.List;
 public class BaseEntry {
     private final String id;
     private final List<String> tags;
+    private final String thumbnailUrl;
 
     public boolean isTaggedWith(String tag) {
         return this.getTags() != null

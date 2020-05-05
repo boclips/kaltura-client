@@ -12,6 +12,8 @@ import com.boclips.kalturaclient.media.*;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.media.list.AllMediaList;
 import com.boclips.kalturaclient.session.SessionGenerator;
+import com.boclips.kalturaclient.baseentry.BaseEntryUpdateThumbnail;
+import com.boclips.kalturaclient.baseentry.BaseEntryUpdateThumbnailClient;
 import org.apache.http.annotation.Experimental;
 
 import java.util.*;
@@ -34,6 +36,7 @@ public class KalturaClientV3 implements KalturaClient {
     private final CaptionAssetServeClient captionAssetServe;
     private final BaseEntryGet baseEntryGet;
     private final BaseEntryUpdate baseEntryUpdate;
+    private final BaseEntryUpdateThumbnail baseEntryUpdateThumbnail;
     private final LinkBuilder linkBuilder;
     private final FlavorParamsListClient flavorParamsList;
     private final KalturaClientConfig config;
@@ -72,6 +75,8 @@ public class KalturaClientV3 implements KalturaClient {
         this.linkBuilder = new LinkBuilder(this);
 
         this.flavorAssetList = new FlavorAssetListClient(restClient);
+
+        this.baseEntryUpdateThumbnail = new BaseEntryUpdateThumbnailClient(restClient, linkBuilder);
     }
 
     @Experimental
@@ -206,6 +211,11 @@ public class KalturaClientV3 implements KalturaClient {
     @Override
     public void deleteCaptionContentByAssetId(String assetId) {
         captionAssetDelete.post(assetId);
+    }
+
+    @Override
+    public void updateDefaultThumbnailWithMiddleFrame(String entryId) {
+        baseEntryUpdateThumbnail.updateWithMiddleFrame(entryId);
     }
 
     @Override

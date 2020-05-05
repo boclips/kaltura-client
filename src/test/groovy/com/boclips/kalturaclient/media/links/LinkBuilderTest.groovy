@@ -35,6 +35,29 @@ class LinkBuilderTest extends Specification {
         thumbnailUrl.contains("width/{thumbnailWidth}")
     }
 
+    def "can build the default thumbnail url"() {
+        given:
+        String entryId = "media-entry-id"
+
+        when:
+        String thumbnailUrl = linkBuilder.getDefaultThumbnailUrl(entryId)
+
+        then:
+        thumbnailUrl.contains("entry_id/media-entry-id/width/{thumbnailWidth}")
+    }
+
+    def "can build a sliced thumbnail url"() {
+        given:
+        String entryId = "media-entry-id"
+        int thumbnailWidth = 500;
+
+        when:
+        String thumbnailUrl = linkBuilder.getSlicedThumbnailUrl(entryId, thumbnailWidth)
+
+        then:
+        thumbnailUrl.contains("entry_id/media-entry-id/width/500/vid_slices/3/vid_slice/1")
+    }
+
     def "can build video preview urls"() {
         given:
         String entryId = "media-entry-id"
