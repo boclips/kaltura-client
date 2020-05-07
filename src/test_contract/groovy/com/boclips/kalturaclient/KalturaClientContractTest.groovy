@@ -19,15 +19,16 @@ import java.time.ZonedDateTime
 import java.util.stream.Collectors
 
 class KalturaClientContractTest extends Specification {
+    String referenceId = UUID.randomUUID().toString()
+    MediaEntry createdMediaEntry = null
 
-    String[] referenceIds = [UUID.randomUUID().toString()]
-
-    void setup() {
-        cleanup()
-    }
 
     void cleanup() {
-        referenceIds.each(this.&tryDeleteMediaEntry)
+        if (createdMediaEntry != null) {
+            this.tryDeleteMediaEntry(createdMediaEntry.id)
+        }
+
+        createdMediaEntry = null
     }
 
     void tryDeleteMediaEntry(String id) {
@@ -36,6 +37,11 @@ class KalturaClientContractTest extends Specification {
         } catch (Exception e) {
             e.printStackTrace()
         }
+    }
+
+    MediaEntry create(KalturaClient client, String referenceId) {
+        createdMediaEntry = client.createEntry(referenceId)
+        return createdMediaEntry
     }
 
     def "retrieve assets by entry id"(KalturaClient client) {
@@ -108,7 +114,7 @@ class KalturaClientContractTest extends Specification {
 
     def "fetch media entries from api by entry id"(KalturaClient client) {
         given:
-        MediaEntry mediaEntry = client.createEntry(referenceIds.first())
+        MediaEntry mediaEntry = create(client, referenceId)
 
         when:
         MediaEntry mediaEntryById = client.getEntry(mediaEntry.id)
@@ -123,7 +129,7 @@ class KalturaClientContractTest extends Specification {
 
     def "create and list caption files by entry id"(KalturaClient client) {
         given:
-        MediaEntry mediaEntry = client.createEntry(referenceIds.first())
+        MediaEntry mediaEntry = create(client, referenceId)
 
         when:
         CaptionAsset captionAsset = CaptionAsset.builder()
@@ -155,7 +161,7 @@ class KalturaClientContractTest extends Specification {
 
     def "delete caption files"(KalturaClient client) {
         given:
-        MediaEntry entry = client.createEntry(referenceIds.first())
+        MediaEntry entry = client.createEntry(referenceId)
         CaptionAsset captionAsset = CaptionAsset.builder()
                 .label("English (auto-generated)")
                 .language(KalturaLanguage.ENGLISH)
@@ -176,7 +182,7 @@ class KalturaClientContractTest extends Specification {
 
     def "can tag base entries"() {
         given:
-        MediaEntry mediaEntry = client.createEntry(referenceIds.first())
+        MediaEntry mediaEntry = create(client, referenceId)
 
         String entryId = mediaEntry.id
 
@@ -192,7 +198,7 @@ class KalturaClientContractTest extends Specification {
 
     def "can request captions"() {
         given:
-        MediaEntry mediaEntry = client.createEntry(referenceIds.first())
+        MediaEntry mediaEntry = create(client, referenceId)
 
         String entryId = mediaEntry.id
 
@@ -208,7 +214,7 @@ class KalturaClientContractTest extends Specification {
 
     def "fetch caption status by entry id - available captions"(KalturaClient client) {
         given:
-        MediaEntry mediaEntry = client.createEntry(referenceIds.first())
+        MediaEntry mediaEntry = create(client, referenceId)
 
         when:
         def captionAsset = CaptionAsset.builder()
@@ -228,7 +234,7 @@ class KalturaClientContractTest extends Specification {
 
     def "fetch caption status by entry id - no captions requested, no captions available"(KalturaClient client) {
         given:
-        MediaEntry mediaEntry = client.createEntry(referenceIds.first())
+        MediaEntry mediaEntry = create(client, referenceId)
 
         when:
         def captionStatus = client.getCaptionStatus(mediaEntry.id)
@@ -242,7 +248,7 @@ class KalturaClientContractTest extends Specification {
 
     def "fetch caption status by entry id - captions requested"(KalturaClient client) {
         given:
-        MediaEntry mediaEntry = client.createEntry(referenceIds.first())
+        MediaEntry mediaEntry = create(client, referenceId)
 
         when:
         client.requestCaption(mediaEntry.id)
@@ -257,7 +263,7 @@ class KalturaClientContractTest extends Specification {
 
     def "fetch caption status by entry id - captions being processed"(KalturaClient client) {
         given:
-        MediaEntry mediaEntry = client.createEntry(referenceIds.first())
+        MediaEntry mediaEntry = create(client, referenceId)
 
         when:
         client.tag(mediaEntry.id, Arrays.asList("processing"))
@@ -273,7 +279,7 @@ class KalturaClientContractTest extends Specification {
 
     def "fetch caption status by entry id - nonsensical tags"(KalturaClient client) {
         given:
-        MediaEntry mediaEntry = client.createEntry(referenceIds.first())
+        MediaEntry mediaEntry = create(client, referenceId)
 
         when:
         client.tag(mediaEntry.id, Arrays.asList("duknow"))
@@ -334,7 +340,7 @@ class KalturaClientContractTest extends Specification {
 //    @Ignore("This is pretty expensive, in terms of time. Run at your own risk.")
     def "fetch all videos"(KalturaClient client) {
         given:
-        client.createEntry(referenceIds.first())
+        create(client, referenceId)
 
         when:
         Iterator<MediaEntry> mediaEntriesIterator = client.getEntries()
@@ -342,7 +348,7 @@ class KalturaClientContractTest extends Specification {
         then:
 
         def index = mediaEntriesIterator.findIndexOf { mediaEntry ->
-            mediaEntry.referenceId == referenceIds.first()
+            mediaEntry.referenceId == referenceId
         }
 
         index != -1
