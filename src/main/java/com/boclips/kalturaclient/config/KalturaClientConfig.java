@@ -1,4 +1,4 @@
-package com.boclips.kalturaclient;
+package com.boclips.kalturaclient.config;
 
 public class KalturaClientConfig {
     private final String baseUrl;

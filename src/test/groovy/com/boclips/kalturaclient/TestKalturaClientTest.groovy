@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient
 
+import com.boclips.kalturaclient.clients.TestKalturaClient
 import com.boclips.kalturaclient.media.MediaEntry
 import spock.lang.Specification
 
@@ -15,7 +16,7 @@ class TestKalturaClientTest extends Specification {
         client.clear()
 
         then:
-        List<MediaEntry> entries = client.getEntriesByReferenceId("1")
+        def entries = client.getEntries().toList()
         entries.isEmpty()
     }
 }

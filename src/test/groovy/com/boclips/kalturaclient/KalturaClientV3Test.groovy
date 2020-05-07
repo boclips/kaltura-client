@@ -1,5 +1,7 @@
 package com.boclips.kalturaclient
 
+import com.boclips.kalturaclient.clients.KalturaClientV3
+import com.boclips.kalturaclient.config.KalturaClientConfig
 import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsListResource
 import com.boclips.kalturaclient.http.KalturaRestClient
 import spock.lang.Specification

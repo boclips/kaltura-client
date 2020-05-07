@@ -1,5 +1,7 @@
 package com.boclips.kalturaclient
 
+import com.boclips.kalturaclient.config.KalturaClientConfig
+import com.boclips.kalturaclient.config.KalturaClientConfigException
 import spock.lang.Specification
 
 class KalturaClientConfigTest extends Specification {

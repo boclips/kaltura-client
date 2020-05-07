@@ -1,7 +1,9 @@
-package com.boclips.kalturaclient;
+package com.boclips.kalturaclient.clients;
 
+import com.boclips.kalturaclient.KalturaClient;
 import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
+import com.boclips.kalturaclient.config.KalturaClientConfig;
 import com.boclips.kalturaclient.flavorAsset.Asset;
 import com.boclips.kalturaclient.flavorParams.FlavorParams;
 import com.boclips.kalturaclient.flavorParams.Quality;
@@ -17,9 +19,6 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
-/**
- *
- */
 public class TestKalturaClient implements KalturaClient {
     private final Map<String, List<MediaEntry>> mediaEntryListsByReferenceId = new HashMap<>();
     private final Map<String, MediaEntry> mediaEntriesById = new HashMap<>();
@@ -47,65 +46,46 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public List<Asset> getAssetsByEntryId(String entryId) {
+    public List<Asset> getVideoAssets(String entryId) {
         return assetsByEntryId.get(entryId);
     }
 
     @Override
-    public Map<String, MediaEntry> getEntriesByIds(Collection<String> entryIds) {
+    public Map<String, MediaEntry> getEntries(Collection<String> entryIds) {
         return entryIds.stream()
                 .filter(mediaEntriesById::containsKey)
                 .collect(toMap(entryId -> entryId, mediaEntriesById::get));
     }
 
     @Override
-    public Map<String, List<MediaEntry>> getEntriesByReferenceIds(Collection<String> referenceIds) {
-        return referenceIds.stream()
-                .filter(mediaEntryListsByReferenceId::containsKey)
-                .collect(toMap(referenceId -> referenceId, mediaEntryListsByReferenceId::get));
-    }
-
-    @Override
-    public MediaEntry getEntryById(String entryId) {
+    public MediaEntry getEntry(String entryId) {
         return mediaEntriesById.get(entryId);
     }
 
     @Override
-    public Map<String, List<Asset>> getAssetsByEntryIds(Collection<String> entryIds) {
+    public Map<String, List<Asset>> getVideoAssets(Collection<String> entryIds) {
         return assetsByEntryId.entrySet().stream()
                 .filter(entry -> entryIds.contains(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override
-    public List<MediaEntry> getEntriesByReferenceId(String referenceId) {
-        return Optional.ofNullable(mediaEntryListsByReferenceId.get(referenceId)).orElse(Collections.emptyList());
-    }
-
-    @Override
-    public void deleteEntryById(String entryId) {
+    public void deleteEntry(String entryId) {
         MediaEntry mediaEntry = mediaEntriesById.get(entryId);
         mediaEntryListsByReferenceId.remove(mediaEntry.getReferenceId());
         mediaEntriesById.remove(entryId);
     }
 
     @Override
-    public void deleteEntriesByReferenceId(String referenceId) {
-        List<MediaEntry> mediaEntries = mediaEntryListsByReferenceId.get(referenceId);
-        mediaEntries.forEach(mediaEntry -> mediaEntriesById.remove(mediaEntry.getId()));
-        mediaEntryListsByReferenceId.remove(referenceId);
+    public void deleteVideoAsset(String assetId) {
     }
 
     @Override
-    public void deleteAssetById(String assetId) {
-
-    }
-
-    @Override
-    public void createEntry(String referenceId) {
+    public MediaEntry createEntry(String referenceId) {
         String id = UUID.randomUUID().toString();
 
         createMediaEntry(id, referenceId, Duration.ofSeconds(92), MediaEntryStatus.NOT_READY);
+        return getEntry(id);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -131,8 +111,8 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public CaptionAsset createCaptionsFileWithEntryId(String entryId, CaptionAsset captionAsset, String content) {
-        MediaEntry mediaEntry = getEntryById(entryId);
+    public CaptionAsset createCaptionForVideo(String entryId, CaptionAsset captionAsset, String content) {
+        MediaEntry mediaEntry = getEntry(entryId);
 
         String assetId = UUID.randomUUID().toString();
         CaptionAsset captionAssetWithId = captionAsset
@@ -151,27 +131,7 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public CaptionAsset createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
-        List<MediaEntry> mediaEntries = getEntriesByReferenceId(referenceId);
-
-        String assetId = UUID.randomUUID().toString();
-        CaptionAsset captionAssetWithId = captionAsset
-                .toBuilder()
-                .id(assetId)
-                .build();
-
-        captionAssetsByReferenceId.computeIfAbsent(referenceId, (refId) -> new ArrayList<>())
-                .add(captionAssetWithId);
-
-        mediaEntries.forEach(mediaEntry -> captionAssetsByEntryId.computeIfAbsent(mediaEntry.getId(), (id) -> new ArrayList<>())
-                .add(captionAssetWithId));
-
-        captionContentsByAssetId.put(assetId, content);
-        return captionAssetWithId;
-    }
-
-    @Override
-    public List<CaptionAsset> getCaptionFilesByEntryId(String entryId) {
+    public List<CaptionAsset> getCaptionsForVideo(String entryId) {
         List<CaptionAsset> captionFiles = captionAssetsByEntryId.get(entryId);
         if (captionFiles == null) {
             return Collections.emptyList();
@@ -180,30 +140,21 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public List<CaptionAsset> getCaptionFilesByReferenceId(String referenceId) {
-        List<CaptionAsset> captionFiles = captionAssetsByReferenceId.get(referenceId);
-        if (captionFiles == null) {
-            return Collections.emptyList();
-        }
-        return captionFiles;
+    public String getCaptionContent(String captionAssetId) {
+        return captionContentsByAssetId.get(captionAssetId);
     }
 
     @Override
-    public String getCaptionContentByAssetId(String assetId) {
-        return captionContentsByAssetId.get(assetId);
-    }
-
-    @Override
-    public void deleteCaptionContentByAssetId(String assetId) {
-        captionContentsByAssetId.remove(assetId);
+    public void deleteCaption(String captionAssetId) {
+        captionContentsByAssetId.remove(captionAssetId);
 
         captionAssetsByReferenceId.values().forEach(assets -> assets.stream()
-                .filter(asset -> asset.getId().equals(assetId))
+                .filter(asset -> asset.getId().equals(captionAssetId))
                 .findAny()
                 .ifPresent(assets::remove));
 
         captionAssetsByEntryId.values().forEach(assets -> assets.stream()
-                .filter(asset -> asset.getId().equals(assetId))
+                .filter(asset -> asset.getId().equals(captionAssetId))
                 .findAny()
                 .ifPresent(assets::remove));
     }
@@ -270,20 +221,20 @@ public class TestKalturaClient implements KalturaClient {
                 .add(mediaEntry);
         mediaEntriesById.put(mediaEntry.getId(), mediaEntry);
         baseEntriesByEntryId.put(
-            mediaEntry.getId(),
-            BaseEntry.builder().id(mediaEntry.getId()).thumbnailUrl("defaultThumbnailUrl").build());
+                mediaEntry.getId(),
+                BaseEntry.builder().id(mediaEntry.getId()).thumbnailUrl("defaultThumbnailUrl").build());
     }
 
     @Override
     public void updateDefaultThumbnailWithMiddleFrame(String entryId) {
         BaseEntry entry = baseEntriesByEntryId.get(entryId);
         baseEntriesByEntryId.put(
-            entryId,
-            BaseEntry.builder()
-                .id(entry.getId())
-                .tags(entry.getTags())
-                .thumbnailUrl(entry.getThumbnailUrl() + UUID.randomUUID().toString())
-                .build());
+                entryId,
+                BaseEntry.builder()
+                        .id(entry.getId())
+                        .tags(entry.getTags())
+                        .thumbnailUrl(entry.getThumbnailUrl() + UUID.randomUUID().toString())
+                        .build());
     }
 
     public void setAssets(String entryId, List<Asset> assets) {

@@ -1,46 +1,24 @@
 package com.boclips.kalturaclient;
 
-import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
 import lombok.val;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public interface KalturaCaptionManager extends KalturaEntryManager {
 
-    enum CaptionRequest {
-        DEFAULT_LANGUAGE_48_HOURS("caption48");
+    CaptionAsset createCaptionForVideo(String entryId, CaptionAsset captionAsset, String content);
+    List<CaptionAsset> getCaptionsForVideo(String entryId);
+    String getCaptionContent(String captionAssetId);
+    void deleteCaption(String captionAssetId);
 
-        private final String tag;
-
-        CaptionRequest(String tag) {
-            this.tag = tag;
-        }
-    }
-
-    enum CaptionStatus {
-        REQUESTED, PROCESSING, AVAILABLE, NOT_AVAILABLE, UNKNOWN
-    }
-
-    CaptionAsset createCaptionsFileWithEntryId(String entryId, CaptionAsset captionAsset, String content);
-
-    CaptionAsset createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content);
-
-    List<CaptionAsset> getCaptionFilesByEntryId(String entryId);
-
-    List<CaptionAsset> getCaptionFilesByReferenceId(String referenceId);
-
-    String getCaptionContentByAssetId(String assetId);
-
-    void tag(String entryId, List<String> tags);
-
-    default void requestCaptions(String entryId) {
-        tag(entryId, Arrays.asList(CaptionRequest.DEFAULT_LANGUAGE_48_HOURS.tag));
+    default void requestCaption(String entryId) {
+        tag(entryId, Collections.singletonList(CaptionRequest.DEFAULT_LANGUAGE_48_HOURS.tag));
     }
 
     default CaptionStatus getCaptionStatus(String entryId) {
-        if (getCaptionFilesByEntryId(entryId).size() > 0) {
+        if (getCaptionsForVideo(entryId).size() > 0) {
             return CaptionStatus.AVAILABLE;
         } else {
             val baseEntry = getBaseEntry(entryId);
@@ -60,6 +38,16 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
         }
     }
 
-    void deleteCaptionContentByAssetId(String assetId);
+    enum CaptionRequest {
+        DEFAULT_LANGUAGE_48_HOURS("caption48");
+        private final String tag;
 
+        CaptionRequest(String tag) {
+            this.tag = tag;
+        }
+    }
+
+    enum CaptionStatus {
+        REQUESTED, PROCESSING, AVAILABLE, NOT_AVAILABLE, UNKNOWN
+    }
 }

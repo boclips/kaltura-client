@@ -2,7 +2,7 @@ package com.boclips.kalturaclient.session
 
 import au.com.dius.pact.consumer.PactVerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
-import com.boclips.kalturaclient.KalturaClientConfig
+import com.boclips.kalturaclient.config.KalturaClientConfig
 import spock.lang.Specification
 
 class RestSessionRetrieverTest extends Specification {

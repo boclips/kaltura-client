@@ -1,26 +1,23 @@
-package com.boclips.kalturaclient;
+package com.boclips.kalturaclient.clients;
 
+import com.boclips.kalturaclient.KalturaClient;
 import com.boclips.kalturaclient.baseentry.*;
 import com.boclips.kalturaclient.captionasset.*;
+import com.boclips.kalturaclient.config.KalturaClientConfig;
 import com.boclips.kalturaclient.flavorAsset.*;
 import com.boclips.kalturaclient.flavorParams.FlavorParams;
 import com.boclips.kalturaclient.flavorParams.FlavorParamsListClient;
-import com.boclips.kalturaclient.http.KalturaClientApiException;
 import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.*;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.media.list.AllMediaList;
 import com.boclips.kalturaclient.session.SessionGenerator;
-import com.boclips.kalturaclient.baseentry.BaseEntryUpdateThumbnail;
-import com.boclips.kalturaclient.baseentry.BaseEntryUpdateThumbnailClient;
 import org.apache.http.annotation.Experimental;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toMap;
 
 public class KalturaClientV3 implements KalturaClient {
@@ -87,12 +84,12 @@ public class KalturaClientV3 implements KalturaClient {
 
 
     @Override
-    public List<Asset> getAssetsByEntryId(String entryId) {
+    public List<Asset> getVideoAssets(String entryId) {
         return flavorAssetList.list(entryIdEqual(entryId));
     }
 
     @Override
-    public MediaEntry getEntryById(String entryId) {
+    public MediaEntry getEntry(String entryId) {
         List<MediaEntry> mediaEntries = mediaList.get(idEqual(entryId));
         if (mediaEntries.isEmpty()) {
             return null;
@@ -102,8 +99,8 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public Map<String, List<Asset>> getAssetsByEntryIds(Collection<String> entryIds) {
-        if(entryIds.isEmpty()) {
+    public Map<String, List<Asset>> getVideoAssets(Collection<String> entryIds) {
+        if (entryIds.isEmpty()) {
             return emptyMap();
         }
         int pageSize = 500;
@@ -127,7 +124,7 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public Map<String, MediaEntry> getEntriesByIds(Collection<String> entryIds) {
+    public Map<String, MediaEntry> getEntries(Collection<String> entryIds) {
         if (entryIds.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -136,81 +133,40 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public Map<String, List<MediaEntry>> getEntriesByReferenceIds(Collection<String> referenceIds) {
-        if (referenceIds.isEmpty()) {
-            return Collections.emptyMap();
-        }
-        List<MediaEntry> mediaEntries = mediaList.get(referenceIdIn(referenceIds));
-        return mediaEntries.stream().collect(Collectors.groupingBy(MediaEntry::getReferenceId, Collectors.toList()));
-    }
-
-    @Override
-    public void deleteAssetById(String assetId) {
+    public void deleteVideoAsset(String assetId) {
         flavorAssetDelete.deleteByAssetId(assetId);
     }
 
     @Override
-    public void deleteEntryById(String entryId) {
+    public void deleteEntry(String entryId) {
         mediaDelete.deleteByEntryId(entryId);
     }
 
     @Override
-    public void deleteEntriesByReferenceId(String referenceId) {
-        final List<MediaEntry> mediaEntriesToBeDeleted = getEntriesByReferenceId(referenceId);
-
-        List<KalturaClientApiException> errors = new ArrayList<>();
-
-        mediaEntriesToBeDeleted.forEach(mediaEntry -> {
-                    try {
-                        deleteEntryById(mediaEntry.getId());
-                    } catch (KalturaClientApiException e) {
-                        errors.add(e);
-                    }
-                }
-        );
-
-        if (errors.size() > 0) {
-            throw errors.get(0);
-        }
+    public MediaEntry createEntry(String referenceId) {
+        return mediaAdd.add(referenceId);
     }
 
     @Override
-    public void createEntry(String referenceId) {
-        mediaAdd.add(referenceId);
-    }
-
-    @Override
-    public CaptionAsset createCaptionsFileWithEntryId(String entryId, CaptionAsset captionAsset, String content) {
+    public CaptionAsset createCaptionForVideo(String entryId, CaptionAsset captionAsset, String content) {
         CaptionAsset asset = captionAssetAdd.post(entryId, captionAsset);
         return captionAssetSetContent.post(asset.getId(), content);
     }
 
-    @Override
-    public CaptionAsset createCaptionsFile(String referenceId, CaptionAsset captionAsset, String content) {
-        String entryId = entryIdFromReferenceId(referenceId);
-        return createCaptionsFileWithEntryId(entryId, captionAsset, content);
-    }
 
     @Override
-    public List<CaptionAsset> getCaptionFilesByEntryId(String entryId) {
+    public List<CaptionAsset> getCaptionsForVideo(String entryId) {
         return captionAssetList.get(entryIdEqual(entryId));
     }
 
     @Override
-    public List<CaptionAsset> getCaptionFilesByReferenceId(String referenceId) {
-        String entryId = entryIdFromReferenceId(referenceId);
-
-        return getCaptionFilesByEntryId(entryId);
+    public String getCaptionContent(String captionAssetId) {
+        return captionAssetServe.get(captionAssetId);
     }
 
     @Override
-    public String getCaptionContentByAssetId(String assetId) {
-        return captionAssetServe.get(assetId);
-    }
-
-    @Override
-    public void deleteCaptionContentByAssetId(String assetId) {
-        captionAssetDelete.post(assetId);
+    public void deleteCaption(String captionAssetId) {
+        captionAssetDelete.post(captionAssetId);
     }
 
     @Override
@@ -233,24 +189,6 @@ public class KalturaClientV3 implements KalturaClient {
         return baseEntryGet.get(entryId);
     }
 
-    private String entryIdFromReferenceId(String referenceId) {
-        List<MediaEntry> mediaEntries = getEntriesByReferenceId(referenceId);
-
-        if (mediaEntries.size() != 1) {
-            throw new RuntimeException(mediaEntries.size() + " media entries for reference id " + referenceId);
-        }
-
-        MediaEntry mediaEntry = mediaEntries.get(0);
-
-        return mediaEntry.getId();
-    }
-
-    @Override
-    public List<MediaEntry> getEntriesByReferenceId(String referenceId) {
-        return Optional.ofNullable(getEntriesByReferenceIds(singleton(referenceId)).get(referenceId))
-                .orElse(Collections.emptyList());
-    }
-
     private RequestFilters entryIdEqual(String entryId) {
         return new RequestFilters()
                 .add("filter[entryIdEqual]", entryId);
@@ -269,11 +207,6 @@ public class KalturaClientV3 implements KalturaClient {
     private RequestFilters idEqual(String entryId) {
         return new RequestFilters()
                 .add("filter[idEqual]", entryId);
-    }
-
-    private RequestFilters referenceIdIn(Collection<String> referenceIds) {
-        return new RequestFilters()
-                .add("filter[referenceIdIn]", String.join(",", referenceIds));
     }
 
     private RequestFilters page(Integer pageSize, Integer pageIndex, RequestFilters filters) {

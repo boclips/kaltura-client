@@ -1,7 +1,7 @@
 package com.boclips.kalturaclient.media.links
 
 import com.boclips.kalturaclient.KalturaClient
-import com.boclips.kalturaclient.KalturaClientConfig
+import com.boclips.kalturaclient.config.KalturaClientConfig
 import com.boclips.kalturaclient.media.streams.StreamFormat
 import spock.lang.Specification
 

@@ -26,7 +26,7 @@ public class MediaProcessor {
                 .collect(Collectors.toList());
     }
 
-    private MediaEntry process(MediaEntryResource resource) {
+    public MediaEntry process(MediaEntryResource resource) {
         return MediaEntry.builder()
                 .id(resource.getId())
                 .referenceId(resource.getReferenceId())
