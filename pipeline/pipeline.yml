@@ -9,7 +9,7 @@ jobs:
       depth: 1
   - put: version
     params:
-      bump: minor
+      pre: rc
   - task: build
     file: source/pipeline/build.yml
 
@@ -42,10 +42,27 @@ jobs:
     passed: [external-tests]
   - get: version
     passed: [external-tests]
+    params:
+      bump: final
   - put: source
     params:
       repository: source
       tag: version/version
+  - put: version
+    params:
+      bump: patch
+
+- name: major
+  plan:
+    - put: version
+      params:
+        bump: major
+
+- name: minor
+  plan:
+    - put: version
+      params:
+        bump: minor
 
 resources:
 - name: source
