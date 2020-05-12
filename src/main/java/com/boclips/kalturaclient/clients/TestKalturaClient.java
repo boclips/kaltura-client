@@ -220,18 +220,6 @@ public class TestKalturaClient implements KalturaClient {
                 BaseEntry.builder().id(mediaEntry.getId()).thumbnailUrl("defaultThumbnailUrl").build());
     }
 
-    @Override
-    public void updateDefaultThumbnailWithMiddleFrame(String entryId) {
-        BaseEntry entry = baseEntriesByEntryId.get(entryId);
-        baseEntriesByEntryId.put(
-                entryId,
-                BaseEntry.builder()
-                        .id(entry.getId())
-                        .tags(entry.getTags())
-                        .thumbnailUrl(entry.getThumbnailUrl() + UUID.randomUUID().toString())
-                        .build());
-    }
-
     public void setAssets(String entryId, List<Asset> assets) {
         assetsByEntryId.put(entryId, assets);
     }

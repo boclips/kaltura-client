@@ -15,7 +15,6 @@ public interface KalturaEntryManager {
     MediaEntry getEntry(String entryId);
     Map<String, MediaEntry> getEntries(Collection<String> entryIds);
     void deleteEntry(String entryId);
-    void updateDefaultThumbnailWithMiddleFrame(String entryId);
     BaseEntry getBaseEntry(String entryId);
     void tag(String entryId, List<String> tags);
 }

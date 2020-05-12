@@ -9,6 +9,10 @@ import java.util.stream.Collectors;
 public class LinkBuilder {
     private final KalturaClient kalturaClient;
 
+    private final String BASE_THUMBNAIL_URL =
+        "https://cdnapisec.kaltura.com/p/{partnerId}/thumbnail/entry_id/{entryId}/width/{thumbnailWidth}";
+
+
     public LinkBuilder(KalturaClient kalturaClient) {
         this.kalturaClient = kalturaClient;
     }
@@ -47,65 +51,32 @@ public class LinkBuilder {
      * <ul>
      * <li>
      * thumbnailWidth - width in pixels of the thumbnail to be returned
-     * </li>s
+     * </li>
      * </ul>
      */
     public String getThumbnailUrl(String entryId) {
-        return UriTemplate.fromTemplate(
-                "https://cdnapisec.kaltura.com" +
-                        "/p/{partnerId}" +
-                        "/thumbnail" +
-                        "/entry_id/{entryId}" +
-                        "/width/{thumbnailWidth}" +
-                        "/vid_slices/3" +
-                        "/vid_slice/1"
-        )
-                .set("partnerId", kalturaClient.getConfig().getPartnerId())
-                .set("entryId", entryId)
-                .expandPartial();
-    }
-
-    /**
-     * @param entryId
-     * @param thumbnailWidth
-     * @return An url to a thumbnail generated from slicing the video
-     * @see <a href="https://developer.kaltura.com/api-docs/Engage_and_Publish/kaltura-thumbnail-api.html">Kaltura Video Thumbnail and Image Transformation API</a>
-     */
-    public String getSlicedThumbnailUrl(String entryId, int thumbnailWidth) {
-        return UriTemplate.fromTemplate(
-            "https://cdnapisec.kaltura.com" +
-                "/p/{partnerId}" +
-                "/thumbnail" +
-                "/entry_id/{entryId}" +
-                "/width/{thumbnailWidth}" +
-                "/vid_slices/3" +
-                "/vid_slice/1"
-        )
+        return UriTemplate.fromTemplate(BASE_THUMBNAIL_URL + "/vid_slices/3/vid_slice/1")
             .set("partnerId", kalturaClient.getConfig().getPartnerId())
             .set("entryId", entryId)
-            .set("thumbnailWidth", thumbnailWidth)
             .expandPartial();
     }
 
     /**
      * @param entryId
-     * @return A templated URL:
+     * @param second
+     * @return A templated URL to a thumbnail generated from a second:
      * <ul>
      * <li>
      * thumbnailWidth - width in pixels of the thumbnail to be returned
-     * </li>s
+     * </li>
      * </ul>
+     * @see <a href="https://developer.kaltura.com/api-docs/Engage_and_Publish/kaltura-thumbnail-api.html">Kaltura Video Thumbnail and Image Transformation API</a>
      */
-    public String getDefaultThumbnailUrl(String entryId) {
-        return UriTemplate.fromTemplate(
-            "https://cdnapisec.kaltura.com" +
-                "/p/{partnerId}" +
-                "/thumbnail" +
-                "/entry_id/{entryId}" +
-                "/width/{thumbnailWidth}"
-        )
+    public String getThumbnailUrlBySecond(String entryId, Integer second) {
+        return UriTemplate.fromTemplate(BASE_THUMBNAIL_URL + "/vid_sec/{second}")
             .set("partnerId", kalturaClient.getConfig().getPartnerId())
             .set("entryId", entryId)
+            .set("second", second)
             .expandPartial();
     }
 

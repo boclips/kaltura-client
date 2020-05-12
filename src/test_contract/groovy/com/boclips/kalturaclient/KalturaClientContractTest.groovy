@@ -1,6 +1,5 @@
 package com.boclips.kalturaclient
 
-import com.boclips.kalturaclient.baseentry.BaseEntry
 import com.boclips.kalturaclient.captionasset.CaptionAsset
 import com.boclips.kalturaclient.captionasset.CaptionFormat
 import com.boclips.kalturaclient.captionasset.KalturaLanguage
@@ -316,22 +315,6 @@ class KalturaClientContractTest extends Specification {
         flavorParamsMap.get(487091).first().getHeight() == 1080
         flavorParamsMap.get(487091).first().getWidth() == 0
         flavorParamsMap.get(487091).first().getQuality() == Quality.HIGH
-
-        where:
-        client << [testClient(), realClient()]
-    }
-
-    def "can set default thumbnail"() {
-        given:
-        def entryId = "1_zk9l1gj8"
-        BaseEntry entryBefore = client.getBaseEntry(entryId)
-
-        when:
-        client.updateDefaultThumbnailWithMiddleFrame(entryId)
-
-        then:
-        BaseEntry entryAfter = client.getBaseEntry(entryId)
-        entryBefore.thumbnailUrl != entryAfter.thumbnailUrl
 
         where:
         client << [testClient(), realClient()]
