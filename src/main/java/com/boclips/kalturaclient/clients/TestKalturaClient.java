@@ -10,10 +10,12 @@ import com.boclips.kalturaclient.flavorParams.Quality;
 import com.boclips.kalturaclient.media.MediaEntry;
 import com.boclips.kalturaclient.media.MediaEntryStatus;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
+import lombok.SneakyThrows;
 import org.apache.http.annotation.Experimental;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -218,6 +220,17 @@ public class TestKalturaClient implements KalturaClient {
         baseEntriesByEntryId.put(
                 mediaEntry.getId(),
                 BaseEntry.builder().id(mediaEntry.getId()).thumbnailUrl("defaultThumbnailUrl").build());
+    }
+
+    @SneakyThrows
+    @Override
+    public URL getDownloadAssetUrl(String assetId) {
+        if (assetsByEntryId.values().stream()
+                .flatMap(Collection::stream)
+                .anyMatch(asset -> asset.getId().equals(assetId))) {
+            return new URL("https://micromanagement/" + assetId);
+        }
+        return null;
     }
 
     public void setAssets(String entryId, List<Asset> assets) {

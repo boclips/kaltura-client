@@ -15,6 +15,7 @@ import com.boclips.kalturaclient.media.list.AllMediaList;
 import com.boclips.kalturaclient.session.SessionGenerator;
 import org.apache.http.annotation.Experimental;
 
+import java.net.URL;
 import java.util.*;
 
 import static java.util.Collections.emptyMap;
@@ -38,6 +39,7 @@ public class KalturaClientV3 implements KalturaClient {
     private final KalturaClientConfig config;
     private final List<FlavorParams> flavorParams;
     private final FlavorAssetList flavorAssetList;
+    private final FlavorAssetGetDownloadUrl flavorAssetGetDownloadUrl;
 
     public static KalturaClientV3 create(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         KalturaRestClient client = KalturaRestClient.create(config.getBaseUrl(), sessionGenerator);
@@ -71,6 +73,7 @@ public class KalturaClientV3 implements KalturaClient {
         this.linkBuilder = new LinkBuilder(this);
 
         this.flavorAssetList = new FlavorAssetListClient(restClient);
+        this.flavorAssetGetDownloadUrl = new FlavorAssetGetDownloadUrlClient(restClient);
     }
 
     @Experimental
@@ -142,6 +145,11 @@ public class KalturaClientV3 implements KalturaClient {
     @Override
     public MediaEntry createEntry(String referenceId) {
         return mediaAdd.add(referenceId);
+    }
+
+    @Override
+    public URL getDownloadAssetUrl(String assetId) {
+        return flavorAssetGetDownloadUrl.getDownloadUrl(assetId);
     }
 
     @Override

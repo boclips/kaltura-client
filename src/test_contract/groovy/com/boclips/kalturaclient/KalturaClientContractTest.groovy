@@ -320,6 +320,18 @@ class KalturaClientContractTest extends Specification {
         client << [testClient(), realClient()]
     }
 
+    def "gets flavor download URL"() {
+        when:
+        def assetId = "1_eian2fxp"
+        URL downloadUrl = client.getDownloadAssetUrl(assetId)
+
+        then:
+        downloadUrl.toString().contains(assetId)
+
+        where:
+        client << [testClient(), realClient()]
+    }
+
 //    @Ignore("This is pretty expensive, in terms of time. Run at your own risk.")
     def "fetch all videos"(KalturaClient client) {
         given:
