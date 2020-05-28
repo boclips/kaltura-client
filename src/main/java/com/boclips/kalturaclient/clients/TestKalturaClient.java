@@ -229,7 +229,7 @@ public class TestKalturaClient implements KalturaClient {
         if (assetsByEntryId.values().stream()
                 .flatMap(Collection::stream)
                 .anyMatch(asset -> asset.getId().equals(assetId))) {
-            return new URI("/asset-download/" + assetId);
+            return new URI("/asset-download/" + assetId + ".mp4");
         }
         return null;
     }
