@@ -15,6 +15,7 @@ import com.boclips.kalturaclient.media.list.AllMediaList;
 import com.boclips.kalturaclient.session.SessionGenerator;
 import org.apache.http.annotation.Experimental;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.*;
 
@@ -148,7 +149,7 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public URL getDownloadAssetUrl(String assetId) {
+    public URI getDownloadAssetUrl(String assetId) {
         return flavorAssetGetDownloadUrl.getDownloadUrl(assetId);
     }
 

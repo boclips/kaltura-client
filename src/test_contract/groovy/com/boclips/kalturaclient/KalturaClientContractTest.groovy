@@ -323,7 +323,7 @@ class KalturaClientContractTest extends Specification {
     def "gets flavor download URL"() {
         when:
         def assetId = "1_eian2fxp"
-        URL downloadUrl = client.getDownloadAssetUrl(assetId)
+        URI downloadUrl = client.getDownloadAssetUrl(assetId)
 
         then:
         downloadUrl.toString().contains(assetId)

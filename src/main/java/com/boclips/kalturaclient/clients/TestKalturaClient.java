@@ -13,6 +13,7 @@ import com.boclips.kalturaclient.media.links.LinkBuilder;
 import lombok.SneakyThrows;
 import org.apache.http.annotation.Experimental;
 
+import java.net.URI;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.net.URL;
@@ -224,11 +225,11 @@ public class TestKalturaClient implements KalturaClient {
 
     @SneakyThrows
     @Override
-    public URL getDownloadAssetUrl(String assetId) {
+    public URI getDownloadAssetUrl(String assetId) {
         if (assetsByEntryId.values().stream()
                 .flatMap(Collection::stream)
                 .anyMatch(asset -> asset.getId().equals(assetId))) {
-            return new URL("https://micromanagement/" + assetId);
+            return new URI("/asset-download/" + assetId);
         }
         return null;
     }
