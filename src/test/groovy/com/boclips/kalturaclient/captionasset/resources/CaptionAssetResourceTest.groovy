@@ -11,6 +11,7 @@ class CaptionAssetResourceTest extends Specification {
             .format(CaptionFormat.WEBVTT.value)
             .label("the label")
             .language("French")
+            .isDefault(true)
             .build()
 
     def "ToAsset"() {
@@ -22,6 +23,7 @@ class CaptionAssetResourceTest extends Specification {
         asset.fileType == CaptionFormat.WEBVTT
         asset.label == "the label"
         asset.language == KalturaLanguage.FRENCH
+        asset.defaultCaption == true
     }
 
     def "Throws when id is null"() {

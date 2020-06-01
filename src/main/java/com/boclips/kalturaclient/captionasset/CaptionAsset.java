@@ -8,12 +8,10 @@ import lombok.Getter;
 public class CaptionAsset {
 
     private final String id;
-
     private final String label;
-
     private final KalturaLanguage language;
-
     private final CaptionFormat fileType;
+    private final boolean defaultCaption;
 
 }
 

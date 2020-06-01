@@ -17,6 +17,7 @@ public class CaptionAssetResource {
     public String label;
     public String language;
     public String format;
+    public Boolean isDefault;
 
     public CaptionAsset toAsset() {
         validate(id);
@@ -29,6 +30,7 @@ public class CaptionAssetResource {
                 .label(label)
                 .language(KalturaLanguage.fromName(language))
                 .fileType(CaptionFormat.fromValue(format))
+                .defaultCaption(isDefault == null ? false : isDefault)
                 .build();
     }
 
