@@ -13,6 +13,8 @@ import com.boclips.kalturaclient.media.*;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.media.list.AllMediaList;
 import com.boclips.kalturaclient.session.SessionGenerator;
+import com.boclips.kalturaclient.thumbnailAsset.SetThumbnailAsDefault;
+import com.boclips.kalturaclient.thumbnailAsset.SetThumbnailAsDefaultClient;
 import com.boclips.kalturaclient.thumbnailAsset.ThumbnailAssetAdd;
 import com.boclips.kalturaclient.thumbnailAsset.ThumbnailAssetAddClient;
 import org.apache.http.annotation.Experimental;
@@ -44,6 +46,7 @@ public class KalturaClientV3 implements KalturaClient {
     private final FlavorAssetList flavorAssetList;
     private final FlavorAssetGetDownloadUrl flavorAssetGetDownloadUrl;
     private final ThumbnailAssetAdd thumbnailAssetAdd;
+    private final SetThumbnailAsDefault setThumbnailAsDefault;
 
     public static KalturaClientV3 create(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         KalturaRestClient client = KalturaRestClient.create(config.getBaseUrl(), sessionGenerator);
@@ -79,6 +82,7 @@ public class KalturaClientV3 implements KalturaClient {
         this.flavorAssetList = new FlavorAssetListClient(restClient);
         this.flavorAssetGetDownloadUrl = new FlavorAssetGetDownloadUrlClient(restClient);
         this.thumbnailAssetAdd = new ThumbnailAssetAddClient(restClient);
+        this.setThumbnailAsDefault = new SetThumbnailAsDefaultClient(restClient);
     }
 
     @Experimental
@@ -192,6 +196,11 @@ public class KalturaClientV3 implements KalturaClient {
     @Override
     public String addThumbnailFromImage(String entryId, InputStream fileStream, String filename) {
         return thumbnailAssetAdd.addThumbnailFromImage(entryId, fileStream, filename);
+    }
+
+    @Override
+    public void setThumbnailAsDefault(String thumbAssetId) {
+        setThumbnailAsDefault.setAsDefaultByThumbAssetId(thumbAssetId);
     }
 
     @Override

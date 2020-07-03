@@ -29,6 +29,7 @@ public class TestKalturaClient implements KalturaClient {
     private final Map<String, String> captionContentsByAssetId = new HashMap<>();
     private final Map<String, BaseEntry> baseEntriesByEntryId = new HashMap<>();
     private final Map<String, List<Asset>> assetsByEntryId = new HashMap<>();
+    private final Map<String, String> entryIdsByThumbAssetId = new HashMap<>();
     private final LinkBuilder linkBuilder;
     private KalturaClientConfig config;
 
@@ -178,9 +179,25 @@ public class TestKalturaClient implements KalturaClient {
 
     @Override
     public String addThumbnailFromImage(String entryId, InputStream fileStream, String filename) {
+        String thumbAssetId = "thumbAssetId_" + filename;
+        entryIdsByThumbAssetId.put(thumbAssetId, entryId);
         return baseEntriesByEntryId.containsKey(entryId)
-                ? "thumbAssetId"
+                ? thumbAssetId
                 : null;
+    }
+
+    @Override
+    public void setThumbnailAsDefault(String thumbAssetId) {
+        String entryId = entryIdsByThumbAssetId.get(thumbAssetId);
+        if (baseEntriesByEntryId.containsKey(entryId)) {
+            BaseEntry baseEntry = baseEntriesByEntryId.get(entryId);
+            BaseEntry updatedUrlBaseEntry = BaseEntry.builder()
+                    .id(baseEntry.getId())
+                    .tags(baseEntry.getTags())
+                    .thumbnailUrl(thumbAssetId)
+                    .build();
+            baseEntriesByEntryId.put(entryId, updatedUrlBaseEntry);
+        }
     }
 
     @Override

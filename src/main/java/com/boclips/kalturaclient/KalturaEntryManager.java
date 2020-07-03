@@ -19,4 +19,5 @@ public interface KalturaEntryManager {
     BaseEntry getBaseEntry(String entryId);
     void tag(String entryId, List<String> tags);
     String addThumbnailFromImage(String entryId, InputStream fileStream, String filename);
+    void setThumbnailAsDefault(String thumbAssetId);
 }

@@ -281,11 +281,30 @@ class KalturaClientContractTest extends Specification {
         MediaEntry mediaEntry = create(client, referenceId)
 
         when:
-        InputStream fileStream = openResourceFile("/upload.jpeg")
-        def thumbAssetId = client.addThumbnailFromImage(mediaEntry.id, fileStream, "upload.jpeg");
+        InputStream fileStream = openResourceFile("/custom-thumbnail.jpeg")
+        def thumbAssetId = client.addThumbnailFromImage(mediaEntry.id, fileStream, "custom-thumbnail.jpeg");
 
         then:
         thumbAssetId != null
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+    def "set custom thumbnail image as default thumbnail"(KalturaClient client) {
+        given:
+        MediaEntry mediaEntry = create(client, referenceId)
+        //first image is implicitly default since there were no other thumbnails before
+        client.addThumbnailFromImage(mediaEntry.id, openResourceFile("/custom-thumbnail.jpeg"), "custom-thumbnail.jpeg");
+        def entryBefore = client.getBaseEntry(mediaEntry.id);
+        def thumbAssetId = client.addThumbnailFromImage(mediaEntry.id, openResourceFile("/custom-thumbnail.jpeg"), "custom-thumbnail2.jpeg");
+
+        when:
+        client.setThumbnailAsDefault(thumbAssetId);
+        def entryAfter = client.getBaseEntry(mediaEntry.id);
+
+        then:
+        entryAfter.thumbnailUrl != entryBefore.thumbnailUrl;
 
         where:
         client << [realClient(), testClient()]
