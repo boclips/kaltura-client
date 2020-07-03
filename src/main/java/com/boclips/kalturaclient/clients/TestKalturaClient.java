@@ -13,10 +13,10 @@ import com.boclips.kalturaclient.media.links.LinkBuilder;
 import lombok.SneakyThrows;
 import org.apache.http.annotation.Experimental;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -174,6 +174,13 @@ public class TestKalturaClient implements KalturaClient {
                         .tags(tags)
                         .build()
         );
+    }
+
+    @Override
+    public String addThumbnailFromImage(String entryId, InputStream fileStream, String filename) {
+        return baseEntriesByEntryId.containsKey(entryId)
+                ? "thumbAssetId"
+                : null;
     }
 
     @Override

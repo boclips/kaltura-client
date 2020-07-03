@@ -60,6 +60,14 @@ public class HttpClient {
         return makeRequest(post, queryParams, responseType);
     }
 
+    public <T> T postImage(String path, Map<String, Object> queryParams, UploadFileDescriptor fileDescriptor, Class<T> responseType) {
+        HttpRequestWithBody post = Unirest.post(path);
+        post.field(fileDescriptor.getFieldName(), fileDescriptor.getFileStream(),
+                fileDescriptor.getContentType(), fileDescriptor.getFilename());
+
+        return makeRequest(post, queryParams, responseType);
+    }
+
     private <T> T makeRequest(HttpRequest request, Map<String, Object> queryParams, Class<T> responseType) {
         try {
             HttpResponse<T> response = request

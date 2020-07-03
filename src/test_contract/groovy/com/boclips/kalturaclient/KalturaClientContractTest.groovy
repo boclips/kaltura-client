@@ -276,6 +276,21 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
+    def "upload thumbnail image to entry"(KalturaClient client) {
+        given:
+        MediaEntry mediaEntry = create(client, referenceId)
+
+        when:
+        InputStream fileStream = openResourceFile("/upload.jpeg")
+        def thumbAssetId = client.addThumbnailFromImage(mediaEntry.id, fileStream, "upload.jpeg");
+
+        then:
+        thumbAssetId != null
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
     def "fetch caption status by entry id - nonsensical tags"(KalturaClient client) {
         given:
         MediaEntry mediaEntry = create(client, referenceId)
@@ -403,7 +418,7 @@ class KalturaClientContractTest extends Specification {
     private String readResourceFile(String path) {
         InputStream is = null
         try {
-            is = KalturaClientContractTest.class.getResourceAsStream(path)
+            is = openResourceFile(path)
             return IOUtils.readLines(is, StandardCharsets.UTF_8)
                     .stream()
                     .collect(Collectors.joining("\n"))
@@ -415,5 +430,9 @@ class KalturaClientContractTest extends Specification {
                 is.close()
             }
         }
+    }
+
+    private InputStream openResourceFile(String path) {
+        return KalturaClientContractTest.class.getResourceAsStream(path);
     }
 }

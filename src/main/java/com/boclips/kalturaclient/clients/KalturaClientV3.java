@@ -13,10 +13,12 @@ import com.boclips.kalturaclient.media.*;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
 import com.boclips.kalturaclient.media.list.AllMediaList;
 import com.boclips.kalturaclient.session.SessionGenerator;
+import com.boclips.kalturaclient.thumbnailAsset.ThumbnailAssetAdd;
+import com.boclips.kalturaclient.thumbnailAsset.ThumbnailAssetAddClient;
 import org.apache.http.annotation.Experimental;
 
+import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
 import java.util.*;
 
 import static java.util.Collections.emptyMap;
@@ -41,6 +43,7 @@ public class KalturaClientV3 implements KalturaClient {
     private final List<FlavorParams> flavorParams;
     private final FlavorAssetList flavorAssetList;
     private final FlavorAssetGetDownloadUrl flavorAssetGetDownloadUrl;
+    private final ThumbnailAssetAdd thumbnailAssetAdd;
 
     public static KalturaClientV3 create(KalturaClientConfig config, SessionGenerator sessionGenerator) {
         KalturaRestClient client = KalturaRestClient.create(config.getBaseUrl(), sessionGenerator);
@@ -75,6 +78,7 @@ public class KalturaClientV3 implements KalturaClient {
 
         this.flavorAssetList = new FlavorAssetListClient(restClient);
         this.flavorAssetGetDownloadUrl = new FlavorAssetGetDownloadUrlClient(restClient);
+        this.thumbnailAssetAdd = new ThumbnailAssetAddClient(restClient);
     }
 
     @Experimental
@@ -183,6 +187,11 @@ public class KalturaClientV3 implements KalturaClient {
     @Override
     public void tag(String entryId, List<String> tags) {
         baseEntryUpdate.post(entryId, BaseEntry.builder().id(entryId).tags(tags).build());
+    }
+
+    @Override
+    public String addThumbnailFromImage(String entryId, InputStream fileStream, String filename) {
+        return thumbnailAssetAdd.addThumbnailFromImage(entryId, fileStream, filename);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.boclips.kalturaclient;
 import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.media.MediaEntry;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -17,4 +18,5 @@ public interface KalturaEntryManager {
     void deleteEntry(String entryId);
     BaseEntry getBaseEntry(String entryId);
     void tag(String entryId, List<String> tags);
+    String addThumbnailFromImage(String entryId, InputStream fileStream, String filename);
 }
