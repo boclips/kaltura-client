@@ -82,6 +82,23 @@ public class LinkBuilder {
 
     /**
      * @param entryId
+     * @return A default URL to a uploaded thumbnail
+     * <ul>
+     * <li>
+     * thumbnailWidth - width in pixels of the thumbnail to be returned
+     * </li>
+     * </ul>
+     * @see <a href="https://developer.kaltura.com/api-docs/Engage_and_Publish/kaltura-thumbnail-api.html">Kaltura Video Thumbnail and Image Transformation API</a>
+     */
+    public String getDefaultThumbnailUrl(String entryId) {
+        return UriTemplate.fromTemplate(BASE_THUMBNAIL_URL)
+                .set("partnerId", kalturaClient.getConfig().getPartnerId())
+                .set("entryId", entryId)
+                .expandPartial();
+    }
+
+    /**
+     * @param entryId
      * @return A templated URL:
      * <ul>
      * <li>

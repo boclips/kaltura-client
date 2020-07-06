@@ -47,6 +47,17 @@ class LinkBuilderTest extends Specification {
         thumbnailUrl.contains("/vid_sec/20")
     }
 
+    def "can build default thumbnail url from a id"() {
+        given:
+        String entryId = "media-entry-id"
+
+        when:
+        String thumbnailUrl = linkBuilder.getDefaultThumbnailUrl(entryId)
+
+        then:
+        thumbnailUrl.endsWith("entry_id/media-entry-id/width/{thumbnailWidth}")
+    }
+
     def "can build video preview urls"() {
         given:
         String entryId = "media-entry-id"
