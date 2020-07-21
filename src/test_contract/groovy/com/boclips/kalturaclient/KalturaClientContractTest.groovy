@@ -287,6 +287,31 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
+
+    def "fetch caption status by entry id with already auto generated catpion - captions requested"(KalturaClient client) {
+        given:
+        MediaEntry mediaEntry = create(client, referenceId)
+
+        when:
+        def captionAsset = CaptionAsset.builder()
+                .label("English (auto-generated)")
+                .language(KalturaLanguage.ENGLISH)
+                .fileType(CaptionFormat.WEBVTT)
+                .build()
+        client.createCaptionForVideo(mediaEntry.id, captionAsset, readResourceFile("/captions.vtt"))
+        client.requestCaption(mediaEntry.id)
+
+
+
+        def captionStatus = client.getCaptionStatus(mediaEntry.id)
+
+        then:
+        captionStatus == KalturaCaptionManager.CaptionStatus.REQUESTED
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
     def "fetch caption status by entry id - captions being processed"(KalturaClient client) {
         given:
         MediaEntry mediaEntry = create(client, referenceId)

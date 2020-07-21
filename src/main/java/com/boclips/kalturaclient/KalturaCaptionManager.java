@@ -22,33 +22,34 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
 
     default CaptionStatus getCaptionStatus(String entryId) {
         val captionsForVideo = getCaptionsForVideo(entryId);
+        val baseEntry = getBaseEntry(entryId);
+        val hasCaptions = captionsForVideo.size() > 0;
 
-        if (captionsForVideo.size() > 0) {
-            val hasHumanGeneratedCaptions = captionsForVideo.stream()
-                    .anyMatch(captionAsset -> !captionAsset.getLabel().contains("(auto-generated)"));
+        val hasHumanGeneratedCaptions = captionsForVideo.stream()
+                .anyMatch(captionAsset -> !captionAsset.getLabel().contains("(auto-generated)"));
 
-            if (hasHumanGeneratedCaptions) {
-                return CaptionStatus.HUMAN_GENERATED_AVAILABLE;
-            } else {
-                return CaptionStatus.AUTO_GENERATED_AVAILABLE;
-            }
-        } else {
-            val baseEntry = getBaseEntry(entryId);
-            if (baseEntry == null) {
-                return CaptionStatus.UNKNOWN;
-            }
-            if (baseEntry.isTaggedWith(CaptionRequest.DEFAULT_LANGUAGE_48_HOURS.tag)) {
-                return CaptionStatus.REQUESTED;
-            }
-            if (baseEntry.isTaggedWith("processing")) {
-                return CaptionStatus.PROCESSING;
-            }
-            if (baseEntry.isTagged()) {
-                return CaptionStatus.UNKNOWN;
-            }
-            return CaptionStatus.NOT_AVAILABLE;
+        if (hasCaptions && hasHumanGeneratedCaptions) {
+            return CaptionStatus.HUMAN_GENERATED_AVAILABLE;
         }
+        if (baseEntry == null) {
+            return CaptionStatus.UNKNOWN;
+        }
+        if (baseEntry.isTaggedWith(CaptionRequest.DEFAULT_LANGUAGE_48_HOURS.tag)) {
+            return CaptionStatus.REQUESTED;
+        }
+        if (hasCaptions) {
+            return CaptionStatus.AUTO_GENERATED_AVAILABLE;
+        }
+        if (baseEntry.isTaggedWith("processing")) {
+            return CaptionStatus.PROCESSING;
+        }
+        if (baseEntry.isTagged()) {
+            return CaptionStatus.UNKNOWN;
+        }
+
+        return CaptionStatus.NOT_AVAILABLE;
     }
+
 
     enum CaptionRequest {
         DEFAULT_LANGUAGE_48_HOURS("caption48");
