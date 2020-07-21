@@ -9,8 +9,11 @@ import java.util.List;
 public interface KalturaCaptionManager extends KalturaEntryManager {
 
     CaptionAsset createCaptionForVideo(String entryId, CaptionAsset captionAsset, String content);
+
     List<CaptionAsset> getCaptionsForVideo(String entryId);
+
     String getCaptionContent(String captionAssetId);
+
     void deleteCaption(String captionAssetId);
 
     default void requestCaption(String entryId) {
@@ -18,8 +21,17 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
     }
 
     default CaptionStatus getCaptionStatus(String entryId) {
-        if (getCaptionsForVideo(entryId).size() > 0) {
-            return CaptionStatus.AVAILABLE;
+        val captionsForVideo = getCaptionsForVideo(entryId);
+
+        if (captionsForVideo.size() > 0) {
+            val hasHumanGeneratedCaptions = captionsForVideo.stream()
+                    .anyMatch(captionAsset -> !captionAsset.getLabel().contains("(auto-generated)"));
+
+            if (hasHumanGeneratedCaptions) {
+                return CaptionStatus.HUMAN_GENERATED_AVAILABLE;
+            } else {
+                return CaptionStatus.AUTO_GENERATED_AVAILABLE;
+            }
         } else {
             val baseEntry = getBaseEntry(entryId);
             if (baseEntry == null) {
@@ -48,6 +60,6 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
     }
 
     enum CaptionStatus {
-        REQUESTED, PROCESSING, AVAILABLE, NOT_AVAILABLE, UNKNOWN
+        REQUESTED, PROCESSING, AUTO_GENERATED_AVAILABLE, HUMAN_GENERATED_AVAILABLE, NOT_AVAILABLE, UNKNOWN
     }
 }
