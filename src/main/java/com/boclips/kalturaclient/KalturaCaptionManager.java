@@ -3,6 +3,7 @@ package com.boclips.kalturaclient;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
 import lombok.val;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,6 +14,8 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
     List<CaptionAsset> getCaptionsForVideo(String entryId);
 
     String getCaptionContent(String captionAssetId);
+
+    URI getCaptionAssetUrl(String captionAssetId);
 
     void deleteCaption(String captionAssetId);
 

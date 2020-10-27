@@ -15,6 +15,7 @@ import org.apache.http.annotation.Experimental;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -144,6 +145,15 @@ public class TestKalturaClient implements KalturaClient {
     @Override
     public String getCaptionContent(String captionAssetId) {
         return captionContentsByAssetId.get(captionAssetId);
+    }
+
+    @Override
+    public URI getCaptionAssetUrl(String captionAssetId) {
+        try {
+            return new URI("https://caption-download-link/" + captionAssetId);
+        } catch (URISyntaxException e) {
+            return null;
+        }
     }
 
     @Override

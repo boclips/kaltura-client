@@ -10,6 +10,7 @@ import com.boclips.kalturaclient.flavorParams.Quality
 import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.testsupport.TestFactories
 import org.apache.commons.io.IOUtils
+import org.apache.commons.lang.StringUtils
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
 
@@ -121,6 +122,35 @@ class KalturaClientContractTest extends Specification {
         then:
         mediaEntry.id == mediaEntryById.id
         mediaEntry.referenceId == mediaEntryById.referenceId
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+
+    def "fetch download caption asset url by caption id"(KalturaClient client) {
+        given:
+        MediaEntry mediaEntry = create(client, referenceId)
+
+        when:
+        CaptionAsset captionAsset = CaptionAsset.builder()
+                .label("English (auto-generated)")
+                .language(KalturaLanguage.ENGLISH)
+                .fileType(CaptionFormat.WEBVTT)
+                .build()
+        client.createCaptionForVideo(mediaEntry.id, captionAsset, readResourceFile("/captions.vtt"))
+
+        List<CaptionAsset> captions = client.getCaptionsForVideo(mediaEntry.id)
+
+        String captionId = captions.get(0).getId()
+        URI captionAssetUri = client.getCaptionAssetUrl(captionId)
+
+        then:
+        captionAssetUri != null
+        String url = captionAssetUri.toString()
+        StringUtils.isNotBlank(url)
+        url.contains(captionId)
+        url.startsWith("http://") || url.startsWith("https://")
 
         where:
         client << [realClient(), testClient()]

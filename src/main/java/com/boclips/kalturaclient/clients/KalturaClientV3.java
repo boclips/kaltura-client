@@ -33,6 +33,7 @@ public class KalturaClientV3 implements KalturaClient {
     private final FlavorAssetDelete flavorAssetDelete;
     private final MediaAdd mediaAdd;
     private final CaptionAssetList captionAssetList;
+    private final CaptionAssetGetUrl captionAssetGetUrl;
     private final CaptionAssetAdd captionAssetAdd;
     private final CaptionAssetDelete captionAssetDelete;
     private final CaptionAssetSetContentClient captionAssetSetContent;
@@ -76,6 +77,7 @@ public class KalturaClientV3 implements KalturaClient {
         this.captionAssetDelete = new CaptionAssetDelete(restClient);
         this.captionAssetSetContent = new CaptionAssetSetContentClient(restClient);
         this.captionAssetServe = new CaptionAssetServeClient(restClient);
+        this.captionAssetGetUrl = new CaptionAssetGetUrl(restClient);
 
         this.linkBuilder = new LinkBuilder(this);
 
@@ -176,6 +178,11 @@ public class KalturaClientV3 implements KalturaClient {
     @Override
     public String getCaptionContent(String captionAssetId) {
         return captionAssetServe.get(captionAssetId);
+    }
+
+    @Override
+    public URI getCaptionAssetUrl(String captionAssetId) {
+        return captionAssetGetUrl.post(captionAssetId);
     }
 
     @Override
