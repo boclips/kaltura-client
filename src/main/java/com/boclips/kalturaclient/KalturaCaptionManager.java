@@ -23,13 +23,20 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
         tag(entryId, Collections.singletonList(CaptionRequest.DEFAULT_LANGUAGE_48_HOURS.tag));
     }
 
+    default CaptionAsset getHumanGeneratedCaptionAsset(String entryId) {
+        return getCaptionsForVideo(entryId).stream()
+                .filter(CaptionAsset::isHumanGenerated)
+                .findFirst()
+                .orElse(null);
+    }
+
     default CaptionStatus getCaptionStatus(String entryId) {
         val captionsForVideo = getCaptionsForVideo(entryId);
         val baseEntry = getBaseEntry(entryId);
         val hasCaptions = captionsForVideo.size() > 0;
 
         val hasHumanGeneratedCaptions = captionsForVideo.stream()
-                .anyMatch(captionAsset -> !captionAsset.getLabel().contains("(auto-generated)"));
+                .anyMatch(CaptionAsset::isHumanGenerated);
 
         if (hasCaptions && hasHumanGeneratedCaptions) {
             return CaptionStatus.HUMAN_GENERATED_AVAILABLE;
@@ -52,7 +59,6 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
 
         return CaptionStatus.NOT_AVAILABLE;
     }
-
 
     enum CaptionRequest {
         DEFAULT_LANGUAGE_48_HOURS("caption48");

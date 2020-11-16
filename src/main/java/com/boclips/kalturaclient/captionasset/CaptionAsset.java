@@ -13,6 +13,9 @@ public class CaptionAsset {
     private final CaptionFormat fileType;
     private final boolean defaultCaption;
 
+    public boolean isHumanGenerated() {
+        return !this.getLabel().contains("(auto-generated)");
+    }
 }
 
 
