@@ -27,7 +27,7 @@ sourceSets {
 dependencies {
     implementation 'com.mashape.unirest:unirest-java:1.4.9'
     implementation 'org.projectlombok:lombok:1.18.2'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'org.apache.commons:commons-collections4:4.4'
     implementation 'org.apache.commons:commons-collections4:4.4'
