@@ -16,7 +16,7 @@ jobs:
 - name: external-tests
   public: true
   plan:
-  - get: 2h
+  - get: two-hours
     trigger: true
   - get: source
     trigger: true
@@ -82,6 +82,6 @@ resources:
     file: kaltura-client
     private_key: ((versions.repo-key))
 
-- name: 2h
+- name: two-hours
   type: time
   source: {interval: 120m}
