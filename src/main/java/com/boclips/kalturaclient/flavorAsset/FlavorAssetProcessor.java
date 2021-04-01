@@ -7,12 +7,16 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class FlavorAssetProcessor {
 
     public List<Asset> processFlavorAssetListResource(FlavorAssetListResource listResource) {
-        return listResource.objects.stream().map(this::processFlavorAssetResource).collect(Collectors.toList());
+        return listResource.objects.stream()
+                .filter(Objects::nonNull)
+                .map(this::processFlavorAssetResource)
+                .collect(Collectors.toList());
     }
 
     private Asset processFlavorAssetResource(FlavorAssetResource assetResource) {
