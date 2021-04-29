@@ -1,13 +1,15 @@
 plugins {
     id 'groovy'
     id 'java'
-    id 'org.owasp.dependencycheck' version '6.0.1'
+    id 'org.owasp.dependencycheck' version '6.1.1'
 }
 
 group 'com.boclips'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
+
+apply plugin: 'org.owasp.dependencycheck'
 
 repositories {
     mavenCentral()
@@ -63,18 +65,10 @@ task testContract(type: Test) {
     classpath = sourceSets.testContract.runtimeClasspath
 }
 
-apply plugin: 'org.owasp.dependencycheck'
-
 dependencyCheck {
     failBuildOnCVSS = 4
-
-    data {
-        directory = './dependency-check-cache'
-    }
-
-    analyzers {
-        assemblyEnabled = false
-    }
-
+    data.directory = './dependency-check-cache'
+    analyzers.assemblyEnabled = false
     suppressionFile = './dependency-check-suppressions.xml'
+    outputDirectory = 'security-report'
 }
