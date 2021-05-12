@@ -235,7 +235,7 @@ class KalturaClientContractTest extends Specification {
         client.requestCaption(entryId)
 
         then:
-        client.getBaseEntry(entryId).tags == ["caption48"]
+        client.getBaseEntry(entryId).tags == ["3play"]
 
         where:
         client << [testClient(), realClient()]

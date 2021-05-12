@@ -20,7 +20,7 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
     void deleteCaption(String captionAssetId);
 
     default void requestCaption(String entryId) {
-        tag(entryId, Collections.singletonList(CaptionRequest.DEFAULT_LANGUAGE_48_HOURS.tag));
+        tag(entryId, Collections.singletonList(CaptionRequest.CAPTION_3PLAY.tag));
     }
 
     default CaptionAsset getHumanGeneratedCaptionAsset(String entryId) {
@@ -44,7 +44,7 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
         if (baseEntry == null) {
             return CaptionStatus.UNKNOWN;
         }
-        if (baseEntry.isTaggedWith(CaptionRequest.DEFAULT_LANGUAGE_48_HOURS.tag)) {
+        if (baseEntry.isTaggedWith(CaptionRequest.CAPTION_3PLAY.tag)) {
             return CaptionStatus.REQUESTED;
         }
         if (hasCaptions) {
@@ -61,7 +61,7 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
     }
 
     enum CaptionRequest {
-        DEFAULT_LANGUAGE_48_HOURS("caption48");
+        CAPTION_3PLAY("3play");
         private final String tag;
 
         CaptionRequest(String tag) {
