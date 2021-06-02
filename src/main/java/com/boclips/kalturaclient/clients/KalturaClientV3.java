@@ -201,6 +201,11 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
+    public void setCategories(String entryId, List<String> categories) {
+        baseEntryUpdate.post(entryId, BaseEntry.builder().id(entryId).categories(categories).build());
+    }
+
+    @Override
     public String addThumbnailFromImage(String entryId, InputStream fileStream, String filename) {
         return thumbnailAssetAdd.addThumbnailFromImage(entryId, fileStream, filename);
     }

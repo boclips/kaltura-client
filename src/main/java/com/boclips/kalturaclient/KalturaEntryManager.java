@@ -18,6 +18,7 @@ public interface KalturaEntryManager {
     void deleteEntry(String entryId);
     BaseEntry getBaseEntry(String entryId);
     void tag(String entryId, List<String> tags);
+    void setCategories(String entryId, List<String> categories);
     String addThumbnailFromImage(String entryId, InputStream fileStream, String filename);
     void setThumbnailAsDefault(String thumbAssetId);
 }

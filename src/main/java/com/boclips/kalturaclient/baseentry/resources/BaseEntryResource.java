@@ -16,12 +16,14 @@ import java.util.Collections;
 public class BaseEntryResource {
     public String id;
     public String tags;
+    public String categories;
     public String thumbnailUrl;
 
     public BaseEntry toBaseEntry() {
         return BaseEntry.builder()
                 .id(id)
                 .tags(tags == null ? Collections.emptyList() : Arrays.asList(tags.split(", ")))
+                .categories(categories == null ? Collections.emptyList() : Arrays.asList(categories.split(", ")))
                 .thumbnailUrl(thumbnailUrl)
                 .build();
     }

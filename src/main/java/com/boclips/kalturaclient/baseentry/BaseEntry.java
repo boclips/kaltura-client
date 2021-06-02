@@ -10,6 +10,7 @@ import java.util.List;
 public class BaseEntry {
     private final String id;
     private final List<String> tags;
+    private final List<String> categories;
     private final String thumbnailUrl;
 
     public boolean isTaggedWith(String tag) {
@@ -17,8 +18,17 @@ public class BaseEntry {
                 && this.getTags().contains(tag);
     }
 
+    public boolean hasCategory(String category) {
+        return this.getCategories() != null
+                && this.getCategories().contains(category);
+    }
+
     public boolean isTagged() {
         return this.getTags() != null
                 && this.getTags().size() > 0;
+    }
+    public boolean hasCategories() {
+        return this.getCategories() != null
+                && this.getCategories().size() > 0;
     }
 }

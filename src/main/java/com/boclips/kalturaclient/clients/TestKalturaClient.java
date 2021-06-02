@@ -188,6 +188,17 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
+    public void setCategories(String entryId, List<String> categories) {
+        baseEntriesByEntryId.put(
+                entryId,
+                BaseEntry.builder()
+                        .id(entryId)
+                        .categories(categories)
+                        .build()
+        );
+    }
+
+    @Override
     public String addThumbnailFromImage(String entryId, InputStream fileStream, String filename) {
         String thumbAssetId = "thumbAssetId_" + filename;
         entryIdsByThumbAssetId.put(thumbAssetId, entryId);

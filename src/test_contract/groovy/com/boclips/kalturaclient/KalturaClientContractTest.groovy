@@ -225,6 +225,22 @@ class KalturaClientContractTest extends Specification {
         client << [testClient(), realClient()]
     }
 
+    def "can assign categories to base entries"() {
+        given:
+        MediaEntry mediaEntry = create(client, referenceId)
+
+        String entryId = mediaEntry.id
+
+        when:
+        client.setCategories(entryId, ["3play_processed"])
+
+        then:
+        client.getBaseEntry(entryId).categories == ["3play_processed"]
+
+        where:
+        client << [testClient(), realClient()]
+    }
+
     def "can request captions"() {
         given:
         MediaEntry mediaEntry = create(client, referenceId)

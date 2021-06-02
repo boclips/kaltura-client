@@ -16,7 +16,12 @@ public class BaseEntryUpdateClient implements BaseEntryUpdate {
     public void post(String entryId, BaseEntry baseEntry) {
         Map<String, Object> params = new HashMap<>();
         params.put("entryId", entryId);
-        params.put("baseEntry[tags]", String.join(", ", baseEntry.getTags()));
+        if (baseEntry.isTagged()) {
+            params.put("baseEntry[tags]", String.join(", ", baseEntry.getTags()));
+        }
+        if (baseEntry.hasCategories()) {
+            params.put("baseEntry[categories]", String.join(", ", baseEntry.getCategories()));
+        }
 
         client.post("/baseentry/action/update", params, String.class);
     }
