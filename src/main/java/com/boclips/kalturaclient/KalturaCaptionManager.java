@@ -50,7 +50,7 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
         if (hasCaptions) {
             return CaptionStatus.AUTO_GENERATED_AVAILABLE;
         }
-        if (baseEntry.isTaggedWith("processing")) {
+        if (baseEntry.hasCategory("3play_processed")) {
             return CaptionStatus.PROCESSING;
         }
         if (baseEntry.isTagged()) {

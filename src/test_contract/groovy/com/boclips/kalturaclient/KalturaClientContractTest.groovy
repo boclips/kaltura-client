@@ -387,7 +387,7 @@ class KalturaClientContractTest extends Specification {
     }
 
 
-    def "fetch caption status by entry id with already auto generated catpion - captions requested"(KalturaClient client) {
+    def "fetch caption status by entry id with already auto generated caption - captions requested"(KalturaClient client) {
         given:
         MediaEntry mediaEntry = create(client, referenceId)
 
@@ -416,7 +416,7 @@ class KalturaClientContractTest extends Specification {
         MediaEntry mediaEntry = create(client, referenceId)
 
         when:
-        client.tag(mediaEntry.id, Arrays.asList("processing"))
+        client.setCategories(mediaEntry.id, Arrays.asList("3play_processed"))
         def captionStatus = client.getCaptionStatus(mediaEntry.id)
 
 
