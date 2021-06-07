@@ -19,14 +19,14 @@ public class BaseEntry {
     }
 
     public boolean hasCategory(String category) {
-        return this.getCategories() != null
-                && this.getCategories().contains(category);
+        return this.hasCategories() && this.getCategories().contains(category);
     }
 
     public boolean isTagged() {
         return this.getTags() != null
                 && this.getTags().size() > 0;
     }
+
     public boolean hasCategories() {
         return this.getCategories() != null
                 && this.getCategories().size() > 0;

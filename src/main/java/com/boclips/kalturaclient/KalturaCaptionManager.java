@@ -47,11 +47,11 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
         if (baseEntry.isTaggedWith(CaptionRequest.CAPTION_3PLAY.tag)) {
             return CaptionStatus.REQUESTED;
         }
-        if (hasCaptions) {
-            return CaptionStatus.AUTO_GENERATED_AVAILABLE;
-        }
         if (baseEntry.hasCategory("3play_processed")) {
             return CaptionStatus.PROCESSING;
+        }
+        if (hasCaptions) {
+            return CaptionStatus.AUTO_GENERATED_AVAILABLE;
         }
         if (baseEntry.isTagged()) {
             return CaptionStatus.UNKNOWN;
