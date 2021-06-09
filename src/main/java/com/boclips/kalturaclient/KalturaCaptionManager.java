@@ -1,13 +1,18 @@
 package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
+
 public interface KalturaCaptionManager extends KalturaEntryManager {
+    @Slf4j
+    final class LogHolder {
+    }
 
     CaptionAsset createCaptionForVideo(String entryId, CaptionAsset captionAsset, String content);
 
@@ -31,6 +36,7 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
     }
 
     default CaptionStatus getCaptionStatus(String entryId) {
+        LogHolder.log.info("Fetching caption status for: " + entryId);
         val captionsForVideo = getCaptionsForVideo(entryId);
         val baseEntry = getBaseEntry(entryId);
         val hasCaptions = captionsForVideo.size() > 0;
@@ -42,6 +48,7 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
             return CaptionStatus.HUMAN_GENERATED_AVAILABLE;
         }
         if (baseEntry == null) {
+            LogHolder.log.info("Cannot find base entry for: " + entryId + ", falling back to unknown caption status");
             return CaptionStatus.UNKNOWN;
         }
         if (baseEntry.isTaggedWith(CaptionRequest.CAPTION_3PLAY.tag)) {
@@ -54,6 +61,7 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
             return CaptionStatus.AUTO_GENERATED_AVAILABLE;
         }
         if (baseEntry.isTagged()) {
+            LogHolder.log.info("Base entry is already tagged for: " + entryId + " with" + baseEntry.getTags() + " tags, falling back to unknown caption status");
             return CaptionStatus.UNKNOWN;
         }
 
