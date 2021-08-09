@@ -29,7 +29,8 @@ public class KalturaRestClient {
         this.retryPolicy = new RetryPolicy<>()
                 .handle(Exception.class)
                 .withBackoff(1, 15, ChronoUnit.SECONDS)
-                .withMaxRetries(3).onRetriesExceeded(e -> {
+                .withMaxRetries(3)
+                .onRetriesExceeded(e -> {
                     throw new KalturaRetryExceededException(e.getFailure().getMessage(), e.getFailure().getCause());
                 });
     }
