@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient.http;
 
+import com.boclips.kalturaclient.config.KalturaRetryExceededException;
 import com.boclips.kalturaclient.session.SessionGenerator;
 import lombok.extern.slf4j.Slf4j;
 import net.jodah.failsafe.Failsafe;
@@ -28,7 +29,9 @@ public class KalturaRestClient {
         this.retryPolicy = new RetryPolicy<>()
                 .handle(Exception.class)
                 .withBackoff(1, 15, ChronoUnit.SECONDS)
-                .withMaxRetries(3);
+                .withMaxRetries(3).onRetriesExceeded(e -> {
+                    throw new KalturaRetryExceededException(e.getFailure().getMessage(), e.getFailure().getCause());
+                });
     }
 
     public <T> T get(String path, Map<String, Object> queryParams, Class<T> responseType) {
