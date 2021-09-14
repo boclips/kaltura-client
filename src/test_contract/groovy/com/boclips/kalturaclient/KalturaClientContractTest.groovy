@@ -578,10 +578,6 @@ class KalturaClientContractTest extends Specification {
         if (System.getenv("SECRET") != null) {
             configuration["SECRET"] = System.getenv("SECRET")
         }
-        if (System.getenv("FLAVOR_PARAM_IDS") != null) {
-            configuration["FLAVOR_PARAM_IDS"] = System.getenv("FLAVOR_PARAM_IDS")
-        }
-
         return configuration
     }
 

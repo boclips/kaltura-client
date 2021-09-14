@@ -31,7 +31,6 @@ jobs:
       PARTNER_ID: ((kaltura-client.partner-id))
       USER_ID: ((kaltura-client.user-id))
       SECRET: ((kaltura-client.secret))
-      FLAVOR_PARAM_IDS: ((kaltura-client.flavor-param-ids))
 
 - name: cut-release
   public: false

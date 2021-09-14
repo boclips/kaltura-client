@@ -27,6 +27,5 @@ In order for them to run successfully, the following environment variables need 
     PARTNER_ID
     USER_ID
     SECRET
-    FLAVOR_PARAM_IDS
 
 Execute `src/test_contract/resources/setup-contract-test` to download some secret configuration from lastpass.

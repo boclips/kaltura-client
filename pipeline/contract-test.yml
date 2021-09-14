@@ -14,7 +14,6 @@ params:
   PARTNER_ID:
   USER_ID:
   SECRET:
-  FLAVOR_PARAM_IDS:
 
 caches:
 - path: source/.gradle
