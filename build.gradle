@@ -1,7 +1,7 @@
 plugins {
     id 'groovy'
     id 'java'
-    id 'org.owasp.dependencycheck' version '6.1.1'
+    id 'org.owasp.dependencycheck' version '6.4.1.1'
 }
 
 group 'com.boclips'
@@ -66,9 +66,8 @@ task testContract(type: Test) {
 }
 
 dependencyCheck {
-    failBuildOnCVSS = 4
-    data.directory = './dependency-check-cache'
+    failBuildOnCVSS = 7
     analyzers.assemblyEnabled = false
     suppressionFile = './dependency-check-suppressions.xml'
-    outputDirectory = 'security-report'
+    outputDirectory = "$rootDir/security-report"
 }
