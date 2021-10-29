@@ -7,7 +7,7 @@ plugins {
 group 'com.boclips'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 11
 
 apply plugin: 'org.owasp.dependencycheck'
 
@@ -27,26 +27,25 @@ sourceSets {
 }
 
 dependencies {
+    annotationProcessor 'org.projectlombok:lombok:1.18.2'
+    compileOnly 'org.projectlombok:lombok:1.18.2'
+
     implementation 'com.mashape.unirest:unirest-java:1.4.9'
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
-    implementation 'org.projectlombok:lombok:1.18.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'org.apache.commons:commons-collections4:4.4'
     implementation 'org.apache.commons:commons-collections4:4.4'
     implementation 'net.jodah:failsafe:2.3.1'
+    implementation("com.damnhandy:handy-uri-templates:2.1.8")
 
     testImplementation 'au.com.dius:pact-jvm-provider_2.11:3.5.6'
     testImplementation 'au.com.dius:pact-jvm-consumer-groovy_2.11:3.5.6'
     testImplementation 'org.yaml:snakeyaml:1.23'
-
-    implementation("com.damnhandy:handy-uri-templates:2.1.8")
-
-    testImplementation("com.damnhandy:handy-uri-templates:2.1.8")
-
+    testImplementation 'com.damnhandy:handy-uri-templates:2.1.8'
     testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4'
-    testImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.9'
+    testImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.21'
     testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.8.22'
     testImplementation group: 'org.objenesis', name: 'objenesis', version: '1.2'
 
