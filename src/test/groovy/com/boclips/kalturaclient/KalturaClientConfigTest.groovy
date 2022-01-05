@@ -14,6 +14,8 @@ class KalturaClientConfigTest extends Specification {
                 .secret("secret")
                 .baseUrl("common://kaltura.com/api")
                 .sessionTtl(120)
+                .captionProviderApiKey("apiKey")
+                .captionProviderHostname("hostname.com")
                 .build()
 
         then:
@@ -30,6 +32,8 @@ class KalturaClientConfigTest extends Specification {
                 .partnerId("partner id")
                 .userId("")
                 .secret("secret")
+                .captionProviderApiKey("apiKey")
+                .captionProviderHostname("hostname.com")
                 .build()
 
         then:
@@ -43,6 +47,8 @@ class KalturaClientConfigTest extends Specification {
                 .partnerId("")
                 .userId("user")
                 .secret("secret")
+                .captionProviderApiKey("apiKey")
+                .captionProviderHostname("hostname.com")
                 .build()
 
         then:
@@ -56,10 +62,42 @@ class KalturaClientConfigTest extends Specification {
                 .partnerId("partnerid")
                 .userId("user")
                 .secret("")
+                .captionProviderApiKey("apiKey")
+                .captionProviderHostname("hostname.com")
                 .build()
 
         then:
         KalturaClientConfigException ex = thrown()
         ex.message == "Invalid secret: []"
+    }
+
+    def 'throws when captionProviderApiKey is blank'() {
+        when:
+        KalturaClientConfig.builder()
+                .partnerId("partnerid")
+                .userId("user")
+                .secret("secret")
+                .captionProviderApiKey("")
+                .captionProviderHostname("hostname.com")
+                .build()
+
+        then:
+        KalturaClientConfigException ex = thrown()
+        ex.message == "Invalid captionProviderApiKey: []"
+    }
+
+    def 'throws when captionProviderHostname is blank'() {
+        when:
+        KalturaClientConfig.builder()
+                .partnerId("partnerid")
+                .userId("user")
+                .secret("secret")
+                .captionProviderApiKey("api-key")
+                .captionProviderHostname("")
+                .build()
+
+        then:
+        KalturaClientConfigException ex = thrown()
+        ex.message == "Invalid captionProviderHostname: []"
     }
 }

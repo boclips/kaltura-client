@@ -18,13 +18,15 @@ class KalturaClientV3Test extends Specification {
                 .userId("user-id")
                 .secret("secret")
                 .baseUrl("common://kaltura.com/api")
+                .captionProviderHostname("hostname.com")
+                .captionProviderApiKey("api-key")
                 .sessionTtl(120)
                 .build()
 
         FlavorParamsListResource flavorParamsListResource = FlavorParamsListResourceFactory.sample()
 
         when:
-        KalturaClientV3 kalturaClient = new KalturaClientV3(httpClient, config)
+        KalturaClientV3 kalturaClient = new KalturaClientV3(httpClient, config, null)
 
         then:
         1 * httpClient.get("/flavorparams/action/list", _, _) >> flavorParamsListResource

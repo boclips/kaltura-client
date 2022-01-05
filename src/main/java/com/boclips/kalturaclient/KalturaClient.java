@@ -12,7 +12,11 @@ import java.util.List;
 public interface KalturaClient extends KalturaEntryManager, KalturaVideoAssetManager, KalturaCaptionManager {
 
     static KalturaClient create(KalturaClientConfig config) {
-        return KalturaClientV3.create(config, new RestSessionGenerator(new SessionRetriever(config), config.getSessionTtl()));
+        return KalturaClientV3.create(
+            config,
+            new RestSessionGenerator(new SessionRetriever(config), config.getSessionTtl()),
+            config.createCaptionProviderConfig()
+        );
     }
 
     List<FlavorParams> getFlavorParams();

@@ -1,18 +1,28 @@
 package com.boclips.kalturaclient.config;
 
+import com.boclips.kalturaclient.captionsProvider.CaptionProviderConfig;
+
 public class KalturaClientConfig {
     private final String baseUrl;
     private final Integer sessionTtl;
     private final String partnerId;
     private final String userId;
     private final String secret;
+    private final String captionsProviderApiKey;
+    private final String captionsProviderHostname;
 
-    private KalturaClientConfig(String partnerId, String userId, String secret, String baseUrl, Integer sessionTtl) {
+    private KalturaClientConfig(String partnerId, String userId, String secret, String baseUrl, Integer sessionTtl, String captionsProviderApiKey, String captionsProviderHostname) {
         this.partnerId = partnerId;
         this.userId = userId;
         this.secret = secret;
         this.baseUrl = baseUrl;
         this.sessionTtl = sessionTtl;
+        this.captionsProviderApiKey = captionsProviderApiKey;
+        this.captionsProviderHostname = captionsProviderHostname;
+    }
+
+    public CaptionProviderConfig createCaptionProviderConfig() {
+        return new CaptionProviderConfig(this.captionsProviderApiKey, this.captionsProviderHostname);
     }
 
     public String getBaseUrl() {
@@ -45,6 +55,8 @@ public class KalturaClientConfig {
         private String partnerId;
         private String userId;
         private String secret;
+        private String captionProviderApiKey = null;
+        private String captionProviderHostname = null;
 
         private Builder() {
         }
@@ -52,7 +64,7 @@ public class KalturaClientConfig {
         public KalturaClientConfig build() {
             validate();
 
-            return new KalturaClientConfig(partnerId, userId, secret, baseUrl, sessionTtl);
+            return new KalturaClientConfig(partnerId, userId, secret, baseUrl, sessionTtl, captionProviderApiKey, captionProviderHostname);
         }
 
         public Builder baseUrl(String baseUrl) {
@@ -80,6 +92,16 @@ public class KalturaClientConfig {
             return this;
         }
 
+        public Builder captionProviderApiKey(String captionsProviderApiKey) {
+            this.captionProviderApiKey = captionsProviderApiKey;
+            return this;
+        }
+
+        public Builder captionProviderHostname(String captionsProviderHostname) {
+            this.captionProviderHostname = captionsProviderHostname;
+            return this;
+        }
+
         private void validate() {
             if (isNullOrEmpty(this.partnerId)) {
                 throw new KalturaClientConfigException(String.format("Invalid partner id: [%s]", this.partnerId));
@@ -89,6 +111,12 @@ public class KalturaClientConfig {
             }
             if (isNullOrEmpty(this.secret)) {
                 throw new KalturaClientConfigException(String.format("Invalid secret: [%s]", this.secret));
+            }
+            if (isNullOrEmpty(this.captionProviderApiKey)) {
+                throw new KalturaClientConfigException(String.format("Invalid captionProviderApiKey: [%s]", this.captionProviderApiKey));
+            }
+            if (isNullOrEmpty(this.captionProviderHostname)) {
+                throw new KalturaClientConfigException(String.format("Invalid captionProviderHostname: [%s]", this.captionProviderHostname));
             }
         }
 

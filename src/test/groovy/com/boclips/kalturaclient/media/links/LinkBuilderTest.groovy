@@ -18,6 +18,8 @@ class LinkBuilderTest extends Specification {
                     .partnerId("partner1")
                     .userId("user")
                     .secret("secret")
+                    .captionProviderHostname("hostname.com")
+                    .captionProviderApiKey("api-key")
                     .build()
         }
         linkBuilder = new LinkBuilder(client)

@@ -3,6 +3,8 @@ package com.boclips.kalturaclient
 import com.boclips.kalturaclient.captionasset.CaptionAsset
 import com.boclips.kalturaclient.captionasset.CaptionFormat
 import com.boclips.kalturaclient.captionasset.KalturaLanguage
+import com.boclips.kalturaclient.captionsProvider.CaptionProviderCaptionStatus
+import com.boclips.kalturaclient.captionsProvider.FakeCaptionProvider
 import com.boclips.kalturaclient.clients.TestKalturaClient
 import com.boclips.kalturaclient.config.KalturaClientConfig
 import com.boclips.kalturaclient.flavorParams.FlavorParams
@@ -22,13 +24,13 @@ class KalturaClientContractTest extends Specification {
     String referenceId = UUID.randomUUID().toString()
     MediaEntry createdMediaEntry = null
 
-
     void cleanup() {
         if (createdMediaEntry != null) {
             this.tryDeleteMediaEntry(createdMediaEntry.id)
         }
 
         createdMediaEntry = null
+        fakeCaptionProvider.clear()
     }
 
     void tryDeleteMediaEntry(String id) {
@@ -371,6 +373,22 @@ class KalturaClientContractTest extends Specification {
         client << [realClient(), testClient()]
     }
 
+    def "fetch caption status by entry id - captions requested but failed in provider, no captions available"(KalturaClient client) {
+        given:
+        String entryId = "1_b0n4v0p3"
+        client.setCategories(entryId, Arrays.asList("3play_processed"))
+        fakeCaptionProvider.setStatusForEntryId(entryId, CaptionProviderCaptionStatus.CANCELLED)
+
+        when:
+        def captionStatus = client.getCaptionStatus(entryId)
+
+        then:
+        captionStatus == KalturaCaptionManager.CaptionStatus.NOT_AVAILABLE
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
     def "fetch caption status by entry id - captions requested"(KalturaClient client) {
         given:
         MediaEntry mediaEntry = create(client, referenceId)
@@ -537,11 +555,14 @@ class KalturaClientContractTest extends Specification {
         client << [testClient(), realClient()]
     }
 
+    private static FakeCaptionProvider fakeCaptionProvider = new FakeCaptionProvider()
+
     private static TestKalturaClient testClient() {
         def testClient = new TestKalturaClient()
         testClient.setAssets("1_zk9l1gj8", Collections.singletonList(TestFactories.asset("1_eian2fxp", 6645, 377, 0, "1_zk9l1gj8", false, 320, 176, ZonedDateTime.parse("2019-11-11T18:03:33Z"))))
+        testClient.setAssets("1_b0n4v0p3", Collections.singletonList(TestFactories.asset("1_b0n4v0p3", 6645, 377, 0, "1_b0n4v0p3", false, 320, 176, ZonedDateTime.parse("2019-11-11T18:03:33Z"))))
         testClient.setAssets("1_1sv8y1q6", Collections.singletonList(TestFactories.asset("1_ogi1ui0u")))
-        testClient.addMediaEntry(MediaEntry.builder().id("1_zk9l1gj8").build())
+        testClient.setCaptionProvider(fakeCaptionProvider)
         return testClient
     }
 
@@ -551,6 +572,8 @@ class KalturaClientContractTest extends Specification {
                 .partnerId(configuration.get("PARTNER_ID"))
                 .userId(configuration.get("USER_ID"))
                 .secret(configuration.get("SECRET"))
+                .captionProviderApiKey(configuration.get("CAPTION_PROVIDER_API_KEY"))
+                .captionProviderHostname(configuration.get("CAPTION_PROVIDER_HOSTNAME"))
                 .build()
 
         return KalturaClient.create(config)
@@ -577,6 +600,9 @@ class KalturaClientContractTest extends Specification {
         }
         if (System.getenv("SECRET") != null) {
             configuration["SECRET"] = System.getenv("SECRET")
+        }
+        if (System.getenv("CAPTION_PROVIDER_API_KEY") != null) {
+            configuration["CAPTION_PROVIDER_API_KEY"] = System.getenv("CAPTION_PROVIDER_API_KEY")
         }
         return configuration
     }

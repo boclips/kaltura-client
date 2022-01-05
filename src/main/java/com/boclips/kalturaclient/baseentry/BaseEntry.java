@@ -12,6 +12,7 @@ public class BaseEntry {
     private final List<String> tags;
     private final List<String> categories;
     private final String thumbnailUrl;
+    private final String name;
 
     public boolean isTaggedWith(String tag) {
         return this.getTags() != null
@@ -30,5 +31,9 @@ public class BaseEntry {
     public boolean hasCategories() {
         return this.getCategories() != null
                 && this.getCategories().size() > 0;
+    }
+
+    public String getName() {
+        return this.name;
     }
 }

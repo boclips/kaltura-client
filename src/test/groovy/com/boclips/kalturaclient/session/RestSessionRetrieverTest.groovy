@@ -17,6 +17,8 @@ class RestSessionRetrieverTest extends Specification {
                         .secret("123")
                         .partnerId("abc")
                         .sessionTtl(8675309)
+                        .captionProviderHostname("hostname.com")
+                        .captionProviderApiKey("api-key")
                         .build()
         )
 

@@ -9,10 +9,14 @@ cwd="$(cd "$(dirname "$0")" && pwd)"
 partner_id="$(bo show credential concourse-main kaltura-client.kaltura-client partner-id)"
 user_id="$(bo show credential concourse-main kaltura-client.kaltura-client user-id)"
 secret="$(bo show credential concourse-main kaltura-client.kaltura-client secret)"
+three_play_api_key="$(bo show credential concourse-main kaltura-client.3play api-key)"
+three_play_hostname="$(bo show credential concourse-main kaltura-client.3play hostname)"
 
 # We're going to update the yml file here
 output="$cwd/contract-test-setup.yml"
 
-echo "PARTNER_ID: \"$partner_id\""             > "$output"
-echo "USER_ID: \"$user_id\""                   >> "$output"
-echo "SECRET: \"$secret\""                     >> "$output"
+echo "PARTNER_ID: \"$partner_id\""                                 > "$output"
+echo "USER_ID: \"$user_id\""                                       >> "$output"
+echo "SECRET: \"$secret\""                                         >> "$output"
+echo "CAPTION_PROVIDER_API_KEY: \"$three_play_api_key\""           >> "$output"
+echo "CAPTION_PROVIDER_HOSTNAME: \"$three_play_hostname\""         >> "$output"

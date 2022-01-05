@@ -18,6 +18,7 @@ public class BaseEntryResource {
     public String tags;
     public String categories;
     public String thumbnailUrl;
+    public String name;
 
     public BaseEntry toBaseEntry() {
         return BaseEntry.builder()
@@ -25,6 +26,7 @@ public class BaseEntryResource {
                 .tags(tags == null ? Collections.emptyList() : Arrays.asList(tags.split(", ")))
                 .categories(categories == null ? Collections.emptyList() : Arrays.asList(categories.split(", ")))
                 .thumbnailUrl(thumbnailUrl)
+                .name(name)
                 .build();
     }
 }

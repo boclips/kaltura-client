@@ -3,6 +3,8 @@ package com.boclips.kalturaclient.clients;
 import com.boclips.kalturaclient.KalturaClient;
 import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
+import com.boclips.kalturaclient.captionsProvider.CaptionProvider;
+import com.boclips.kalturaclient.captionsProvider.CaptionProviderCaptionStatus;
 import com.boclips.kalturaclient.config.KalturaClientConfig;
 import com.boclips.kalturaclient.flavorAsset.Asset;
 import com.boclips.kalturaclient.flavorParams.FlavorParams;
@@ -33,12 +35,15 @@ public class TestKalturaClient implements KalturaClient {
     private final Map<String, String> entryIdsByThumbAssetId = new HashMap<>();
     private final LinkBuilder linkBuilder;
     private KalturaClientConfig config;
+    private CaptionProvider captionProvider;
 
     public TestKalturaClient() {
         config = KalturaClientConfig.builder()
                 .partnerId("partner-id")
                 .userId("user-id")
                 .secret("ssh-it-is-a-secret")
+                .captionProviderApiKey("api-key")
+                .captionProviderHostname("hostname.com")
                 .build();
         linkBuilder = new LinkBuilder(this);
     }
@@ -96,6 +101,7 @@ public class TestKalturaClient implements KalturaClient {
         createMediaEntry(MediaEntry.builder()
                 .referenceId(referenceId)
                 .id(id)
+                .name(referenceId + "_name")
                 .downloadUrl(downloadUrl(id))
                 .duration(duration)
                 .status(status)
@@ -169,6 +175,11 @@ public class TestKalturaClient implements KalturaClient {
                 .filter(asset -> asset.getId().equals(captionAssetId))
                 .findAny()
                 .ifPresent(assets::remove));
+    }
+
+    @Override
+    public CaptionProviderCaptionStatus getCaptionStatusFromCaptionProvider(String title, String entryId) {
+        return this.captionProvider.getCaptionStatus(title, entryId);
     }
 
     @Override
@@ -277,6 +288,10 @@ public class TestKalturaClient implements KalturaClient {
             return new URI("/asset-download/" + assetId + ".mp4");
         }
         return null;
+    }
+
+    public void setCaptionProvider(CaptionProvider provider) {
+        this.captionProvider = provider;
     }
 
     public void setAssets(String entryId, List<Asset> assets) {

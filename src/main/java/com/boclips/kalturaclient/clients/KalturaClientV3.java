@@ -3,6 +3,10 @@ package com.boclips.kalturaclient.clients;
 import com.boclips.kalturaclient.KalturaClient;
 import com.boclips.kalturaclient.baseentry.*;
 import com.boclips.kalturaclient.captionasset.*;
+import com.boclips.kalturaclient.captionsProvider.CaptionProvider;
+import com.boclips.kalturaclient.captionsProvider.CaptionProviderCaptionStatus;
+import com.boclips.kalturaclient.captionsProvider.CaptionProviderConfig;
+import com.boclips.kalturaclient.captionsProvider.ThreePlayCaptionProvider;
 import com.boclips.kalturaclient.config.KalturaClientConfig;
 import com.boclips.kalturaclient.flavorAsset.*;
 import com.boclips.kalturaclient.flavorParams.FlavorParams;
@@ -48,15 +52,19 @@ public class KalturaClientV3 implements KalturaClient {
     private final FlavorAssetGetDownloadUrl flavorAssetGetDownloadUrl;
     private final ThumbnailAssetAdd thumbnailAssetAdd;
     private final SetThumbnailAsDefault setThumbnailAsDefault;
+    private final CaptionProvider captionProvider;
 
-    public static KalturaClientV3 create(KalturaClientConfig config, SessionGenerator sessionGenerator) {
+
+    public static KalturaClientV3 create(KalturaClientConfig config, SessionGenerator sessionGenerator, CaptionProviderConfig captionProviderConfig) {
         KalturaRestClient client = KalturaRestClient.create(config.getBaseUrl(), sessionGenerator);
+        CaptionProvider captionProvider = ThreePlayCaptionProvider.create(captionProviderConfig);
 
-        return new KalturaClientV3(client, config);
+        return new KalturaClientV3(client, config, captionProvider);
     }
 
-    KalturaClientV3(KalturaRestClient restClient, KalturaClientConfig config) {
+    KalturaClientV3(KalturaRestClient restClient, KalturaClientConfig config, CaptionProvider captionProvider) {
         this.config = config;
+        this.captionProvider = captionProvider;
 
         this.baseEntryGet = new BaseEntryGetClient(restClient);
         this.baseEntryUpdate = new BaseEntryUpdateClient(restClient);
@@ -188,6 +196,11 @@ public class KalturaClientV3 implements KalturaClient {
     @Override
     public void deleteCaption(String captionAssetId) {
         captionAssetDelete.post(captionAssetId);
+    }
+
+    @Override
+    public CaptionProviderCaptionStatus getCaptionStatusFromCaptionProvider(String title, String entryId) {
+        return this.captionProvider.getCaptionStatus(title, entryId);
     }
 
     @Override

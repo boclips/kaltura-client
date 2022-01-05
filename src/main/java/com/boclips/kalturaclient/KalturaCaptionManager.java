@@ -1,12 +1,15 @@
 package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
+import com.boclips.kalturaclient.captionsProvider.CaptionProviderCaptionStatus;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+
+import static com.boclips.kalturaclient.captionsProvider.CaptionProviderCaptionStatus.CANCELLED;
 
 
 public interface KalturaCaptionManager extends KalturaEntryManager {
@@ -23,6 +26,8 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
     URI getCaptionAssetUrl(String captionAssetId);
 
     void deleteCaption(String captionAssetId);
+
+    CaptionProviderCaptionStatus getCaptionStatusFromCaptionProvider(String title, String entryId);
 
     default void requestCaption(String entryId) {
         tag(entryId, Collections.singletonList(CaptionRequest.CAPTION_3PLAY.tag));
@@ -53,6 +58,9 @@ public interface KalturaCaptionManager extends KalturaEntryManager {
         }
         if (baseEntry.isTaggedWith(CaptionRequest.CAPTION_3PLAY.tag)) {
             return CaptionStatus.REQUESTED;
+        }
+        if (baseEntry.hasCategory("3play_processed") && CANCELLED.equals(getCaptionStatusFromCaptionProvider(baseEntry.getName(), baseEntry.getId()))) {
+            return CaptionStatus.NOT_AVAILABLE;
         }
         if (baseEntry.hasCategory("3play_processed")) {
             return CaptionStatus.PROCESSING;
