@@ -31,6 +31,8 @@ jobs:
       PARTNER_ID: ((kaltura-client.partner-id))
       USER_ID: ((kaltura-client.user-id))
       SECRET: ((kaltura-client.secret))
+      CAPTION_PROVIDER_API_KEY: ((3play.api-key))
+      CAPTION_PROVIDER_HOSTNAME: ((3play.hostname))
 
 - name: cut-release
   public: false
