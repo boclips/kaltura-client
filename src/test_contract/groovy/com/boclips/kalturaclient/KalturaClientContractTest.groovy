@@ -604,6 +604,9 @@ class KalturaClientContractTest extends Specification {
         if (System.getenv("CAPTION_PROVIDER_API_KEY") != null) {
             configuration["CAPTION_PROVIDER_API_KEY"] = System.getenv("CAPTION_PROVIDER_API_KEY")
         }
+        if (System.getenv("CAPTION_PROVIDER_HOSTNAME") != null) {
+            configuration["CAPTION_PROVIDER_HOSTNAME"] = System.getenv("CAPTION_PROVIDER_HOSTNAME")
+        }
         return configuration
     }
 
