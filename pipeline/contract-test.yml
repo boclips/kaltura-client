@@ -14,6 +14,8 @@ params:
   PARTNER_ID:
   USER_ID:
   SECRET:
+  CAPTION_PROVIDER_API_KEY:
+  CAPTION_PROVIDER_HOSTNAME:
 
 caches:
 - path: source/.gradle
