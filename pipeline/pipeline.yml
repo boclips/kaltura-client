@@ -32,7 +32,7 @@ jobs:
       USER_ID: ((kaltura-client.user-id))
       SECRET: ((kaltura-client.secret))
       CAPTION_PROVIDER_API_KEY: ((3play.api-key))
-      CAPTION_PROVIDER_HOSTNAME: ((3play.hostname))
+      CAPTION_PROVIDER_HOSTNAME: "api.3playmedia.com"
 
 - name: cut-release
   public: false
