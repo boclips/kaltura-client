@@ -7,8 +7,6 @@ plugins {
 group 'com.boclips'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 11
-
 apply plugin: 'org.owasp.dependencycheck'
 
 repositories {
@@ -26,6 +24,12 @@ sourceSets {
     }
 }
 
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
 dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.2'
     compileOnly 'org.projectlombok:lombok:1.18.2'
