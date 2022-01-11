@@ -1,5 +1,6 @@
 package com.boclips.kalturaclient.clients;
 
+import com.boclips.kalturaclient.CaptionStatus;
 import com.boclips.kalturaclient.KalturaClient;
 import com.boclips.kalturaclient.baseentry.*;
 import com.boclips.kalturaclient.captionasset.*;
@@ -177,7 +178,6 @@ public class KalturaClientV3 implements KalturaClient {
         return captionAssetSetContent.post(asset.getId(), content);
     }
 
-
     @Override
     public List<CaptionAsset> getCaptionsForVideo(String entryId) {
         return captionAssetList.get(entryIdEqual(entryId));
@@ -199,8 +199,32 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public CaptionProviderCaptionStatus getCaptionStatusFromCaptionProvider(String title, String entryId) {
-        return this.captionProvider.getCaptionStatus(title, entryId);
+    public void requestCaption(String entryId) {
+        tag(entryId, Collections.singletonList(captionProvider.getUploadRequestTag()));
+    }
+
+    @Override
+    public CaptionStatus getCaptionStatus(String entryId) {
+        return BaseEntryWithCaptions.builder()
+            .id(entryId)
+            .baseEntry(getBaseEntry(entryId))
+            .captions(getCaptionsForVideo(entryId))
+            .captionProvider(captionProvider)
+            .build()
+            .getCaptionStatus();
+    }
+
+    @Override
+    public CaptionProvider getCaptionProvider() {
+        return this.captionProvider;
+    }
+
+    @Override
+    public CaptionAsset getHumanGeneratedCaptionAsset(String entryId)  {
+        return getCaptionsForVideo(entryId).stream()
+            .filter(CaptionAsset::isHumanGenerated)
+            .findFirst()
+            .orElse(null);
     }
 
     @Override

@@ -35,6 +35,16 @@ public class ThreePlayCaptionProvider implements CaptionProvider {
         return status;
     }
 
+    @Override
+    public String uploadedToProviderTag() {
+        return "3play_processed";
+    }
+
+    @Override
+    public String getUploadRequestTag() {
+        return "3play";
+    }
+
     private CaptionStatusResponse fetchTranscriptStatus(String assetName, URL transcriptUrl) {
         try {
             return httpClient.execute(transcriptUrl, CaptionStatusResponse.class);

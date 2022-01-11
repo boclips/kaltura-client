@@ -326,7 +326,7 @@ class KalturaClientContractTest extends Specification {
         def captionStatus = client.getCaptionStatus(mediaEntry.id)
 
         then:
-        captionStatus == KalturaCaptionManager.CaptionStatus.AUTO_GENERATED_AVAILABLE
+        captionStatus == CaptionStatus.AUTO_GENERATED_AVAILABLE
 
         where:
         client << [realClient(), testClient()]
@@ -353,7 +353,7 @@ class KalturaClientContractTest extends Specification {
         def captionStatus = client.getCaptionStatus(mediaEntry.id)
 
         then:
-        captionStatus == KalturaCaptionManager.CaptionStatus.HUMAN_GENERATED_AVAILABLE
+        captionStatus == CaptionStatus.HUMAN_GENERATED_AVAILABLE
 
         where:
         client << [realClient(), testClient()]
@@ -367,7 +367,7 @@ class KalturaClientContractTest extends Specification {
         def captionStatus = client.getCaptionStatus(mediaEntry.id)
 
         then:
-        captionStatus == KalturaCaptionManager.CaptionStatus.NOT_AVAILABLE
+        captionStatus == CaptionStatus.NOT_AVAILABLE
 
         where:
         client << [realClient(), testClient()]
@@ -383,7 +383,7 @@ class KalturaClientContractTest extends Specification {
         def captionStatus = client.getCaptionStatus(entryId)
 
         then:
-        captionStatus == KalturaCaptionManager.CaptionStatus.NOT_AVAILABLE
+        captionStatus == CaptionStatus.NOT_AVAILABLE
 
         where:
         client << [realClient(), testClient()]
@@ -398,7 +398,7 @@ class KalturaClientContractTest extends Specification {
         def captionStatus = client.getCaptionStatus(mediaEntry.id)
 
         then:
-        captionStatus == KalturaCaptionManager.CaptionStatus.REQUESTED
+        captionStatus == CaptionStatus.REQUESTED
 
         where:
         client << [realClient(), testClient()]
@@ -423,7 +423,7 @@ class KalturaClientContractTest extends Specification {
         def captionStatus = client.getCaptionStatus(mediaEntry.id)
 
         then:
-        captionStatus == KalturaCaptionManager.CaptionStatus.REQUESTED
+        captionStatus == CaptionStatus.REQUESTED
 
         where:
         client << [realClient(), testClient()]
@@ -439,7 +439,7 @@ class KalturaClientContractTest extends Specification {
 
 
         then:
-        captionStatus == KalturaCaptionManager.CaptionStatus.PROCESSING
+        captionStatus == CaptionStatus.PROCESSING
 
         where:
         client << [realClient(), testClient()]
@@ -488,7 +488,7 @@ class KalturaClientContractTest extends Specification {
         def captionStatus = client.getCaptionStatus(mediaEntry.id)
 
         then:
-        captionStatus == KalturaCaptionManager.CaptionStatus.UNKNOWN
+        captionStatus == CaptionStatus.UNKNOWN
 
         where:
         client << [realClient(), testClient()]

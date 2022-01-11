@@ -13,6 +13,16 @@ public class FakeCaptionProvider implements CaptionProvider {
         return titlesToStatusMap.getOrDefault(entryId, CaptionProviderCaptionStatus.UNKNOWN);
     }
 
+    @Override
+    public String uploadedToProviderTag() {
+        return "3play_processed";
+    }
+
+    @Override
+    public String getUploadRequestTag() {
+        return "3play";
+    }
+
     public void setStatusForEntryId(String entryId, CaptionProviderCaptionStatus status) {
         titlesToStatusMap.put(entryId, status);
     }
