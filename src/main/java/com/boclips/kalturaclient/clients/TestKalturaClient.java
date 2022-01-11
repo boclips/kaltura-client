@@ -7,6 +7,7 @@ import com.boclips.kalturaclient.baseentry.BaseEntryWithCaptions;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
 import com.boclips.kalturaclient.captionsProvider.CaptionProvider;
 import com.boclips.kalturaclient.captionsProvider.CaptionProviderCaptionStatus;
+import com.boclips.kalturaclient.captionsProvider.FakeCaptionProvider;
 import com.boclips.kalturaclient.config.KalturaClientConfig;
 import com.boclips.kalturaclient.flavorAsset.Asset;
 import com.boclips.kalturaclient.flavorParams.FlavorParams;
@@ -48,6 +49,7 @@ public class TestKalturaClient implements KalturaClient {
                 .captionProviderHostname("hostname.com")
                 .build();
         linkBuilder = new LinkBuilder(this);
+        captionProvider = new FakeCaptionProvider();
     }
 
     @Experimental
