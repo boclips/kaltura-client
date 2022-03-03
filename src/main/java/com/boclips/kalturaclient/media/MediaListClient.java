@@ -24,15 +24,13 @@ public class MediaListClient implements MediaList {
 
     @Override
     public List<MediaEntry> get(RequestFilters filters) {
-        List<MediaEntry> result;
         try {
-            result = this.processor.process(listMediaEntries(filters));
+            return this.processor.process(listMediaEntries(filters));
         } catch (KalturaClientApiException e) {
             log.warn("Failed to fetch data from Kaltura. Refreshing session", e);
             this.client.refreshSession();
-            result = this.processor.process(listMediaEntries(filters));
+            return this.processor.process(listMediaEntries(filters));
         }
-        return result;
     }
 
     @Override

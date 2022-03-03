@@ -15,4 +15,27 @@ class CaptionAssetProcessorTest extends Specification {
         then:
         assert assets == []
     }
+
+    def "it doesn't blow up on whole objects array being null"() {
+        given:
+        CaptionAssetListResource listResource = new CaptionAssetListResource(objects: null, totalCount: 1)
+        CaptionAssetProcessor processor = new CaptionAssetProcessor()
+
+        when:
+        List<CaptionAsset> assets = processor.processCaptionAssetListResource(listResource)
+
+        then:
+        assert assets == []
+    }
+
+    def "it doesn't blow up on whole caption asset resource being null"() {
+        given:
+        CaptionAssetProcessor processor = new CaptionAssetProcessor()
+
+        when:
+        List<CaptionAsset> assets = processor.processCaptionAssetListResource(null)
+
+        then:
+        assert assets == []
+    }
 }
