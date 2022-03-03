@@ -16,6 +16,7 @@ public class RestSessionGenerator implements SessionGenerator {
         this.sessionTtl = secondsTtl;
     }
 
+    @Override
     public KalturaSession get() {
         if (currentSession == null || hasExpired()) {
             generateSession();
@@ -24,13 +25,14 @@ public class RestSessionGenerator implements SessionGenerator {
         return new KalturaSession(this.currentSession, this.sessionExpiresAt);
     }
 
-    private boolean hasExpired() {
-        return Instant.now().toEpochMilli() + 5000 > sessionExpiresAt.toEpochMilli();
-    }
-
-    private void generateSession() {
+    @Override
+    public void generateSession() {
         log.debug("Generating a session with {} TTL", sessionTtl);
         this.currentSession = this.sessionRetriever.fetch();
         this.sessionExpiresAt = Instant.ofEpochMilli(Instant.now().toEpochMilli() + sessionTtl * 1000);
+    }
+
+    private boolean hasExpired() {
+        return Instant.now().toEpochMilli() + 5000 > sessionExpiresAt.toEpochMilli();
     }
 }

@@ -55,6 +55,10 @@ public class KalturaRestClient {
         return httpClient.postImage(this.baseUrl + path, appendQueryParameters(queryParams), uploadFileDescriptor, responseType);
     }
 
+    public void refreshSession() {
+        sessionGenerator.generateSession();
+    }
+
     private Map<String, Object> appendQueryParameters(final Map<String, Object> queryParams) {
         Map<String, Object> parameters = new HashMap<>(queryParams);
 

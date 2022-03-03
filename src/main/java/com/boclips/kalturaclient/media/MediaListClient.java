@@ -1,8 +1,10 @@
 package com.boclips.kalturaclient.media;
 
+import com.boclips.kalturaclient.http.KalturaClientApiException;
 import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.resources.MediaListResource;
+import lombok.extern.slf4j.Slf4j;
 import net.jodah.failsafe.RetryPolicy;
 
 import java.time.Duration;
@@ -10,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class MediaListClient implements MediaList {
     private final KalturaRestClient client;
     private final MediaProcessor processor;
@@ -21,8 +24,15 @@ public class MediaListClient implements MediaList {
 
     @Override
     public List<MediaEntry> get(RequestFilters filters) {
-        MediaListResource mediaListResource = listMediaEntries(filters);
-        return this.processor.process(mediaListResource);
+        List<MediaEntry> result;
+        try {
+            result = this.processor.process(listMediaEntries(filters));
+        } catch (KalturaClientApiException e) {
+            log.warn("Failed to fetch data from Kaltura. Refreshing session", e);
+            this.client.refreshSession();
+            result = this.processor.process(listMediaEntries(filters));
+        }
+        return result;
     }
 
     @Override
