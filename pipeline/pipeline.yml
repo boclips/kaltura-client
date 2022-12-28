@@ -69,7 +69,7 @@ resources:
 - name: source
   type: git
   source:
-    branch: master
+    branch: main
     private_key: ((kaltura-client.repo-key))
     uri: git@github.com:knowledgemotion/kaltura-client.git
 
