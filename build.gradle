@@ -1,7 +1,7 @@
 plugins {
     id 'groovy'
     id 'java'
-    id 'org.owasp.dependencycheck' version '6.4.1.1'
+    id 'org.owasp.dependencycheck' version '8.0.2'
 }
 
 group 'com.boclips'
