@@ -1,9 +1,10 @@
 package com.boclips.kalturaclient.http;
 
+import kong.unirest.ContentType;
 import lombok.Builder;
 import lombok.Data;
+
 import java.io.InputStream;
-import kong.unirest.ContentType;
 
 @Builder
 @Data
