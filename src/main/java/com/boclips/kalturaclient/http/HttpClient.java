@@ -1,27 +1,30 @@
 package com.boclips.kalturaclient.http;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.ObjectMapper;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.GetRequest;
-import com.mashape.unirest.request.HttpRequest;
-import com.mashape.unirest.request.HttpRequestWithBody;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
+import kong.unirest.GenericType;
+import kong.unirest.HttpResponse;
+import kong.unirest.ObjectMapper;
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
+import kong.unirest.GetRequest;
+import kong.unirest.HttpRequest;
+import kong.unirest.HttpRequestWithBody;
+
 public class HttpClient {
 
     public HttpClient() {
-        Unirest.setObjectMapper(new ObjectMapper() {
+        Unirest.config().setObjectMapper(new ObjectMapper() {
             private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
                     = new com.fasterxml.jackson.databind.ObjectMapper();
 
             {
+                jacksonObjectMapper.configure(JsonGenerator.Feature.IGNORE_UNKNOWN, true);
                 jacksonObjectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             }
 
@@ -30,6 +33,14 @@ public class HttpClient {
                     return jacksonObjectMapper.readValue(value, valueType);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
+                }
+            }
+
+            public <T> T readValue(String value, GenericType<T> genericType) {
+                try {
+                    return jacksonObjectMapper.readValue(value, jacksonObjectMapper.constructType(genericType.getType()));
+                } catch (IOException e) {
+                    throw new UnirestException(e);
                 }
             }
 
@@ -68,13 +79,12 @@ public class HttpClient {
         return makeRequest(post, queryParams, responseType);
     }
 
-    private <T> T makeRequest(HttpRequest request, Map<String, Object> queryParams, Class<T> responseType) {
+    private <T> T makeRequest(HttpRequest<?> request, Map<String, Object> queryParams, Class<T> responseType) {
         try {
-            HttpResponse<T> response = request
-                    .queryString(queryParams)
-                    .asObject(responseType);
+            HttpRequest<?> requestWithQuery = request.queryString(queryParams);
+            HttpResponse<T> response = requestWithQuery.asObject(responseType);
 
-            if(response.getStatus() >= 400) {
+            if (response.getStatus() >= 400) {
                 throw new RuntimeException(request.getHttpMethod().name() + " request to " + request.getUrl() + " failed with status " + response.getStatus());
             }
 
