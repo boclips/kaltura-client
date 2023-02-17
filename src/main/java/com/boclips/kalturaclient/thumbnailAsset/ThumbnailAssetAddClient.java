@@ -3,10 +3,11 @@ package com.boclips.kalturaclient.thumbnailAsset;
 import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.http.UploadFileDescriptor;
 import com.boclips.kalturaclient.thumbnailAsset.resources.ThumbnailAssetAddResource;
+import kong.unirest.ContentType;
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import kong.unirest.ContentType;
 
 public class ThumbnailAssetAddClient implements ThumbnailAssetAdd {
     private final KalturaRestClient client;
