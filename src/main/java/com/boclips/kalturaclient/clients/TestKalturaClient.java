@@ -6,7 +6,6 @@ import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.baseentry.BaseEntryWithCaptions;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
 import com.boclips.kalturaclient.captionsProvider.CaptionProvider;
-import com.boclips.kalturaclient.captionsProvider.CaptionProviderCaptionStatus;
 import com.boclips.kalturaclient.captionsProvider.FakeCaptionProvider;
 import com.boclips.kalturaclient.config.KalturaClientConfig;
 import com.boclips.kalturaclient.flavorAsset.Asset;
@@ -15,6 +14,7 @@ import com.boclips.kalturaclient.flavorParams.Quality;
 import com.boclips.kalturaclient.media.MediaEntry;
 import com.boclips.kalturaclient.media.MediaEntryStatus;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
+import com.boclips.kalturaclient.media.links.StreamUrlSessionGenerator;
 import lombok.SneakyThrows;
 import org.apache.http.annotation.Experimental;
 
@@ -48,7 +48,7 @@ public class TestKalturaClient implements KalturaClient {
                 .captionProviderApiKey("api-key")
                 .captionProviderHostname("hostname.com")
                 .build();
-        linkBuilder = new LinkBuilder(this);
+        linkBuilder = new LinkBuilder(this, new StreamUrlSessionGenerator(this.config));
         captionProvider = new FakeCaptionProvider();
     }
 

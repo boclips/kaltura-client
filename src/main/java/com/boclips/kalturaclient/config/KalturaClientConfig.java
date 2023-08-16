@@ -5,18 +5,20 @@ import com.boclips.kalturaclient.captionsProvider.CaptionProviderConfig;
 public class KalturaClientConfig {
     private final String baseUrl;
     private final Integer sessionTtl;
+    private final Integer streamingLinkSessionTtlHours;
     private final String partnerId;
     private final String userId;
     private final String secret;
     private final String captionsProviderApiKey;
     private final String captionsProviderHostname;
 
-    private KalturaClientConfig(String partnerId, String userId, String secret, String baseUrl, Integer sessionTtl, String captionsProviderApiKey, String captionsProviderHostname) {
+    private KalturaClientConfig(String partnerId, String userId, String secret, String baseUrl, Integer sessionTtl, String captionsProviderApiKey, String captionsProviderHostname, Integer streamingLinkSessionTtlHours) {
         this.partnerId = partnerId;
         this.userId = userId;
         this.secret = secret;
         this.baseUrl = baseUrl;
         this.sessionTtl = sessionTtl;
+        this.streamingLinkSessionTtlHours = streamingLinkSessionTtlHours;
         this.captionsProviderApiKey = captionsProviderApiKey;
         this.captionsProviderHostname = captionsProviderHostname;
     }
@@ -31,6 +33,10 @@ public class KalturaClientConfig {
 
     public Integer getSessionTtl() {
         return sessionTtl;
+    }
+
+    public Integer getStreamingLinkSessionTtlHours() {
+        return streamingLinkSessionTtlHours;
     }
 
     public String getPartnerId() {
@@ -52,6 +58,7 @@ public class KalturaClientConfig {
     public static class Builder {
         private String baseUrl = "https://www.kaltura.com/api_v3/service";
         private Integer sessionTtl = 60;
+        private Integer streamingLinkSessionTtlHours = 48;
         private String partnerId;
         private String userId;
         private String secret;
@@ -64,7 +71,7 @@ public class KalturaClientConfig {
         public KalturaClientConfig build() {
             validate();
 
-            return new KalturaClientConfig(partnerId, userId, secret, baseUrl, sessionTtl, captionProviderApiKey, captionProviderHostname);
+            return new KalturaClientConfig(partnerId, userId, secret, baseUrl, sessionTtl, captionProviderApiKey, captionProviderHostname, streamingLinkSessionTtlHours);
         }
 
         public Builder baseUrl(String baseUrl) {

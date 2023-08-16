@@ -8,13 +8,15 @@ import java.util.stream.Collectors;
 
 public class LinkBuilder {
     private final KalturaClient kalturaClient;
+    private final StreamUrlSessionGenerator streamUrlSessionGenerator;
 
     private final String BASE_THUMBNAIL_URL =
         "https://cdnapisec.kaltura.com/p/{partnerId}/thumbnail/entry_id/{entryId}/width/{thumbnailWidth}";
 
 
-    public LinkBuilder(KalturaClient kalturaClient) {
+    public LinkBuilder(KalturaClient kalturaClient, StreamUrlSessionGenerator streamUrlSessionGenerator) {
         this.kalturaClient = kalturaClient;
+        this.streamUrlSessionGenerator = streamUrlSessionGenerator;
     }
 
     /**
@@ -23,14 +25,15 @@ public class LinkBuilder {
      * @return A url to the stream manifest file
      * @see <a href="https://developer.kaltura.com/api-docs/Deliver-and-Distribute-Media/playManifest-streaming-api.html">The playManifest Service: Streaming API for Videos and Playlists</a>
      */
-    public String getStreamUrl(String entryId, StreamFormat streamingTechnique) {
-        return UriTemplate.fromTemplate(
+    public String getStreamUrl(String entryId, StreamFormat streamingTechnique, boolean includeSession) {
+        UriTemplate streamLinkTemplate = UriTemplate.fromTemplate(
                 "https://cdnapisec.kaltura.com" +
                         "/p/{partnerId}" +
                         "/sp/{partnerId}00" +
                         "/playManifest" +
                         "/entryId/{entryId}" +
                         "/format/{format}" +
+                        (includeSession ? "/ks/{kalturaSession}" : "") +
                         "/flavorParamIds/{flavorParamIds}" +
                         "/protocol/https/video.mp4"
         )
@@ -41,8 +44,17 @@ public class LinkBuilder {
                         .stream()
                         .map(flavorParams -> String.valueOf(flavorParams.getId()))
                         .collect(Collectors.joining(","))
-                )
-                .expand();
+                );
+
+        if (includeSession) {
+            try {
+                streamLinkTemplate.set("kalturaSession", this.streamUrlSessionGenerator.getForEntry(entryId));
+            } catch (Exception e) {
+                throw new GenerateKalturaSessionException(entryId, e);
+            }
+        }
+
+        return streamLinkTemplate.expand();
     }
 
     /**
