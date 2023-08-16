@@ -11,6 +11,7 @@ class LinkBuilderTest extends Specification {
 
     private KalturaClient client
     private LinkBuilder linkBuilder
+    private StreamUrlSessionGenerator linkSessionGenerator
 
     def "setup"() {
         client = Mock(KalturaClient) {
@@ -22,7 +23,8 @@ class LinkBuilderTest extends Specification {
                     .captionProviderApiKey("api-key")
                     .build()
         }
-        linkBuilder = new LinkBuilder(client)
+        linkSessionGenerator = Mock(StreamUrlSessionGenerator)
+        linkBuilder = new LinkBuilder(client, linkSessionGenerator)
     }
 
     def "can build thumbnail urls"() {
@@ -79,12 +81,41 @@ class LinkBuilderTest extends Specification {
         StreamFormat streamTechnique = StreamFormat.APPLE_HDS
 
         when:
-        String hlsStream = linkBuilder.getStreamUrl(entryId, streamTechnique)
+        String hlsStream = linkBuilder.getStreamUrl(entryId, streamTechnique, false)
 
         then:
         1 * client.getFlavorParams() >> FlavorParamsListFactory.sample()
         hlsStream.contains("entryId/media-entry-id")
         hlsStream.contains("format/" + streamTechnique.code)
         hlsStream.contains("flavorParamIds/1111%2C2222%2C3333")
+        !hlsStream.contains("/ks/")
+    }
+
+    def "can build hls stream urls with kaltura session attached"() {
+        given:
+        String entryId = "media-entry-id"
+        StreamFormat streamTechnique = StreamFormat.APPLE_HDS
+        linkSessionGenerator.getForEntry("media-entry-id") >> "session-for-media-entry-id"
+
+        when:
+        String hlsStream = linkBuilder.getStreamUrl(entryId, streamTechnique, true)
+
+        then:
+        1 * client.getFlavorParams() >> FlavorParamsListFactory.sample()
+        hlsStream.contains("/ks/session-for-media-entry-id")
+    }
+
+    def "throws KalturaSessionException when generating session fails"() {
+        given:
+        String entryId = "media-entry-id"
+        StreamFormat streamTechnique = StreamFormat.APPLE_HDS
+        linkSessionGenerator.getForEntry("media-entry-id") >> {throw new RuntimeException("something went wrong")}
+
+        when:
+        linkBuilder.getStreamUrl(entryId, streamTechnique, true)
+
+        then:
+        1 * client.getFlavorParams() >> FlavorParamsListFactory.sample()
+        thrown GenerateKalturaSessionException
     }
 }

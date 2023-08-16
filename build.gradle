@@ -42,6 +42,7 @@ dependencies {
     implementation 'org.apache.commons:commons-collections4:4.4'
     implementation 'net.jodah:failsafe:2.4.4'
     implementation("com.damnhandy:handy-uri-templates:2.1.8")
+    implementation("com.kaltura:kalturaApiClient:19.3.0")
 
     testImplementation 'au.com.dius:pact-jvm-provider_2.11:3.5.6'
     testImplementation 'au.com.dius:pact-jvm-consumer-groovy_2.11:3.5.24'

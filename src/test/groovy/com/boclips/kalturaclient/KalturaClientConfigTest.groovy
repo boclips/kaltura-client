@@ -14,6 +14,7 @@ class KalturaClientConfigTest extends Specification {
                 .secret("secret")
                 .baseUrl("common://kaltura.com/api")
                 .sessionTtl(120)
+                .streamingLinkSessionTtlHours(123)
                 .captionProviderApiKey("apiKey")
                 .captionProviderHostname("hostname.com")
                 .build()
@@ -24,6 +25,7 @@ class KalturaClientConfigTest extends Specification {
         config.secret == "secret"
         config.baseUrl == "common://kaltura.com/api"
         config.sessionTtl == 120
+        config.streamingLinkSessionTtlHours == 123
     }
 
     def 'throws when userId is blank'() {

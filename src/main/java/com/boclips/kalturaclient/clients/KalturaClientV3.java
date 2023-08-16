@@ -5,7 +5,6 @@ import com.boclips.kalturaclient.KalturaClient;
 import com.boclips.kalturaclient.baseentry.*;
 import com.boclips.kalturaclient.captionasset.*;
 import com.boclips.kalturaclient.captionsProvider.CaptionProvider;
-import com.boclips.kalturaclient.captionsProvider.CaptionProviderCaptionStatus;
 import com.boclips.kalturaclient.captionsProvider.CaptionProviderConfig;
 import com.boclips.kalturaclient.captionsProvider.ThreePlayCaptionProvider;
 import com.boclips.kalturaclient.config.KalturaClientConfig;
@@ -16,6 +15,7 @@ import com.boclips.kalturaclient.http.KalturaRestClient;
 import com.boclips.kalturaclient.http.RequestFilters;
 import com.boclips.kalturaclient.media.*;
 import com.boclips.kalturaclient.media.links.LinkBuilder;
+import com.boclips.kalturaclient.media.links.StreamUrlSessionGenerator;
 import com.boclips.kalturaclient.media.list.AllMediaList;
 import com.boclips.kalturaclient.session.SessionGenerator;
 import com.boclips.kalturaclient.thumbnailAsset.SetThumbnailAsDefault;
@@ -88,7 +88,7 @@ public class KalturaClientV3 implements KalturaClient {
         this.captionAssetServe = new CaptionAssetServeClient(restClient);
         this.captionAssetGetUrl = new CaptionAssetGetUrl(restClient);
 
-        this.linkBuilder = new LinkBuilder(this);
+        this.linkBuilder = new LinkBuilder(this, new StreamUrlSessionGenerator(this.config));
 
         this.flavorAssetList = new FlavorAssetListClient(restClient);
         this.flavorAssetGetDownloadUrl = new FlavorAssetGetDownloadUrlClient(restClient);
