@@ -569,7 +569,7 @@ class KalturaClientContractTest extends Specification {
     private KalturaClient realClient() {
         Map<String, String> configuration = readConfiguration()
         KalturaClientConfig config = KalturaClientConfig.builder()
-                .partnerId(configuration.get("PARTNER_ID"))
+                .partnerId(Integer.parseInt(configuration.get("PARTNER_ID")))
                 .userId(configuration.get("USER_ID"))
                 .secret(configuration.get("SECRET"))
                 .captionProviderApiKey(configuration.get("CAPTION_PROVIDER_API_KEY"))
