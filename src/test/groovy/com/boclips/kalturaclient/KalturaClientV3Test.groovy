@@ -14,7 +14,7 @@ class KalturaClientV3Test extends Specification {
         given:
         KalturaRestClient httpClient = Mock(KalturaRestClient)
         KalturaClientConfig config = KalturaClientConfig.builder()
-                .partnerId("partner-id")
+                .partnerId(123)
                 .userId("user-id")
                 .secret("secret")
                 .baseUrl("common://kaltura.com/api")

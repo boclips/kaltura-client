@@ -42,7 +42,7 @@ public class TestKalturaClient implements KalturaClient {
 
     public TestKalturaClient() {
         config = KalturaClientConfig.builder()
-                .partnerId("partner-id")
+                .partnerId(123)
                 .userId("user-id")
                 .secret("ssh-it-is-a-secret")
                 .captionProviderApiKey("api-key")
