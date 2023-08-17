@@ -21,7 +21,7 @@ public class StreamUrlSessionGenerator {
                 this.config.getSecret(),
                 this.config.getUserId(),
                 SessionType.USER,
-                Integer.parseInt(this.config.getPartnerId()),
+                this.config.getPartnerId(),
                 getTtlInSeconds(this.config.getStreamingLinkSessionTtlHours()),
                 "sview:" + entryId
         );

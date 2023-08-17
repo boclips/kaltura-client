@@ -16,7 +16,7 @@ class LinkBuilderTest extends Specification {
     def "setup"() {
         client = Mock(KalturaClient) {
             getConfig() >> KalturaClientConfig.builder()
-                    .partnerId("partner1")
+                    .partnerId(123)
                     .userId("user")
                     .secret("secret")
                     .captionProviderHostname("hostname.com")

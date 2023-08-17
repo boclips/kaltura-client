@@ -9,7 +9,7 @@ class KalturaClientConfigTest extends Specification {
     def 'builder creates a config'() {
         when:
         KalturaClientConfig config = KalturaClientConfig.builder()
-                .partnerId("partner-id")
+                .partnerId(123)
                 .userId("user-id")
                 .secret("secret")
                 .baseUrl("common://kaltura.com/api")
@@ -20,7 +20,7 @@ class KalturaClientConfigTest extends Specification {
                 .build()
 
         then:
-        config.partnerId == "partner-id"
+        config.partnerId == 123
         config.userId == "user-id"
         config.secret == "secret"
         config.baseUrl == "common://kaltura.com/api"
@@ -31,7 +31,7 @@ class KalturaClientConfigTest extends Specification {
     def 'throws when userId is blank'() {
         when:
         KalturaClientConfig.builder()
-                .partnerId("partner id")
+                .partnerId(123)
                 .userId("")
                 .secret("secret")
                 .captionProviderApiKey("apiKey")
@@ -43,10 +43,9 @@ class KalturaClientConfigTest extends Specification {
         ex.message == "Invalid user id: []"
     }
 
-    def 'throws when partnerId is blank'() {
+    def 'throws when partnerId is omitted'() {
         when:
         KalturaClientConfig.builder()
-                .partnerId("")
                 .userId("user")
                 .secret("secret")
                 .captionProviderApiKey("apiKey")
@@ -55,13 +54,13 @@ class KalturaClientConfigTest extends Specification {
 
         then:
         KalturaClientConfigException ex = thrown()
-        ex.message == "Invalid partner id: []"
+        ex.message == "partner id not specified"
     }
 
     def 'throws when secret is blank'() {
         when:
         KalturaClientConfig.builder()
-                .partnerId("partnerid")
+                .partnerId(123)
                 .userId("user")
                 .secret("")
                 .captionProviderApiKey("apiKey")
@@ -76,7 +75,7 @@ class KalturaClientConfigTest extends Specification {
     def 'throws when captionProviderApiKey is blank'() {
         when:
         KalturaClientConfig.builder()
-                .partnerId("partnerid")
+                .partnerId(123)
                 .userId("user")
                 .secret("secret")
                 .captionProviderApiKey("")
@@ -91,7 +90,7 @@ class KalturaClientConfigTest extends Specification {
     def 'throws when captionProviderHostname is blank'() {
         when:
         KalturaClientConfig.builder()
-                .partnerId("partnerid")
+                .partnerId(123)
                 .userId("user")
                 .secret("secret")
                 .captionProviderApiKey("api-key")

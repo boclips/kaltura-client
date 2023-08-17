@@ -6,13 +6,13 @@ public class KalturaClientConfig {
     private final String baseUrl;
     private final Integer sessionTtl;
     private final Integer streamingLinkSessionTtlHours;
-    private final String partnerId;
+    private final Integer partnerId;
     private final String userId;
     private final String secret;
     private final String captionsProviderApiKey;
     private final String captionsProviderHostname;
 
-    private KalturaClientConfig(String partnerId, String userId, String secret, String baseUrl, Integer sessionTtl, String captionsProviderApiKey, String captionsProviderHostname, Integer streamingLinkSessionTtlHours) {
+    private KalturaClientConfig(Integer partnerId, String userId, String secret, String baseUrl, Integer sessionTtl, String captionsProviderApiKey, String captionsProviderHostname, Integer streamingLinkSessionTtlHours) {
         this.partnerId = partnerId;
         this.userId = userId;
         this.secret = secret;
@@ -39,7 +39,7 @@ public class KalturaClientConfig {
         return streamingLinkSessionTtlHours;
     }
 
-    public String getPartnerId() {
+    public Integer getPartnerId() {
         return partnerId;
     }
 
@@ -59,7 +59,7 @@ public class KalturaClientConfig {
         private String baseUrl = "https://www.kaltura.com/api_v3/service";
         private Integer sessionTtl = 60;
         private Integer streamingLinkSessionTtlHours = 48;
-        private String partnerId;
+        private Integer partnerId;
         private String userId;
         private String secret;
         private String captionProviderApiKey = null;
@@ -89,7 +89,7 @@ public class KalturaClientConfig {
             return this;
         }
 
-        public Builder partnerId(String partnerId) {
+        public Builder partnerId(Integer partnerId) {
             this.partnerId = partnerId;
             return this;
         }
@@ -115,8 +115,8 @@ public class KalturaClientConfig {
         }
 
         private void validate() {
-            if (isNullOrEmpty(this.partnerId)) {
-                throw new KalturaClientConfigException(String.format("Invalid partner id: [%s]", this.partnerId));
+            if (this.partnerId == null) {
+                throw new KalturaClientConfigException("partner id not specified");
             }
             if (isNullOrEmpty(this.userId)) {
                 throw new KalturaClientConfigException(String.format("Invalid user id: [%s]", this.userId));
@@ -133,7 +133,7 @@ public class KalturaClientConfig {
         }
 
         private boolean isNullOrEmpty(String input) {
-            return (input == null || "".equals(input));
+            return (input == null || input.isEmpty());
         }
     }
 }

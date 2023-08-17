@@ -15,7 +15,7 @@ class RestSessionRetrieverTest extends Specification {
                         .baseUrl(String.format("http://localhost:%d", PORT))
                         .userId("user@kaltura.com")
                         .secret("123")
-                        .partnerId("abc")
+                        .partnerId(123)
                         .sessionTtl(8675309)
                         .captionProviderHostname("hostname.com")
                         .captionProviderApiKey("api-key")
@@ -44,7 +44,7 @@ class RestSessionRetrieverTest extends Specification {
                     method : 'POST',
                     path   : '/api_v3/service/session/action/start',
                     headers: ['Content-Type': 'application/x-www-form-urlencoded'],
-                    body   : 'expiry=8675309&format=1&partnerId=abc&secret=123&type=2&userId=user%40kaltura.com'
+                    body   : 'expiry=8675309&format=1&partnerId=123&secret=123&type=2&userId=user%40kaltura.com'
             ])
             willRespondWith([
                     status : 200,
