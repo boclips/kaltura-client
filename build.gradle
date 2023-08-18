@@ -57,7 +57,7 @@ dependencies {
     testImplementation("com.damnhandy:handy-uri-templates:2.1.8")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.spockframework:spock-core:1.1-groovy-2.4")
-    testImplementation("org.codehaus.groovy:groovy-all:2.4.21")
+    testImplementation("org.codehaus.groovy:groovy-all:3.0.18")
     testImplementation("net.bytebuddy:byte-buddy:1.14.6")
     testImplementation("org.objenesis:objenesis:1.2")
 
