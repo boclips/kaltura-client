@@ -1,14 +1,12 @@
 plugins {
-    id 'groovy'
-    id 'java'
-    id 'org.owasp.dependencycheck' version '8.1.0'
-    id("maven-publish")
+    id "groovy"
+    id "java"
+    id "org.owasp.dependencycheck" version '8.1.0'
+    id "maven-publish"
 }
 
-group 'com.boclips'
-version '1.0-SNAPSHOT'
-
-apply plugin: 'org.owasp.dependencycheck'
+group = "com.boclips"
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -22,50 +20,48 @@ sourceSets {
         groovy {
             compileClasspath += main.output + test.output
             runtimeClasspath += main.output + test.output
-            srcDir 'src/test_contract/groovy'
+            srcDir "src/test_contract/groovy"
         }
-        resources.srcDir file('src/test_contract/resources')
+        resources.srcDir file("src/test_contract/resources")
     }
 }
-
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(11)
     }
 }
-dependencies {
-    annotationProcessor 'org.projectlombok:lombok:1.18.2'
-    compileOnly 'org.projectlombok:lombok:1.18.2'
 
-    implementation 'com.konghq:unirest-java:3.14.5'
-    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
-    implementation 'org.slf4j:slf4j-api:1.7.25'
-    implementation 'org.apache.commons:commons-collections4:4.4'
-    implementation 'org.apache.commons:commons-collections4:4.4'
-    implementation 'net.jodah:failsafe:2.4.4'
+configurations {
+    testContractImplementation.extendsFrom(implementation)
+    testContractImplementation.extendsFrom(testImplementation)
+}
+
+dependencies {
+    annotationProcessor("org.projectlombok:lombok:1.18.2")
+    compileOnly("org.projectlombok:lombok:1.18.2")
+
+    implementation("com.konghq:unirest-java:3.14.5")
+    implementation("org.apache.httpcomponents:httpclient:4.5.13")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
+    implementation("org.slf4j:slf4j-api:1.7.25")
+    implementation("org.apache.commons:commons-collections4:4.4")
+    implementation("org.apache.commons:commons-collections4:4.4")
+    implementation("net.jodah:failsafe:2.4.4")
     implementation("com.damnhandy:handy-uri-templates:2.1.8")
     implementation("com.kaltura:kalturaApiClient:19.3.0")
 
-    testImplementation 'au.com.dius:pact-jvm-provider_2.11:3.5.6'
-    testImplementation 'au.com.dius:pact-jvm-consumer-groovy_2.11:3.5.24'
-    testImplementation 'org.yaml:snakeyaml:2.0'
-    testImplementation 'com.damnhandy:handy-uri-templates:2.1.8'
-    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-    testImplementation group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4'
-    testImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.21'
-    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.14.4'
-    testImplementation group: 'org.objenesis', name: 'objenesis', version: '1.2'
+    testImplementation("au.com.dius:pact-jvm-provider_2.11:3.5.6")
+    testImplementation("au.com.dius:pact-jvm-consumer-groovy_2.11:3.5.24")
+    testImplementation("org.yaml:snakeyaml:2.0")
+    testImplementation("com.damnhandy:handy-uri-templates:2.1.8")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.spockframework:spock-core:1.1-groovy-2.4")
+    testImplementation("org.codehaus.groovy:groovy-all:2.4.21")
+    testImplementation("net.bytebuddy:byte-buddy:1.14.4")
+    testImplementation("org.objenesis:objenesis:1.2")
 
-    testContractImplementation sourceSets.main.output
-
-    testContractImplementation configurations.implementation
-    testContractImplementation configurations.testImplementation
-    testContractImplementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
-
-    testContractRuntime configurations.runtime
-    testContractRuntime configurations.testRuntime
+    testContractImplementation("org.slf4j:slf4j-log4j12:1.7.25")
 }
 
 task testContract(type: Test) {
@@ -76,7 +72,7 @@ task testContract(type: Test) {
 dependencyCheck {
     failBuildOnCVSS = 7
     analyzers.assemblyEnabled = false
-    suppressionFile = './dependency-check-suppressions.xml'
+    suppressionFile = "./dependency-check-suppressions.xml"
     outputDirectory = "$rootDir/security-report"
 }
 
