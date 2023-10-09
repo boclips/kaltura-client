@@ -79,29 +79,16 @@ class LinkBuilderTest extends Specification {
         given:
         String entryId = "media-entry-id"
         StreamFormat streamTechnique = StreamFormat.APPLE_HDS
+        linkSessionGenerator.getForEntry("media-entry-id") >> "session-for-media-entry-id"
 
         when:
-        String hlsStream = linkBuilder.getStreamUrl(entryId, streamTechnique, false)
+        String hlsStream = linkBuilder.getStreamUrl(entryId, streamTechnique)
 
         then:
         1 * client.getFlavorParams() >> FlavorParamsListFactory.sample()
         hlsStream.contains("entryId/media-entry-id")
         hlsStream.contains("format/" + streamTechnique.code)
         hlsStream.contains("flavorParamIds/1111%2C2222%2C3333")
-        !hlsStream.contains("/ks/")
-    }
-
-    def "can build hls stream urls with kaltura session attached"() {
-        given:
-        String entryId = "media-entry-id"
-        StreamFormat streamTechnique = StreamFormat.APPLE_HDS
-        linkSessionGenerator.getForEntry("media-entry-id") >> "session-for-media-entry-id"
-
-        when:
-        String hlsStream = linkBuilder.getStreamUrl(entryId, streamTechnique, true)
-
-        then:
-        1 * client.getFlavorParams() >> FlavorParamsListFactory.sample()
         hlsStream.contains("/ks/session-for-media-entry-id")
     }
 
@@ -112,7 +99,7 @@ class LinkBuilderTest extends Specification {
         linkSessionGenerator.getForEntry("media-entry-id") >> {throw new RuntimeException("something went wrong")}
 
         when:
-        linkBuilder.getStreamUrl(entryId, streamTechnique, true)
+        linkBuilder.getStreamUrl(entryId, streamTechnique)
 
         then:
         1 * client.getFlavorParams() >> FlavorParamsListFactory.sample()
