@@ -15,4 +15,9 @@
         <packageUrl regex="true">^pkg:maven/com\.squareup\.okio/okio\-jvm@.*$</packageUrl>
         <cve>CVE-2023-3635</cve>
     </suppress>
+    <suppress until="2024-02-01">
+        <notes><![CDATA[ file name: json-20220924.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.json/json@.*</packageUrl>
+        <cve>CVE-2023-5072</cve>
+    </suppress>
 </suppressions>
