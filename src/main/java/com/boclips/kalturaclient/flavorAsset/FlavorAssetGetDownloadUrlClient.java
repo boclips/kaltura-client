@@ -1,32 +1,46 @@
 package com.boclips.kalturaclient.flavorAsset;
 
-import com.boclips.kalturaclient.flavorAsset.resources.FlavorAssetListResource;
 import com.boclips.kalturaclient.http.KalturaRestClient;
-import com.boclips.kalturaclient.http.RequestFilters;
+import com.boclips.kalturaclient.media.links.GenerateKalturaSessionException;
+import com.boclips.kalturaclient.media.links.StreamUrlSessionGenerator;
+import org.apache.http.client.utils.URIBuilder;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FlavorAssetGetDownloadUrlClient implements FlavorAssetGetDownloadUrl {
 
     private final KalturaRestClient client;
-    private final FlavorAssetProcessor processor;
+    private final StreamUrlSessionGenerator sessionGenerator;
 
-    public FlavorAssetGetDownloadUrlClient(KalturaRestClient client) {
+    public FlavorAssetGetDownloadUrlClient(KalturaRestClient client, StreamUrlSessionGenerator sessionGenerator) {
         this.client = client;
-        this.processor = new FlavorAssetProcessor();
+        this.sessionGenerator = sessionGenerator;
     }
 
     @Override
-    public URI getDownloadUrl(String assetId) {
-        Map map = new HashMap();
+    public URI getDownloadUrl(String assetId, Boolean includeSession) {
+        HashMap<String, Object> map = new HashMap<>();
         map.put("id", assetId);
-        URI uri = this.client.get("/flavorasset/action/getUrl", map, URI.class);
-
-        return uri;
+        String session;
+        URIBuilder uri = new URIBuilder(this.client.get("/flavorasset/action/getUrl", map, URI.class));
+        if (includeSession) {
+            try {
+                session = sessionGenerator.getForEntry(assetId);
+            } catch (Exception ex) {
+                throw new GenerateKalturaSessionException("GetDownloadUrl", assetId, ex.getCause());
+            }
+            List<String> pathSegments = uri.getPathSegments();
+            pathSegments.add(pathSegments.size() - 2, "ks");
+            pathSegments.add(pathSegments.size() - 2, session);
+            uri.setPathSegments(pathSegments);
+        }
+        try {
+            return uri.build();
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
 }

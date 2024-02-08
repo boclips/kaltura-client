@@ -12,5 +12,5 @@ public interface KalturaVideoAssetManager {
     List<Asset> getVideoAssets(String entryId);
     Map<String, List<Asset>> getVideoAssets(Collection<String> entryIds);
     void deleteVideoAsset(String assetId);
-    URI getDownloadAssetUrl(String assetId);
+    URI getDownloadAssetUrl(String assetId, Boolean includeSession);
 }

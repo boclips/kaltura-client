@@ -88,10 +88,11 @@ public class KalturaClientV3 implements KalturaClient {
         this.captionAssetServe = new CaptionAssetServeClient(restClient);
         this.captionAssetGetUrl = new CaptionAssetGetUrl(restClient);
 
-        this.linkBuilder = new LinkBuilder(this, new StreamUrlSessionGenerator(this.config));
+        StreamUrlSessionGenerator streamUrlSessionGenerator = new StreamUrlSessionGenerator(this.config);
+        this.linkBuilder = new LinkBuilder(this, streamUrlSessionGenerator);
 
         this.flavorAssetList = new FlavorAssetListClient(restClient);
-        this.flavorAssetGetDownloadUrl = new FlavorAssetGetDownloadUrlClient(restClient);
+        this.flavorAssetGetDownloadUrl = new FlavorAssetGetDownloadUrlClient(restClient, streamUrlSessionGenerator);
         this.thumbnailAssetAdd = new ThumbnailAssetAddClient(restClient);
         this.setThumbnailAsDefault = new SetThumbnailAsDefaultClient(restClient);
     }
@@ -168,8 +169,8 @@ public class KalturaClientV3 implements KalturaClient {
     }
 
     @Override
-    public URI getDownloadAssetUrl(String assetId) {
-        return flavorAssetGetDownloadUrl.getDownloadUrl(assetId);
+    public URI getDownloadAssetUrl(String assetId, Boolean includeSession) {
+        return flavorAssetGetDownloadUrl.getDownloadUrl(assetId, includeSession);
     }
 
     @Override

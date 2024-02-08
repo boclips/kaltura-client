@@ -10,6 +10,7 @@ import com.boclips.kalturaclient.config.KalturaClientConfig
 import com.boclips.kalturaclient.flavorParams.FlavorParams
 import com.boclips.kalturaclient.flavorParams.Quality
 import com.boclips.kalturaclient.media.MediaEntry
+import com.boclips.kalturaclient.media.links.StreamUrlSessionGenerator
 import com.boclips.kalturaclient.testsupport.TestFactories
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang.StringUtils
@@ -23,6 +24,7 @@ import java.util.stream.Collectors
 class KalturaClientContractTest extends Specification {
     String referenceId = UUID.randomUUID().toString()
     MediaEntry createdMediaEntry = null
+    private StreamUrlSessionGenerator linkSessionGenerator
 
     void cleanup() {
         if (createdMediaEntry != null) {
@@ -31,6 +33,10 @@ class KalturaClientContractTest extends Specification {
 
         createdMediaEntry = null
         fakeCaptionProvider.clear()
+    }
+
+    def "setup"() {
+        linkSessionGenerator = Mock(StreamUrlSessionGenerator)
     }
 
     void tryDeleteMediaEntry(String id) {
@@ -524,12 +530,17 @@ class KalturaClientContractTest extends Specification {
     }
 
     def "gets flavor download URL"() {
-        when:
+        given:
         def assetId = "1_eian2fxp"
-        URI downloadUrl = client.getDownloadAssetUrl(assetId)
+        linkSessionGenerator.getForEntry(assetId) >> "session-for-media-entry-id"
+
+        when:
+        URI downloadUrl = client.getDownloadAssetUrl(assetId, true)
 
         then:
         downloadUrl.toString().contains(assetId)
+        downloadUrl.toString().contains("/ks/")
+
 
         where:
         client << [testClient(), realClient()]
