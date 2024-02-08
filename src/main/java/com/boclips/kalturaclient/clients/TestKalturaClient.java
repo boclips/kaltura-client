@@ -39,6 +39,7 @@ public class TestKalturaClient implements KalturaClient {
     private final LinkBuilder linkBuilder;
     private KalturaClientConfig config;
     private CaptionProvider captionProvider;
+    private StreamUrlSessionGenerator sessionGenerator;
 
     public TestKalturaClient() {
         config = KalturaClientConfig.builder()
@@ -48,7 +49,8 @@ public class TestKalturaClient implements KalturaClient {
                 .captionProviderApiKey("api-key")
                 .captionProviderHostname("hostname.com")
                 .build();
-        linkBuilder = new LinkBuilder(this, new StreamUrlSessionGenerator(this.config));
+        sessionGenerator = new StreamUrlSessionGenerator(this.config);
+        linkBuilder = new LinkBuilder(this, sessionGenerator);
         captionProvider = new FakeCaptionProvider();
     }
 
@@ -182,17 +184,17 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public void requestCaption(String entryId)  {
+    public void requestCaption(String entryId) {
         tag(entryId, Collections.singletonList("3play"));
     }
 
     @Override
     public CaptionStatus getCaptionStatus(String entryId) {
         BaseEntryWithCaptions base = BaseEntryWithCaptions.builder()
-            .baseEntry(getBaseEntry(entryId))
-            .captions(getCaptionsForVideo(entryId))
-            .captionProvider(getCaptionProvider())
-            .build();
+                .baseEntry(getBaseEntry(entryId))
+                .captions(getCaptionsForVideo(entryId))
+                .captionProvider(getCaptionProvider())
+                .build();
 
         return base.getCaptionStatus();
     }
@@ -203,11 +205,11 @@ public class TestKalturaClient implements KalturaClient {
     }
 
     @Override
-    public CaptionAsset getHumanGeneratedCaptionAsset(String entryId)  {
+    public CaptionAsset getHumanGeneratedCaptionAsset(String entryId) {
         return getCaptionsForVideo(entryId).stream()
-            .filter(CaptionAsset::isHumanGenerated)
-            .findFirst()
-            .orElse(null);
+                .filter(CaptionAsset::isHumanGenerated)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
@@ -309,11 +311,17 @@ public class TestKalturaClient implements KalturaClient {
 
     @SneakyThrows
     @Override
-    public URI getDownloadAssetUrl(String assetId) {
+    public URI getDownloadAssetUrl(String assetId, Boolean includeSession) {
         if (assetsByEntryId.values().stream()
                 .flatMap(Collection::stream)
                 .anyMatch(asset -> asset.getId().equals(assetId))) {
-            return new URI("/asset-download/" + assetId + ".mp4");
+            String session;
+            if (includeSession) {
+                session = "ks/" + sessionGenerator.getForEntry(assetId) + "/";
+            } else {
+                session = "";
+            }
+            return new URI("/asset-download/" + session + assetId + ".mp4");
         }
         return null;
     }
