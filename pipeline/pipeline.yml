@@ -1,18 +1,5 @@
 ---
 jobs:
-- name: internal-tests
-  public: true
-  plan:
-  - get: source
-    trigger: true
-    params:
-      depth: 1
-  - put: version
-    params:
-      pre: rc
-  - task: build
-    file: source/pipeline/build.yml
-
 - name: external-tests
   public: true
   plan:
@@ -20,11 +7,11 @@ jobs:
     trigger: true
   - get: source
     trigger: true
-    passed: [internal-tests]
     params:
       depth: 1
-  - get: version
-    passed: [internal-tests]
+  - put: version
+    params:
+      pre: rc
   - task: contract-test
     file: source/pipeline/contract-test.yml
     params:
