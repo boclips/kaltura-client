@@ -3,7 +3,7 @@ jobs:
 - name: external-tests
   public: true
   plan:
-  - get: two-hours
+  - get: once-per-weekday
     trigger: true
   - get: source
     trigger: true
@@ -70,6 +70,10 @@ resources:
     file: kaltura-client
     private_key: ((versions.repo-key))
 
-- name: two-hours
+- name: once-per-weekday
   type: time
-  source: {interval: 120m}
+  source:
+    start: "08:30"
+    stop: "20:00"
+    days: [Monday, Tuesday, Wednesday, Thursday, Friday]
+    location: Europe/London
