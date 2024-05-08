@@ -57,7 +57,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.spockframework:spock-core:1.1-groovy-2.4")
     testImplementation("org.codehaus.groovy:groovy-all:2.4.21")
-    testImplementation("net.bytebuddy:byte-buddy:1.14.11")
+    testImplementation("net.bytebuddy:byte-buddy:1.14.15")
     testImplementation("org.objenesis:objenesis:3.3")
 
     testContractImplementation("org.slf4j:slf4j-log4j12:2.0.7")
