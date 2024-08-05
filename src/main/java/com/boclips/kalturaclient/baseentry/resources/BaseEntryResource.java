@@ -23,8 +23,8 @@ public class BaseEntryResource {
     public BaseEntry toBaseEntry() {
         return BaseEntry.builder()
                 .id(id)
-                .tags(tags == null ? Collections.emptyList() : Arrays.asList(tags.split(", ")))
-                .categories(categories == null ? Collections.emptyList() : Arrays.asList(categories.split(", ")))
+                .tags(tags == null || tags.isBlank() ? Collections.emptyList() : Arrays.asList(tags.split(", ")))
+                .categories(categories == null || categories.isBlank() ? Collections.emptyList() : Arrays.asList(categories.split(", ")))
                 .thumbnailUrl(thumbnailUrl)
                 .name(name)
                 .build();
