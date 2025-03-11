@@ -6,6 +6,8 @@ image_resource:
   source:
     repository: openjdk
     tag: 11.0.2-jdk-stretch
+    username: ((docker-hub.username))
+    password: ((docker-hub.password))
 
 inputs:
 - name: source
