@@ -60,7 +60,7 @@ dependencies {
     testImplementation("net.bytebuddy:byte-buddy:1.14.11")
     testImplementation("org.objenesis:objenesis:3.3")
 
-    testContractImplementation("org.slf4j:slf4j-log4j12:2.0.7")
+    testContractImplementation("org.slf4j:slf4j-log4j12:2.0.17")
 }
 
 task testContract(type: Test) {
