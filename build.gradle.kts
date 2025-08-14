@@ -3,7 +3,7 @@ val nvdApiKey: String? by project
 plugins {
     groovy
     java
-    id("org.owasp.dependencycheck") version "9.0.9"
+    id("org.owasp.dependencycheck") version "12.1.3"
     `maven-publish`
 }
 
