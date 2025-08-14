@@ -49,7 +49,7 @@ dependencies {
     implementation("org.apache.httpcomponents:httpclient:4.5.14")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
     implementation("org.slf4j:slf4j-api:2.0.7")
-    implementation("org.apache.commons:commons-collections4:4.4")
+    implementation("org.apache.commons:commons-collections4:4.5.0")
     implementation("net.jodah:failsafe:2.4.4")
     implementation("com.damnhandy:handy-uri-templates:2.1.8")
     implementation("com.kaltura:kalturaApiClient:19.3.0")
