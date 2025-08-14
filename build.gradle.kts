@@ -59,7 +59,7 @@ dependencies {
     testImplementation("org.yaml:snakeyaml:2.1")
     testImplementation("com.damnhandy:handy-uri-templates:2.1.8")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.spockframework:spock-core:1.1-groovy-2.4")
+    testImplementation("org.spockframework:spock-core:2.3-groovy-4.0")
     testImplementation("org.codehaus.groovy:groovy-all:2.4.21")
     testImplementation("net.bytebuddy:byte-buddy:1.14.11")
     testImplementation("org.objenesis:objenesis:3.3")
