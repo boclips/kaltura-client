@@ -48,7 +48,7 @@ dependencies {
     implementation("com.konghq:unirest-java:3.14.5")
     implementation("org.apache.httpcomponents:httpclient:4.5.14")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
-    implementation("org.slf4j:slf4j-api:2.0.7")
+    implementation("org.slf4j:slf4j-api:2.0.17")
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("net.jodah:failsafe:2.4.4")
     implementation("com.damnhandy:handy-uri-templates:2.1.8")
@@ -64,7 +64,7 @@ dependencies {
     testImplementation("net.bytebuddy:byte-buddy:1.14.11")
     testImplementation("org.objenesis:objenesis:3.3")
 
-    add("testContractImplementation", "org.slf4j:slf4j-log4j12:2.0.7")
+    add("testContractImplementation", "org.slf4j:slf4j-log4j12:2.0.17")
 }
 
 tasks.register<Test>("testContract") {
