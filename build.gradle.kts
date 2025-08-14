@@ -1,8 +1,10 @@
+val nvdApiKey: String? by project
+
 plugins {
-    id "groovy"
-    id "java"
-    id "org.owasp.dependencycheck" version '9.0.9'
-    id "maven-publish"
+    groovy
+    java
+    id("org.owasp.dependencycheck") version "9.0.9"
+    `maven-publish`
 }
 
 group = "com.boclips"
@@ -16,25 +18,27 @@ repositories {
 }
 
 sourceSets {
-    testContract {
+    create("testContract") {
         groovy {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
-            srcDir "src/test_contract/groovy"
+            compileClasspath += sourceSets["main"].output + sourceSets["test"].output
+            runtimeClasspath += sourceSets["main"].output + sourceSets["test"].output
+            srcDir("src/test_contract/groovy")
         }
-        resources.srcDir file("src/test_contract/resources")
+        resources.srcDir("src/test_contract/resources")
     }
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
+        languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
 
 configurations {
-    testContractImplementation.extendsFrom(implementation)
-    testContractImplementation.extendsFrom(testImplementation)
+    "testContractImplementation" {
+        extendsFrom(configurations["implementation"])
+        extendsFrom(configurations["testImplementation"])
+    }
 }
 
 dependencies {
@@ -60,28 +64,26 @@ dependencies {
     testImplementation("net.bytebuddy:byte-buddy:1.14.11")
     testImplementation("org.objenesis:objenesis:3.3")
 
-    testContractImplementation("org.slf4j:slf4j-log4j12:2.0.7")
+    add("testContractImplementation", "org.slf4j:slf4j-log4j12:2.0.7")
 }
 
-task testContract(type: Test) {
-    testClassesDirs = sourceSets.testContract.output.classesDirs
-    classpath = sourceSets.testContract.runtimeClasspath
+tasks.register<Test>("testContract") {
+    testClassesDirs = sourceSets["testContract"].output.classesDirs
+    classpath = sourceSets["testContract"].runtimeClasspath
 }
 
-dependencyCheck {
-    failBuildOnCVSS = 7
-    analyzers.assemblyEnabled = false
+configure<org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension> {
+    failBuildOnCVSS = 7F // Fail on high severity or greater
+    skipTestGroups = true
     suppressionFile = "./dependency-check-suppressions.xml"
     outputDirectory = "$rootDir/security-report"
-    nvd {
-        apiKey = nvdApiKey
-    }
+    nvd.apiKey = nvdApiKey
 }
 
 publishing {
     publications {
-        maven(MavenPublication) {
-            from components.java
+        create<MavenPublication>("maven") {
+            from(components["java"])
         }
     }
 }
