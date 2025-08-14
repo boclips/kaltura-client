@@ -54,7 +54,7 @@ dependencies {
     implementation("com.damnhandy:handy-uri-templates:2.1.8")
     implementation("com.kaltura:kalturaApiClient:19.3.0")
 
-    testImplementation("au.com.dius:pact-jvm-provider_2.11:3.5.6")
+    testImplementation("au.com.dius:pact-jvm-provider_2.11:3.5.24")
     testImplementation("au.com.dius:pact-jvm-consumer-groovy_2.11:3.5.24")
     testImplementation("org.yaml:snakeyaml:2.1")
     testImplementation("com.damnhandy:handy-uri-templates:2.1.8")
