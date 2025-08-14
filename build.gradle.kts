@@ -62,7 +62,7 @@ dependencies {
     testImplementation("org.spockframework:spock-core:1.1-groovy-2.4")
     testImplementation("org.codehaus.groovy:groovy-all:2.4.21")
     testImplementation("net.bytebuddy:byte-buddy:1.14.11")
-    testImplementation("org.objenesis:objenesis:3.3")
+    testImplementation("org.objenesis:objenesis:3.4")
 
     add("testContractImplementation", "org.slf4j:slf4j-log4j12:2.0.7")
 }
