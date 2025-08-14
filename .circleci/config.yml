@@ -1,0 +1,107 @@
+version: 2.1
+
+orbs:
+  gradle: circleci/gradle@3.0.0
+
+executors:
+  jdk:
+    docker:
+      - image: cimg/openjdk:11.0.2
+    resource_class: small
+  node:
+    docker:
+      - image: cimg/node:20.19.4
+    resource_class: small
+
+jobs:
+  test:
+    executor: jdk
+    steps:
+      - checkout
+      - gradle/with_cache:
+          deps_checksum_file: build.gradle.kts
+          steps:
+            - run:
+                name: Run Tests
+                command: |
+                  if [ -z "$JITPACK_AUTH_TOKEN" ]; then
+                    echo "JITPACK_AUTH_TOKEN is not set"
+                    exit 1
+                  fi
+                  echo "authToken=$JITPACK_AUTH_TOKEN" > gradle.properties
+  
+                  ./gradlew testContract
+      - gradle/collect_test_results
+  tag-release:
+    executor: node
+    parameters:
+      release-type:
+        default: "patch"
+        type: enum
+        enum: [ "patch", "minor", "major" ]
+    steps:
+      - add_ssh_keys
+      - checkout
+      - run:
+          name: Bump and tag release
+          command: |
+            CURRENT_VERSION=$(git describe --tags --abbrev=0)
+            NEXT_VERSION=$(npx semver -i << parameters.release-type >> $CURRENT_VERSION)
+
+            git tag $NEXT_VERSION
+            git push origin tag $NEXT_VERSION
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - contract-tests:
+          serial-group: kaltura-tests
+          context:
+            - gradle
+            - kaltura
+      - hold-patch:
+          type: approval
+          requires:
+          - test
+          filters:
+            branches:
+              only: main
+      - tag-release:
+          name: tag-release-patch
+          release-type: patch
+          requires:
+          - hold-patch
+          filters:
+            branches:
+              only: main
+      - hold-minor:
+          type: approval
+          requires:
+          - test
+          filters:
+            branches:
+              only: main
+      - tag-release:
+          name: tag-release-minor
+          release-type: minor
+          requires:
+          - hold-minor
+          filters:
+            branches:
+              only: main
+      - hold-major:
+          type: approval
+          requires:
+          - test
+          filters:
+            branches:
+              only: main
+      - tag-release:
+          name: tag-release-major
+          release-type: major
+          requires:
+          - hold-major
+          filters:
+            branches:
+              only: main
