@@ -14,7 +14,7 @@ executors:
     resource_class: small
 
 jobs:
-  test:
+  contract-tests:
     executor: jdk
     steps:
       - checkout
@@ -63,7 +63,7 @@ workflows:
       - hold-patch:
           type: approval
           requires:
-          - test
+          - contract-tests
           filters:
             branches:
               only: main
@@ -78,7 +78,7 @@ workflows:
       - hold-minor:
           type: approval
           requires:
-          - test
+          - contract-tests
           filters:
             branches:
               only: main
@@ -93,7 +93,7 @@ workflows:
       - hold-major:
           type: approval
           requires:
-          - test
+          - contract-tests
           filters:
             branches:
               only: main
