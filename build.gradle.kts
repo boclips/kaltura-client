@@ -56,7 +56,7 @@ dependencies {
 
     testImplementation("au.com.dius:pact-jvm-provider_2.11:3.5.6")
     testImplementation("au.com.dius:pact-jvm-consumer-groovy_2.11:3.5.24")
-    testImplementation("org.yaml:snakeyaml:2.1")
+    testImplementation("org.yaml:snakeyaml:2.4")
     testImplementation("com.damnhandy:handy-uri-templates:2.1.8")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.spockframework:spock-core:1.1-groovy-2.4")
