@@ -18,19 +18,16 @@ jobs:
     executor: jdk
     steps:
       - checkout
-      - gradle/with_cache:
-          deps_checksum_file: build.gradle.kts
-          steps:
-            - run:
-                name: Run Tests
-                command: |
-                  if [ -z "$JITPACK_AUTH_TOKEN" ]; then
-                    echo "JITPACK_AUTH_TOKEN is not set"
-                    exit 1
-                  fi
-                  echo "authToken=$JITPACK_AUTH_TOKEN" > gradle.properties
-  
-                  ./gradlew testContract
+      - run:
+          name: Run Tests
+          command: |
+            if [ -z "$JITPACK_AUTH_TOKEN" ]; then
+              echo "JITPACK_AUTH_TOKEN is not set"
+              exit 1
+            fi
+            echo "authToken=$JITPACK_AUTH_TOKEN" > gradle.properties
+
+            ./gradlew testContract
       - gradle/collect_test_results
   tag-release:
     executor: node
