@@ -42,8 +42,8 @@ configurations {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:1.18.28")
-    compileOnly("org.projectlombok:lombok:1.18.28")
+    annotationProcessor("org.projectlombok:lombok:1.18.38")
+    compileOnly("org.projectlombok:lombok:1.18.38")
 
     implementation("com.konghq:unirest-java:3.14.5")
     implementation("org.apache.httpcomponents:httpclient:4.5.14")
