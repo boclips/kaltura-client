@@ -21,6 +21,7 @@ class LinkBuilderTest extends Specification {
                     .secret("secret")
                     .captionProviderHostname("hostname.com")
                     .captionProviderApiKey("api-key")
+                    .streamingLinkSessionTtlHours(48)
                     .build()
         }
         linkSessionGenerator = Mock(StreamUrlSessionGenerator)
@@ -79,10 +80,10 @@ class LinkBuilderTest extends Specification {
         given:
         String entryId = "media-entry-id"
         StreamFormat streamTechnique = StreamFormat.APPLE_HDS
-        linkSessionGenerator.getForEntry("media-entry-id") >> "session-for-media-entry-id"
+        linkSessionGenerator.getForEntry("media-entry-id", null) >> "session-for-media-entry-id"
 
         when:
-        String hlsStream = linkBuilder.getStreamUrl(entryId, streamTechnique)
+        String hlsStream = linkBuilder.getStreamUrl(entryId, streamTechnique, null)
 
         then:
         1 * client.getFlavorParams() >> FlavorParamsListFactory.sample()
@@ -96,13 +97,30 @@ class LinkBuilderTest extends Specification {
         given:
         String entryId = "media-entry-id"
         StreamFormat streamTechnique = StreamFormat.APPLE_HDS
-        linkSessionGenerator.getForEntry("media-entry-id") >> {throw new RuntimeException("something went wrong")}
+        linkSessionGenerator.getForEntry("media-entry-id", null) >> { throw new RuntimeException("something went wrong") }
 
         when:
-        linkBuilder.getStreamUrl(entryId, streamTechnique)
+        linkBuilder.getStreamUrl(entryId, streamTechnique, null)
 
         then:
         1 * client.getFlavorParams() >> FlavorParamsListFactory.sample()
         thrown GenerateKalturaSessionException
+    }
+
+    def "can build hls stream urls with overridden ttl"() {
+        given:
+        String entryId = "media-entry-id"
+        StreamFormat streamTechnique = StreamFormat.APPLE_HDS
+        linkSessionGenerator.getForEntry("media-entry-id", 4800) >> "session-for-media-entry-id-with-custom-ttl"
+
+        when:
+        String hlsStream = linkBuilder.getStreamUrl(entryId, streamTechnique, 4800)
+
+        then:
+        1 * client.getFlavorParams() >> FlavorParamsListFactory.sample()
+        hlsStream.contains("entryId/media-entry-id")
+        hlsStream.contains("format/" + streamTechnique.code)
+        hlsStream.contains("flavorParamIds/1111%2C2222%2C3333")
+        hlsStream.contains("/ks/session-for-media-entry-id")
     }
 }

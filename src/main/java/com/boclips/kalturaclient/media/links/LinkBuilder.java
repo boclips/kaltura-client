@@ -11,7 +11,7 @@ public class LinkBuilder {
     private final StreamUrlSessionGenerator streamUrlSessionGenerator;
 
     private final String BASE_THUMBNAIL_URL =
-        "https://cdnapisec.kaltura.com/p/{partnerId}/thumbnail/entry_id/{entryId}/width/{thumbnailWidth}";
+            "https://cdnapisec.kaltura.com/p/{partnerId}/thumbnail/entry_id/{entryId}/width/{thumbnailWidth}";
 
 
     public LinkBuilder(KalturaClient kalturaClient, StreamUrlSessionGenerator streamUrlSessionGenerator) {
@@ -22,21 +22,22 @@ public class LinkBuilder {
     /**
      * @param entryId
      * @param streamingTechnique
-     * @return A url to the stream manifest file
+     * @param streamingLinkSessionTtlHours
+     * @return A url to the stream manifest file with a non-default streaming link session ttl
      * @see <a href="https://developer.kaltura.com/api-docs/Deliver-and-Distribute-Media/playManifest-streaming-api.html">The playManifest Service: Streaming API for Videos and Playlists</a>
      */
-    public String getStreamUrl(String entryId, StreamFormat streamingTechnique) {
+    public String getStreamUrl(String entryId, StreamFormat streamingTechnique, Integer streamingLinkSessionTtlHours) {
         UriTemplate streamLinkTemplate = UriTemplate.fromTemplate(
-                "https://cdnapisec.kaltura.com" +
-                        "/p/{partnerId}" +
-                        "/sp/{partnerId}00" +
-                        "/playManifest" +
-                        "/entryId/{entryId}" +
-                        "/format/{format}" +
-                        "/ks/{kalturaSession}" +
-                        "/flavorParamIds/{flavorParamIds}" +
-                        "/protocol/https/video.mp4"
-        )
+                        "https://cdnapisec.kaltura.com" +
+                                "/p/{partnerId}" +
+                                "/sp/{partnerId}00" +
+                                "/playManifest" +
+                                "/entryId/{entryId}" +
+                                "/format/{format}" +
+                                "/ks/{kalturaSession}" +
+                                "/flavorParamIds/{flavorParamIds}" +
+                                "/protocol/https/video.mp4"
+                )
                 .set("partnerId", kalturaClient.getConfig().getPartnerId())
                 .set("entryId", entryId)
                 .set("format", streamingTechnique.getCode())
@@ -47,7 +48,7 @@ public class LinkBuilder {
                 );
 
         try {
-            streamLinkTemplate.set("kalturaSession", this.streamUrlSessionGenerator.getForEntry(entryId));
+            streamLinkTemplate.set("kalturaSession", this.streamUrlSessionGenerator.getForEntry(entryId, streamingLinkSessionTtlHours));
         } catch (Exception e) {
             throw new GenerateKalturaSessionException("Stream URL builder", entryId, e);
         }
@@ -66,9 +67,9 @@ public class LinkBuilder {
      */
     public String getThumbnailUrl(String entryId) {
         return UriTemplate.fromTemplate(BASE_THUMBNAIL_URL + "/vid_slices/3/vid_slice/1")
-            .set("partnerId", kalturaClient.getConfig().getPartnerId())
-            .set("entryId", entryId)
-            .expandPartial();
+                .set("partnerId", kalturaClient.getConfig().getPartnerId())
+                .set("entryId", entryId)
+                .expandPartial();
     }
 
     /**
@@ -84,10 +85,10 @@ public class LinkBuilder {
      */
     public String getThumbnailUrlBySecond(String entryId, Integer second) {
         return UriTemplate.fromTemplate(BASE_THUMBNAIL_URL + "/vid_sec/{second}")
-            .set("partnerId", kalturaClient.getConfig().getPartnerId())
-            .set("entryId", entryId)
-            .set("second", second)
-            .expandPartial();
+                .set("partnerId", kalturaClient.getConfig().getPartnerId())
+                .set("entryId", entryId)
+                .set("second", second)
+                .expandPartial();
     }
 
     /**
@@ -121,17 +122,15 @@ public class LinkBuilder {
      */
     public String getVideoPreviewUrl(String entryId) {
         return UriTemplate.fromTemplate(
-                "https://cdnapisec.kaltura.com" +
-                        "/p/{partnerId}" +
-                        "/thumbnail" +
-                        "/entry_id/{entryId}" +
-                        "/width/{thumbnailWidth}" +
-                        "/vid_slices/{thumbnailCount}"
-        )
+                        "https://cdnapisec.kaltura.com" +
+                                "/p/{partnerId}" +
+                                "/thumbnail" +
+                                "/entry_id/{entryId}" +
+                                "/width/{thumbnailWidth}" +
+                                "/vid_slices/{thumbnailCount}"
+                )
                 .set("partnerId", kalturaClient.getConfig().getPartnerId())
                 .set("entryId", entryId)
                 .expandPartial();
     }
-
-
 }

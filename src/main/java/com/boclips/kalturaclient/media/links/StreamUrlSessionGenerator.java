@@ -17,12 +17,16 @@ public class StreamUrlSessionGenerator {
     }
 
     public String getForEntry(String entryId) throws Exception {
+        return getForEntry(entryId, null);
+    }
+
+    public String getForEntry(String entryId, Integer streamingLinkSessionTtlHours) throws Exception {
         return client.generateSessionV2(
                 this.config.getSecret(),
                 this.config.getUserId(),
                 SessionType.USER,
                 this.config.getPartnerId(),
-                getTtlInSeconds(this.config.getStreamingLinkSessionTtlHours()),
+                getTtlInSeconds((streamingLinkSessionTtlHours != null) ? streamingLinkSessionTtlHours : this.config.getStreamingLinkSessionTtlHours()),
                 "sview:" + entryId
         );
     }
