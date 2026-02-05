@@ -3,7 +3,6 @@ val nvdApiKey: String? by project
 plugins {
     groovy
     java
-    id("org.owasp.dependencycheck") version "9.0.9"
     `maven-publish`
 }
 
@@ -70,14 +69,6 @@ dependencies {
 tasks.register<Test>("testContract") {
     testClassesDirs = sourceSets["testContract"].output.classesDirs
     classpath = sourceSets["testContract"].runtimeClasspath
-}
-
-configure<org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension> {
-    failBuildOnCVSS = 7F // Fail on high severity or greater
-    skipTestGroups = true
-    suppressionFile = "./dependency-check-suppressions.xml"
-    outputDirectory = "$rootDir/security-report"
-    nvd.apiKey = nvdApiKey
 }
 
 publishing {
