@@ -587,7 +587,7 @@ class KalturaClientContractTest extends Specification {
                 .captionProviderHostname(configuration.get("CAPTION_PROVIDER_HOSTNAME"))
                 .build()
 
-        return KalturaClient.create(config)
+        return ContractTestClients.create(config)
     }
 
     private Map<String, String> readConfiguration() {
