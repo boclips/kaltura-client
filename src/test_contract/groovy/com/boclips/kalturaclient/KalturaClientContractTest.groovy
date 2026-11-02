@@ -13,7 +13,6 @@ import com.boclips.kalturaclient.media.MediaEntry
 import com.boclips.kalturaclient.media.links.StreamUrlSessionGenerator
 import com.boclips.kalturaclient.testsupport.TestFactories
 import org.apache.commons.io.IOUtils
-import org.apache.commons.lang.StringUtils
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
 
@@ -156,7 +155,7 @@ class KalturaClientContractTest extends Specification {
         then:
         captionAssetUri != null
         String url = captionAssetUri.toString()
-        StringUtils.isNotBlank(url)
+        !url.isBlank()
         url.contains(captionId)
         url.startsWith("http://") || url.startsWith("https://")
 
