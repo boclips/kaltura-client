@@ -1,5 +1,3 @@
-val nvdApiKey: String? by project
-
 plugins {
     groovy
     java
