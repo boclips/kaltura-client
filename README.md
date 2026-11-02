@@ -1,16 +1,16 @@
-# Klient  [![](https://ci.boclips.com/api/v1/teams/main/pipelines/kaltura-client/jobs/internal-tests/badge)](https://ci.boclips.com/teams/main/pipelines/kaltura-client) 
+# Klient  [![CircleCI](https://dl.circleci.com/status-badge/img/gh/boclips/kaltura-client/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/boclips/kaltura-client/tree/main)
 
 After trying the *official* Java Kaltura Client, we felt strong urge to write our own.
 The goal of *Klient* is to make interactions with Kaltura less painful and fix various shortcomings.
 
 ## Use
-Latest version: [![](https://jitpack.io/v/knowledgemotion/kaltura-client.svg)](https://jitpack.io/#knowledgemotion/kaltura-client)
+Latest version: [![](https://jitpack.io/v/boclips/kaltura-client.svg)](https://jitpack.io/#boclips/kaltura-client)
 
 ```
-compile 'com.github.knowledgemotion:kaltura-client:<tag>'
+implementation("com.github.boclips:kaltura-client:<tag>")
 ```
 
-Check different available [versions](https://jitpack.io/#knowledgemotion/kaltura-client).
+Check different available [versions](https://jitpack.io/#boclips/kaltura-client).
 
 ## Test
 
