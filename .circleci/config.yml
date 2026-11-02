@@ -27,7 +27,7 @@ jobs:
             fi
             echo "authToken=$JITPACK_AUTH_TOKEN" > gradle.properties
 
-            ./gradlew testContract
+            ./gradlew test testContract
       - gradle/collect_test_results
   tag-release:
     executor: node
