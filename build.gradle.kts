@@ -27,10 +27,8 @@ sourceSets {
     }
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
-    }
+tasks.withType<JavaCompile>().configureEach {
+    options.release = 11
 }
 
 configurations {
