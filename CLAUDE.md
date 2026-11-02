@@ -19,8 +19,9 @@ show the whole codebase as broken while Gradle builds it fine.
 ```
 
 `testContract` needs `PARTNER_ID`, `USER_ID` and `SECRET` in the environment and talks to the real
-Kaltura API — it is not part of `build`. Run `src/test_contract/resources/setup-contract-test` to pull
-those from LastPass.
+Kaltura API — it is not part of `build`. `src/test_contract/resources/setup-contract-test` reads them
+from the Concourse credential store with `bo` into `contract-test-setup.yml`; environment variables
+with the same names override that file, which is how CircleCI's `kaltura` context supplies them.
 
 ## Conventions and gotchas
 
