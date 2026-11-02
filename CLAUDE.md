@@ -43,5 +43,4 @@ those from LastPass.
 
 ## Publishing
 
-Published via JitPack as `com.github.knowledgemotion:kaltura-client` — note the legacy
-`knowledgemotion` org rather than `boclips`. Tags trigger the build.
+Published via JitPack as `com.github.boclips:kaltura-client`. Tags trigger the build.
