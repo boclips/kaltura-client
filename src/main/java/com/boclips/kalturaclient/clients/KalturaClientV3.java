@@ -32,6 +32,8 @@ import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toMap;
 
 public class KalturaClientV3 implements KalturaClient {
+    private static final int MAX_PAGE_SIZE = 500;
+
     private final MediaList mediaList;
     private final AllMediaList allMediaList;
     private final MediaDelete mediaDelete;
@@ -149,7 +151,10 @@ public class KalturaClientV3 implements KalturaClient {
         if (entryIds.isEmpty()) {
             return Collections.emptyMap();
         }
-        List<MediaEntry> mediaEntries = mediaList.get(idIn(entryIds));
+        if (entryIds.size() > MAX_PAGE_SIZE) {
+            throw new IllegalArgumentException("Too many entry ids. Max " + MAX_PAGE_SIZE + ", got " + entryIds.size());
+        }
+        List<MediaEntry> mediaEntries = mediaList.get(page(entryIds.size(), 1, idIn(entryIds)));
         return mediaEntries.stream().collect(toMap(MediaEntry::getId, mediaEntry -> mediaEntry));
     }
 
