@@ -1,6 +1,7 @@
 package com.boclips.kalturaclient;
 
 import com.boclips.kalturaclient.baseentry.BaseEntry;
+import com.boclips.kalturaclient.bulkupload.BulkUpload;
 import com.boclips.kalturaclient.media.MediaEntry;
 
 import java.io.InputStream;
@@ -16,6 +17,8 @@ public interface KalturaEntryManager {
     MediaEntry getEntry(String entryId);
     Map<String, MediaEntry> getEntries(Collection<String> entryIds);
     void deleteEntry(String entryId);
+    BulkUpload deleteEntriesInBulk(Collection<String> entryIds);
+    BulkUpload getBulkUpload(String bulkUploadId);
     BaseEntry getBaseEntry(String entryId);
     void tag(String entryId, List<String> tags);
     void setCategories(String entryId, List<String> categories);

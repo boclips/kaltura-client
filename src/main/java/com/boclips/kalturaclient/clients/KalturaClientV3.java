@@ -3,6 +3,7 @@ package com.boclips.kalturaclient.clients;
 import com.boclips.kalturaclient.CaptionStatus;
 import com.boclips.kalturaclient.KalturaClient;
 import com.boclips.kalturaclient.baseentry.*;
+import com.boclips.kalturaclient.bulkupload.*;
 import com.boclips.kalturaclient.captionasset.*;
 import com.boclips.kalturaclient.captionsProvider.CaptionProvider;
 import com.boclips.kalturaclient.captionsProvider.CaptionProviderConfig;
@@ -37,6 +38,8 @@ public class KalturaClientV3 implements KalturaClient {
     private final MediaList mediaList;
     private final AllMediaList allMediaList;
     private final MediaDelete mediaDelete;
+    private final MediaBulkDelete mediaBulkDelete;
+    private final BulkUploadGet bulkUploadGet;
     private final FlavorAssetDelete flavorAssetDelete;
     private final MediaAdd mediaAdd;
     private final CaptionAssetList captionAssetList;
@@ -76,6 +79,8 @@ public class KalturaClientV3 implements KalturaClient {
         this.allMediaList = new AllMediaList(this.mediaList, 9500, 500);
 
         this.mediaDelete = new MediaDeleteClient(restClient);
+        this.mediaBulkDelete = new MediaBulkDeleteClient(restClient);
+        this.bulkUploadGet = new BulkUploadGetClient(restClient);
         this.mediaAdd = new MediaAddClient(restClient);
 
         this.flavorParamsList = new FlavorParamsListClient(restClient);
@@ -166,6 +171,16 @@ public class KalturaClientV3 implements KalturaClient {
     @Override
     public void deleteEntry(String entryId) {
         mediaDelete.deleteByEntryId(entryId);
+    }
+
+    @Override
+    public BulkUpload deleteEntriesInBulk(Collection<String> entryIds) {
+        return mediaBulkDelete.deleteEntries(entryIds);
+    }
+
+    @Override
+    public BulkUpload getBulkUpload(String bulkUploadId) {
+        return bulkUploadGet.get(bulkUploadId);
     }
 
     @Override

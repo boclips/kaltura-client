@@ -1,5 +1,7 @@
 package com.boclips.kalturaclient
 
+import com.boclips.kalturaclient.bulkupload.BulkUpload
+import com.boclips.kalturaclient.bulkupload.BulkUploadStatus
 import com.boclips.kalturaclient.captionasset.CaptionAsset
 import com.boclips.kalturaclient.captionasset.CaptionFormat
 import com.boclips.kalturaclient.captionasset.KalturaLanguage
@@ -114,6 +116,29 @@ class KalturaClientContractTest extends Specification {
         then:
         mediaEntry.referenceId == referenceId
         deletedMediaEntry.isEmpty()
+
+        where:
+        client << [realClient(), testClient()]
+    }
+
+    def "delete media entries in bulk"(KalturaClient client) {
+        given:
+        List<String> entryIds = (1..2).collect { client.createEntry(UUID.randomUUID().toString()).id }
+
+        when:
+        BulkUpload bulkUpload = client.deleteEntriesInBulk(entryIds)
+        long deadline = System.currentTimeMillis() + 10 * 60 * 1000
+        while (!bulkUpload.status.hasEnded() && System.currentTimeMillis() < deadline) {
+            Thread.sleep(10 * 1000)
+            bulkUpload = client.getBulkUpload(bulkUpload.id)
+        }
+
+        then:
+        bulkUpload.status == BulkUploadStatus.FINISHED
+        client.getEntries(entryIds).isEmpty()
+
+        cleanup:
+        entryIds.each { if (client.getEntry(it) != null) client.deleteEntry(it) }
 
         where:
         client << [realClient(), testClient()]
