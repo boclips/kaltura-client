@@ -1,5 +1,8 @@
 package com.boclips.kalturaclient
 
+import com.boclips.kalturaclient.bulkupload.BulkUpload
+import com.boclips.kalturaclient.bulkupload.BulkUploadStatus
+import com.boclips.kalturaclient.bulkupload.resources.BulkUploadResource
 import com.boclips.kalturaclient.clients.KalturaClientV3
 import com.boclips.kalturaclient.config.KalturaClientConfig
 import com.boclips.kalturaclient.flavorParams.resources.FlavorParamsListResource
@@ -71,5 +74,31 @@ class KalturaClientV3Test extends Specification {
 
         then:
         thrown(IllegalArgumentException)
+    }
+
+    def "deletes entries in bulk"() {
+        given:
+        def kalturaClient = new KalturaClientV3(restClient, config, null)
+
+        when:
+        BulkUpload bulkUpload = kalturaClient.deleteEntriesInBulk(["0_entry1"])
+
+        then:
+        1 * restClient.postFileBody("/media/action/bulkUploadAdd", _, _, BulkUploadResource.class) >>
+                new BulkUploadResource(objectType: "KalturaBulkUpload", id: 7, status: 1)
+        bulkUpload == new BulkUpload("7", BulkUploadStatus.QUEUED, null)
+    }
+
+    def "gets a bulk upload"() {
+        given:
+        def kalturaClient = new KalturaClientV3(restClient, config, null)
+
+        when:
+        BulkUpload bulkUpload = kalturaClient.getBulkUpload("7")
+
+        then:
+        1 * restClient.get("/bulkupload_bulk/action/get", [id: "7"], BulkUploadResource.class) >>
+                new BulkUploadResource(objectType: "KalturaBulkUpload", id: 7, status: 5)
+        bulkUpload == new BulkUpload("7", BulkUploadStatus.FINISHED, null)
     }
 }

@@ -4,6 +4,8 @@ import com.boclips.kalturaclient.CaptionStatus;
 import com.boclips.kalturaclient.KalturaClient;
 import com.boclips.kalturaclient.baseentry.BaseEntry;
 import com.boclips.kalturaclient.baseentry.BaseEntryWithCaptions;
+import com.boclips.kalturaclient.bulkupload.BulkUpload;
+import com.boclips.kalturaclient.bulkupload.BulkUploadStatus;
 import com.boclips.kalturaclient.captionasset.CaptionAsset;
 import com.boclips.kalturaclient.captionsProvider.CaptionProvider;
 import com.boclips.kalturaclient.captionsProvider.FakeCaptionProvider;
@@ -36,6 +38,7 @@ public class TestKalturaClient implements KalturaClient {
     private final Map<String, BaseEntry> baseEntriesByEntryId = new HashMap<>();
     private final Map<String, List<Asset>> assetsByEntryId = new HashMap<>();
     private final Map<String, String> entryIdsByThumbAssetId = new HashMap<>();
+    private final Map<String, BulkUpload> bulkUploadsById = new HashMap<>();
     private final LinkBuilder linkBuilder;
     private KalturaClientConfig config;
     private CaptionProvider captionProvider;
@@ -88,6 +91,26 @@ public class TestKalturaClient implements KalturaClient {
     public void deleteEntry(String entryId) {
         MediaEntry mediaEntry = mediaEntriesById.get(entryId);
         mediaEntriesById.remove(entryId);
+    }
+
+    @Override
+    public BulkUpload deleteEntriesInBulk(Collection<String> entryIds) {
+        long deleted = entryIds.stream().filter(entryId -> mediaEntriesById.remove(entryId) != null).count();
+        BulkUploadStatus status = deleted == entryIds.size() ? BulkUploadStatus.FINISHED
+                : deleted == 0 ? BulkUploadStatus.FAILED
+                : BulkUploadStatus.FINISHED_PARTIALLY;
+        BulkUpload bulkUpload = new BulkUpload(UUID.randomUUID().toString(), status, null);
+        bulkUploadsById.put(bulkUpload.getId(), bulkUpload);
+        return bulkUpload;
+    }
+
+    @Override
+    public BulkUpload getBulkUpload(String bulkUploadId) {
+        return bulkUploadsById.get(bulkUploadId);
+    }
+
+    public void setBulkUploadStatus(String bulkUploadId, BulkUploadStatus status) {
+        bulkUploadsById.put(bulkUploadId, new BulkUpload(bulkUploadId, status, null));
     }
 
     @Override
@@ -341,6 +364,7 @@ public class TestKalturaClient implements KalturaClient {
         captionContentsByAssetId.clear();
         baseEntriesByEntryId.clear();
         assetsByEntryId.clear();
+        bulkUploadsById.clear();
     }
 
     private static String downloadUrl(String id) {
